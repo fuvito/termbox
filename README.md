@@ -74,6 +74,25 @@ A 67-term glossary for the in vitro diagnostics (IVD) and medical device industr
 
 To use it, open TermBox → **≡** → **Add from file** → select `samples/biotest-diagnostics.csv`.
 
+### `ai-ml.csv`
+
+An 82-term glossary covering the AI and machine learning landscape:
+
+| Domain | Example terms |
+|---|---|
+| Foundations | AI, ML, Deep Learning, Neural Network, Transfer Learning |
+| LLMs | LLM, GPT, Transformer, Attention, Context Window, Token, Hallucination |
+| Prompting | Prompt Engineering, Few-Shot, Zero-Shot, Chain-of-Thought, System Prompt |
+| Training & Alignment | RLHF, SFT, DPO, Fine-Tuning, LoRA, QLoRA, PEFT |
+| Generative AI | GAN, VAE, Diffusion Model, RAG, Multimodal |
+| Evaluation | Perplexity, BLEU, ROUGE, MMLU, HumanEval, Benchmark |
+| Core ML concepts | Overfitting, Dropout, Batch Norm, Loss Function, Gradient Descent, Adam |
+| Deployment | Inference, Quantisation, Pruning, Distillation, ONNX, GPU, TPU |
+| AI Agents | Agent, Tool Use, MCP, Agentic Loop, Semantic Search, Vector Database |
+| AI Safety | Alignment, Guardrails, Prompt Injection, Jailbreak |
+
+To use it, open TermBox → **≡** → **Add from file** → select `samples/ai-ml.csv`.
+
 ---
 
 ## Installation (Chrome)

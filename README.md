@@ -80,7 +80,9 @@ npm install
 npm run serve
 ```
 
-Then open [http://localhost:5173](http://localhost:5173).
+Then open [http://localhost:5173/popup.html](http://localhost:5173/popup.html).
+
+> The dev server auto-opens this URL in your default browser when started.
 
 `chrome.storage.local` is automatically replaced with a `localStorage`-backed mock, so adding sources and searching works exactly as it would in the real extension.
 

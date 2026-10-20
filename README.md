@@ -51,6 +51,31 @@ API,Application Programming Interface,A set of rules for software communication,
 
 ---
 
+## Sample glossaries
+
+The `samples/` folder contains ready-to-use CSV files you can load straight into TermBox.
+
+### `biotest-diagnostics.csv`
+
+A 67-term glossary for the in vitro diagnostics (IVD) and medical device industry, covering:
+
+| Domain | Example terms |
+|---|---|
+| Molecular Biology | PCR, qPCR, ddPCR, DNA, RNA |
+| Genomics | NGS, WGS, SNP |
+| Immunology | ELISA, CLIA, LFA, IgG, IgM |
+| Clinical Chemistry | CRP, HbA1c, troponin, LDL |
+| Oncology | ctDNA, TMB, PD-L1, PSA |
+| Neurology | MS, Amyloid Beta, Tau, APOE |
+| Medical Imaging | MRI, CT, PET |
+| Analytical / Statistics | LOD, LOQ, CV, Sensitivity, Specificity, PPV, NPV, ROC, AUC |
+| Regulatory | IVD, IVDR, MDR, CE, FDA, EMA, IFU, UDI, GLP, ICH |
+| Quality | SOP, CAPA, GMP, QMS, DHF, NCR, OOS |
+
+To use it, open TermBox → **≡** → **Add from file** → select `samples/biotest-diagnostics.csv`.
+
+---
+
 ## Installation (Chrome)
 
 ### From source (manual)
@@ -123,9 +148,9 @@ termbox/
 
 ## Tech stack
 
-- **React 18** — UI
-- **TypeScript 5** — language
-- **Vite 5** — bundler
+- **React 19** — UI
+- **TypeScript 7** — language
+- **Vite 8** — bundler
 - **chrome.storage.local** — persistence
 - **Inline styles** — no CSS framework
 - **No external runtime dependencies** beyond React

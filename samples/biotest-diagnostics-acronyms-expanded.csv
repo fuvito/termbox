@@ -1,0 +1,1000 @@
+term,full_form,definition,domain,source_reference,aliases
+PCR,Polymerase Chain Reaction,A molecular biology technique used to amplify a specific segment of DNA. Widely used in diagnostics to detect pathogens and genetic variants.,Molecular Biology,ISO 15189:2022,polymerase chain reaction
+qPCR,Quantitative Polymerase Chain Reaction,A PCR-based technique that quantifies the amount of a target DNA or RNA in real time using fluorescent reporters. Also called real-time PCR.,Molecular Biology,ISO 20395,real-time PCR;rt-PCR
+ddPCR,Droplet Digital PCR,A digital PCR method that partitions a sample into thousands of droplets to enable absolute quantification of nucleic acids without a standard curve.,Molecular Biology,Bio-Rad ddPCR,digital droplet PCR
+DNA,Deoxyribonucleic Acid,"The molecule that carries the genetic instructions for the development, functioning, growth, and reproduction of all known living organisms.",Molecular Biology,,
+RNA,Ribonucleic Acid,"A molecule essential in gene expression and regulation. Includes mRNA, tRNA, and rRNA subtypes that participate in protein synthesis.",Molecular Biology,,
+NGS,Next-Generation Sequencing,"High-throughput DNA sequencing technology that enables rapid sequencing of entire genomes or targeted gene panels. Used in oncology diagnostics, infectious disease, and rare disease.",Genomics,ISO 20166,massively parallel sequencing
+WGS,Whole Genome Sequencing,"The process of determining the complete DNA sequence of an organism's genome. Used in outbreak investigations, oncology, and rare disease diagnosis.",Genomics,,
+SNP,Single Nucleotide Polymorphism,A variation at a single position in a DNA sequence among individuals. SNPs are used as biomarkers in genetic disease studies and pharmacogenomics.,Genomics,,
+FISH,Fluorescence In Situ Hybridization,"A cytogenetic technique using fluorescent probes that bind to specific chromosomal regions. Used to detect gene amplifications, deletions, and translocations.",Cytogenetics,,
+ELISA,Enzyme-Linked Immunosorbent Assay,"A plate-based assay technique designed for detecting and quantifying substances such as peptides, proteins, antibodies, and hormones.",Immunology,ISO 7864,EIA
+CLIA,Chemiluminescence Immunoassay,An immunoassay technique that uses chemiluminescent labels to detect analytes. Offers high sensitivity and is widely used on automated analyzers.,Immunology,,chemiluminescent immunoassay
+LFA,Lateral Flow Assay,A paper-based point-of-care diagnostic device that detects target analytes via antibody-antigen interaction. Used in rapid tests for infectious diseases and pregnancy.,Immunology,,rapid test;lateral flow immunoassay
+IgG,Immunoglobulin G,The most abundant antibody isotype in human blood. Provides long-term immunity and is used as a marker of past infection or vaccination response.,Immunology,,
+IgM,Immunoglobulin M,The first antibody produced in response to an infection. Elevated IgM typically indicates acute or recent infection.,Immunology,,
+CRP,C-Reactive Protein,"An acute-phase protein produced by the liver in response to inflammation. Used as a biomarker for infection, inflammatory disease, and cardiovascular risk.",Clinical Chemistry,,c-reactive protein
+HbA1c,Glycated Haemoglobin,A measure of average blood glucose levels over the preceding 2–3 months. Standard diagnostic and monitoring test for diabetes mellitus.,Clinical Chemistry,IFCC / NGSP,A1c;glycohaemoglobin
+PSA,Prostate-Specific Antigen,A protein produced by prostate gland cells. Used as a screening biomarker for prostate cancer and to monitor treatment response.,Oncology,,
+troponin,Cardiac Troponin,A cardiac biomarker released into the bloodstream when heart muscle is damaged. High-sensitivity troponin assays are the gold standard for myocardial infarction diagnosis.,Clinical Chemistry,,TnI;TnT
+LDL,Low-Density Lipoprotein,Lipoprotein that transports cholesterol in the blood. Elevated LDL is a major risk factor for cardiovascular disease.,Clinical Chemistry,,
+ctDNA,Circulating Tumour DNA,Cell-free tumour-derived DNA fragments found in the bloodstream. Used as a liquid biopsy biomarker for cancer detection and monitoring.,Oncology,,circulating tumor DNA;liquid biopsy marker
+TMB,Tumour Mutational Burden,A biomarker measuring the total number of somatic mutations per megabase in a tumour genome. High TMB predicts response to immunotherapy.,Oncology,FDA guidance 2020,tumor mutational burden
+PD-L1,Programmed Death-Ligand 1,A protein expressed on tumour cells that binds to the PD-1 receptor on T cells to suppress immune responses. A companion diagnostic target for checkpoint inhibitor therapy.,Oncology,FDA companion diagnostics,programmed death ligand 1
+Amyloid Beta,,A peptide of 36–43 amino acids that is the main component of amyloid plaques in the brains of patients with Alzheimer's disease.,Neurology,,
+Tau,,A microtubule-associated protein that becomes hyperphosphorylated in tauopathies such as Alzheimer's disease and frontotemporal dementia.,Neurology,,
+APOE,Apolipoprotein E,A lipoprotein involved in lipid transport. The APOE ε4 allele is the strongest genetic risk factor for late-onset Alzheimer's disease.,Neurology,,apolipoprotein E
+MS,Mass Spectrometry,An analytical technique that measures the mass-to-charge ratio of ions. Used to identify and quantify molecules in complex biological samples.,Analytical Chemistry,ISO 20387,mass spec;MS analysis
+MRI,Magnetic Resonance Imaging,A non-invasive imaging technique using strong magnetic fields and radio waves to generate detailed images of organs and tissues without ionising radiation.,Medical Imaging,,
+CT,Computed Tomography,An imaging modality that uses X-rays and computer processing to create cross-sectional images of the body. Also known as a CAT scan.,Medical Imaging,,CAT scan;computed axial tomography
+PET,Positron Emission Tomography,A nuclear medicine functional imaging technique that produces 3D images of metabolic processes. Commonly combined with CT (PET-CT) for oncology staging.,Medical Imaging,,
+LOD,Limit of Detection,The lowest amount of an analyte that can be reliably distinguished from the absence of that analyte. A fundamental analytical performance characteristic.,Analytical,CLSI EP17,detection limit;analytical sensitivity
+LOQ,Limit of Quantitation,The lowest concentration at which an analyte can be quantitatively determined with acceptable precision and accuracy. Typically higher than the LOD.,Analytical,CLSI EP17,quantitation limit
+AMR,Analytical Measurement Range,The range of analyte concentrations that a method can directly measure without any modification. Equivalent to the reportable range in clinical chemistry.,Analytical,CLSI EP06,
+CV,Coefficient of Variation,"A measure of relative precision expressed as the ratio of standard deviation to the mean, usually as a percentage. Used to compare assay variability across different concentration levels.",Statistics,ISO 5725,coefficient of variation;%CV
+Sensitivity,Diagnostic Sensitivity,The ability of a test to correctly identify individuals with the target condition (true positive rate). Calculated as TP / (TP + FN).,Clinical Performance,ISO 20916,true positive rate;recall
+Specificity,Diagnostic Specificity,The ability of a test to correctly identify individuals without the target condition (true negative rate). Calculated as TN / (TN + FP).,Clinical Performance,ISO 20916,true negative rate
+PPV,Positive Predictive Value,"The probability that a person with a positive test result truly has the condition. Dependent on test sensitivity, specificity, and disease prevalence.",Clinical Performance,ISO 20916,positive predictive value
+NPV,Negative Predictive Value,"The probability that a person with a negative test result truly does not have the condition. Dependent on test sensitivity, specificity, and disease prevalence.",Clinical Performance,ISO 20916,negative predictive value
+ROC,Receiver Operating Characteristic,A graphical plot of diagnostic test sensitivity versus 1-specificity at various threshold settings. The area under the ROC curve (AUC) summarises overall discriminatory ability.,Clinical Performance,,ROC curve;AUC
+AUC,Area Under the Curve,A measure of a diagnostic test's discriminatory ability derived from the ROC curve. Ranges from 0.5 (no discrimination) to 1.0 (perfect discrimination).,Clinical Performance,,
+QC,Quality Control,Materials and procedures used to monitor assay performance and detect systematic or random errors before patient results are reported.,Laboratory,ISO 15189:2022,
+PT,Proficiency Testing,External quality assessment program in which samples are distributed to multiple laboratories to assess the comparability of results. Required for laboratory accreditation.,Laboratory,ISO 17043,
+IVD,In Vitro Diagnostic,Medical devices and accessories intended to be used in vitro for examination of specimens derived from the human body.,Regulatory,EU IVD Regulation 2017/746,
+IVDR,In Vitro Diagnostic Regulation,"EU Regulation 2017/746 replacing the former IVD Directive. Introduces stricter requirements for clinical evidence, post-market surveillance, and notified body review for IVDs.",Regulatory,EU IVDR 2017/746,
+MDR,Medical Device Regulation,EU Regulation 2017/745 governing the placing on the market and putting into service of medical devices in the European Union.,Regulatory,EU MDR 2017/745,
+FDA,Food and Drug Administration,"United States federal agency responsible for protecting public health by regulating medical devices, drugs, and biologics.",Regulatory,FDA.gov,
+EMA,European Medicines Agency,"The European Union agency responsible for the scientific evaluation, supervision, and safety monitoring of medicines for human and veterinary use.",Regulatory,,
+CE,Conformité Européenne,"CE marking indicates that a product meets EU safety, health, and environmental requirements. Required for IVD devices sold in the European Economic Area.",Regulatory,EU IVD Regulation 2017/746,CE mark;CE marking
+IFU,Instructions For Use,"Documentation that accompanies a medical device explaining intended purpose, correct use, contraindications, warnings, and precautions.",Regulatory,EU MDR 2017/745,instructions for use
+UDI,Unique Device Identification,A system for assigning a unique code to medical devices to improve traceability across the supply chain. Required under EU MDR/IVDR and FDA regulations.,Regulatory,EU MDR 2017/745 / FDA UDI Rule,
+DoC,Declaration of Conformity,"A document in which the manufacturer states that a product conforms to all applicable EU regulations, enabling CE marking.",Regulatory,EU MDR 2017/745,
+PMS,Post-Market Surveillance,A proactive system for collecting and reviewing experience gained from medical devices placed on the market. Required under EU MDR and IVDR.,Regulatory,EU MDR 2017/745 Annex III,
+PMCF,Post-Market Clinical Follow-up,"A continuous process of evaluating clinical data from a marketed device to confirm safety, performance, and clinical benefit. Part of PMS under EU MDR.",Regulatory,EU MDR 2017/745 Annex XIV,
+EUDAMED,European Database on Medical Devices,"The EU central database for registration and transparency of medical devices, clinical investigations, certificates, and vigilance data.",Regulatory,EU MDR 2017/745,
+GLP,Good Laboratory Practice,A set of principles that ensure the quality and integrity of non-clinical laboratory studies submitted to regulatory authorities.,Regulatory,OECD GLP principles,good laboratory practice
+ICH,International Council for Harmonisation,International body that brings together regulatory authorities and pharmaceutical industry to harmonise technical requirements for pharmaceutical products.,Regulatory,ICH guidelines,
+SOP,Standard Operating Procedure,A documented step-by-step instruction for carrying out routine operations consistently. Required for quality management in laboratory settings.,Quality,ISO 13485:2016,
+CAPA,Corrective and Preventive Action,A process for investigating root causes of non-conformances and implementing actions to prevent recurrence or occurrence. Core to ISO 13485 QMS.,Quality,ISO 13485:2016,
+GMP,Good Manufacturing Practice,A system of regulations for ensuring that products are consistently produced and controlled according to quality standards. Required for medical device manufacturers.,Quality,FDA 21 CFR Part 820 / ISO 13485,
+QMS,Quality Management System,"An organized system of documented processes, procedures, and responsibilities for achieving quality policies and objectives. ISO 13485 is the standard for medical device QMS.",Quality,ISO 13485:2016,
+DHF,Design History File,A compilation of records that describes the design history of a finished device. Required under FDA 21 CFR Part 820.,Quality,FDA 21 CFR 820.30,
+DHR,Device History Record,Records demonstrating that a device was manufactured in accordance with the Device Master Record (DMR). Required under FDA 21 CFR Part 820.,Quality,FDA 21 CFR 820.184,
+DMR,Device Master Record,A compilation of records containing the procedures and specifications for a finished device. The manufacturing equivalent of a recipe book.,Quality,FDA 21 CFR 820.181,
+NCR,Non-Conformance Report,"A formal document raised when a product, process, or service fails to meet specified requirements. Typically triggers a CAPA process.",Quality,ISO 13485:2016,
+OOS,Out-of-Specification,A test result that falls outside established acceptance criteria. Requires investigation and documented disposition before the product can be released or rejected.,Quality,,
+Limit of detection,LoD,Lowest analyte level a method can detect with a defined probability under specified conditions.,Analytical performance,CLSI EP17; assay validation guidance,detection limit
+Limit of quantitation,LoQ,Lowest analyte level that can be quantified with predefined acceptable precision and bias.,Analytical performance,CLSI EP17,LOQ; quantitation limit
+Limit of blank,LoB,Upper expected limit of results from blank samples under a defined statistical procedure.,Analytical performance,CLSI EP17,LoB
+Analytical sensitivity,,Ability to detect small amounts of the intended analyte; often characterized by detection capability.,Analytical performance,CLSI; assay validation guidance,
+Analytical specificity,,Ability to detect or measure the intended analyte without unacceptable cross-reactivity or interference.,Analytical performance,CLSI; assay validation guidance,
+Clinical sensitivity,,Proportion of people with the target condition who test positive in a defined study population.,Clinical performance,Diagnostic accuracy methodology,true-positive rate
+Clinical specificity,,Proportion of people without the target condition who test negative in a defined study population.,Clinical performance,Diagnostic accuracy methodology,true-negative rate
+Positive predictive value,PPV,Proportion of positive results that are true positives in the tested population; depends on prevalence.,Clinical performance,Diagnostic accuracy methodology,PPV
+Negative predictive value,NPV,Proportion of negative results that are true negatives in the tested population; depends on prevalence.,Clinical performance,Diagnostic accuracy methodology,NPV
+Positive percent agreement,PPA,Proportion of comparator-positive specimens that test positive by the candidate method when a definitive gold standard is not used.,Clinical performance,FDA diagnostic performance guidance,PPA
+Negative percent agreement,NPA,Proportion of comparator-negative specimens that test negative by the candidate method when a definitive gold standard is not used.,Clinical performance,FDA diagnostic performance guidance,NPA
+Overall percent agreement,OPA,Proportion of specimens for which candidate and comparator classifications match.,Clinical performance,FDA diagnostic performance guidance,OPA
+Likelihood ratio positive,LR+,Ratio of the probability of a positive result in people with the condition to that in people without it.,Clinical performance,Diagnostic accuracy methodology,positive likelihood ratio
+Likelihood ratio negative,LR-,Ratio of the probability of a negative result in people with the condition to that in people without it.,Clinical performance,Diagnostic accuracy methodology,negative likelihood ratio
+Receiver operating characteristic,ROC,Curve showing sensitivity versus false-positive rate across diagnostic thresholds.,Statistics,Diagnostic accuracy methodology,ROC curve
+Area under the curve,AUC,"Summary measure of discrimination, often calculated from a ROC curve.",Statistics,Diagnostic accuracy methodology,AUROC
+Confidence interval,CI,An interval expressing uncertainty around an estimate under a specified statistical method.,Statistics,Biostatistics references,confidence limits
+Repeatability,,Precision under the same operating conditions over a short interval.,Analytical performance,ISO 5725; CLSI precision guidance,within-run precision
+Reproducibility,,"Precision under changed conditions such as different sites, operators, instruments, or time periods.",Analytical performance,ISO 5725; CLSI precision guidance,between-laboratory precision
+Bias,,Systematic difference between a measurement result and an accepted reference value.,Analytical performance,ISO 5725; CLSI EP09,systematic error
+Measurement uncertainty,MU,Parameter describing the dispersion of values reasonably attributable to a measured quantity.,Analytical performance,ISO/IEC Guide 98-3; ISO 15189,
+Reference interval,,Range of results expected for a defined reference population and method; distinct from a clinical decision limit.,Clinical laboratory,CLSI EP28,normal range
+Clinical decision limit,,Threshold associated with a defined clinical action or risk category; not necessarily a population reference interval.,Clinical laboratory,Clinical laboratory references,decision threshold
+Calibration,,Operation establishing the relationship between instrument response and assigned calibrator values.,Laboratory operations,ISO 15189; metrology guidance,
+Calibrator,,Material with an assigned value used to establish or verify measurement response.,Laboratory operations,ISO 17511; metrology guidance,calibration material
+Internal quality control,IQC,Routine controls used to monitor analytical performance over time.,Quality control,ISO 15189; CLSI guidance,internal QC
+External quality assessment,EQA,External comparison program used to evaluate laboratory performance against peers or assigned targets.,Quality control,ISO 15189; proficiency testing guidance,proficiency testing; PT
+Levey-Jennings chart,,Control chart plotting QC results over time against a mean and standard-deviation limits.,Quality control,Clinical laboratory QC references,
+Westgard rules,,Statistical decision rules used to interpret QC results and detect potential analytical errors.,Quality control,Clinical laboratory QC references,Westgard multirules
+Pre-analytical phase,,"Processes before measurement, including collection, labeling, transport, and specimen preparation.",Laboratory operations,ISO 15189,preanalytical phase
+Analytical phase,,Stage in which the specimen is measured or analyzed.,Laboratory operations,ISO 15189,analytic phase
+Post-analytical phase,,"Processes after measurement, including review, reporting, interpretation, and communication.",Laboratory operations,ISO 15189,postanalytical phase
+Specimen rejection criteria,,"Defined conditions under which a specimen is unsuitable for testing, such as mislabeling or inadequate volume.",Laboratory operations,ISO 15189; laboratory SOPs,sample rejection criteria
+Chain of custody,,"Documented control of a specimen from collection through transfer, testing, storage, and disposition.",Laboratory operations,Laboratory SOPs,
+Hemolysis,,Rupture of red blood cells releasing intracellular contents that may interfere with selected measurements.,Clinical chemistry,Clinical chemistry references,hemolyzed specimen
+Lipemia,,Excess lipid particles that cause turbidity and may interfere with some methods.,Clinical chemistry,Clinical chemistry references,lipemic specimen
+Icterus,,Bilirubin-associated sample coloration that may interfere with some assays depending on method and concentration.,Clinical chemistry,Clinical chemistry references,icteric specimen
+Complete blood count,CBC,"Hematology panel including red cells, white cells, hemoglobin, hematocrit, and platelets.",Hematology,Clinical laboratory references,full blood count; FBC
+Mean corpuscular volume,MCV,"Average red blood cell volume, used in classifying anemia.",Hematology,Clinical laboratory references,MCV
+Platelet count,PLT,Number of platelets in a defined blood volume.,Hematology,Clinical laboratory references,thrombocyte count
+Prothrombin time,PT,Coagulation test assessing selected clotting pathways; commonly used in anticoagulation monitoring.,Coagulation,Clinical laboratory references,PT
+International normalized ratio,INR,"Standardized expression of prothrombin time, particularly for vitamin K antagonist monitoring.",Coagulation,WHO; clinical laboratory references,INR
+Activated partial thromboplastin time,aPTT,Coagulation test used to assess selected clotting pathways and support evaluation of bleeding disorders or heparin therapy.,Coagulation,Clinical laboratory references,APTT; PTT
+Basic metabolic panel,BMP,"Common chemistry panel including selected electrolytes, glucose, and kidney-related measurements; contents vary by setting.",Clinical chemistry,Clinical laboratory references,BMP
+Comprehensive metabolic panel,CMP,"Chemistry panel including electrolytes, glucose, kidney-related and selected liver/protein measurements.",Clinical chemistry,Clinical laboratory references,CMP
+Creatinine,,Blood or urine analyte used with other information to assess kidney function.,Clinical chemistry,Clinical laboratory references,serum creatinine
+Estimated glomerular filtration rate,eGFR,Estimate of kidney filtration calculated using a validated equation and patient measurements.,Clinical chemistry,KDIGO; clinical laboratory references,eGFR
+Alanine aminotransferase,ALT,Enzyme measured in blood as a marker of liver cell injury.,Clinical chemistry,Clinical laboratory references,GPT; SGPT
+Aspartate aminotransferase,AST,"Enzyme that may increase with liver, muscle, or other tissue injury; AST also means antimicrobial susceptibility testing in microbiology.",Clinical chemistry,Clinical laboratory references,GOT; SGOT
+Alkaline phosphatase,ALP,Enzyme measured in selected evaluations of hepatobiliary and bone conditions.,Clinical chemistry,Clinical laboratory references,alk phos
+C-reactive protein,CRP,Acute-phase protein measured as a nonspecific marker of inflammation.,Clinical chemistry,Clinical laboratory references,CRP
+Procalcitonin,PCT,Biomarker that may support evaluation of bacterial infection in selected contexts; not definitive alone.,Clinical chemistry,Clinical laboratory references,PCT
+Hemoglobin A1c,HbA1c,"Measurement reflecting average glycemia over roughly the preceding two to three months, with known interpretive limitations.",Clinical chemistry,NGSP; clinical laboratory references,A1C; glycated hemoglobin
+Thyroid-stimulating hormone,TSH,Pituitary hormone commonly measured as an initial test of thyroid function.,Endocrinology,Clinical laboratory references,thyrotropin
+Urinalysis,UA,"Urine assessment that may include physical appearance, chemical strip testing, and microscopy.",Urinalysis,Clinical laboratory references,urine analysis
+Urine culture,,Culture-based test to detect and identify organisms in urine.,Microbiology,Clinical microbiology references,urine C&S
+Blood culture,,Blood incubated in culture media to detect bloodstream infection; collection technique affects contamination risk.,Microbiology,Clinical microbiology references,
+Culture and susceptibility,C&S,"Workflow that grows an organism, identifies it, and tests susceptibility to selected antimicrobials.",Microbiology,CLSI M100; EUCAST,culture and sensitivity
+Antimicrobial susceptibility testing,AST,"Testing that determines how an isolate responds to antimicrobial agents. In chemistry, AST can also mean aspartate aminotransferase.",Microbiology,CLSI M100; EUCAST methods,antibiotic susceptibility testing
+Minimum inhibitory concentration,MIC,Lowest antimicrobial concentration preventing visible microbial growth under specified test conditions.,Microbiology,CLSI; EUCAST,MIC
+Breakpoint,,"Interpretive threshold used to categorize susceptibility for a defined organism, drug, method, and standard version.",Microbiology,CLSI; EUCAST,clinical breakpoint
+Antimicrobial resistance,AMR,Ability of a microorganism to survive or grow despite exposure to an antimicrobial that would ordinarily inhibit it.,Microbiology,WHO; CDC,drug resistance
+MALDI-TOF mass spectrometry,MALDI-TOF MS,Mass-spectrometry method used to identify microorganisms from characteristic protein profiles.,Microbiology,Clinical microbiology references,MALDI-TOF
+Gram stain,,Differential staining method that broadly classifies bacteria by staining characteristics and morphology.,Microbiology,Clinical microbiology references,Gram's stain
+Acid-fast stain,AFB stain,"Staining method used to detect acid-fast organisms, including mycobacteria, in appropriate specimens.",Microbiology,Clinical microbiology references,Ziehl-Neelsen stain
+Colony-forming unit,CFU,Unit estimating viable microorganisms capable of forming colonies under defined culture conditions.,Microbiology,Microbiology references,CFU
+Reverse transcription PCR,RT-PCR,Method in which RNA is converted to complementary DNA before amplification; distinct from real-time PCR despite common naming confusion.,Molecular diagnostics,Molecular diagnostics references,reverse-transcription PCR
+Internal control,IC,"Control included in a test workflow to monitor selected steps such as extraction, amplification, or detection.",Molecular diagnostics,Molecular diagnostics validation guidance,internal process control
+Extraction control,,Control used to monitor nucleic-acid extraction and help identify extraction failures or contamination.,Molecular diagnostics,Molecular diagnostics validation guidance,process control
+No-template control,NTC,"PCR control with no target nucleic acid, used to detect contamination in reagents or reaction setup.",Molecular diagnostics,Molecular diagnostics references,negative amplification control
+Cycle threshold,Ct,PCR cycle at which fluorescence crosses a defined threshold; interpretation and comparison are assay-dependent.,Molecular diagnostics,MIQE guidelines; assay IFU,Cq; quantification cycle
+Amplification efficiency,,Measure of how effectively target nucleic acid is amplified during each PCR cycle.,Molecular diagnostics,MIQE guidelines,PCR efficiency
+Melt curve analysis,,Analysis of fluorescence during controlled heating to assess amplification product characteristics in selected PCR methods.,Molecular diagnostics,Molecular diagnostics references,melting curve
+Nucleic acid amplification test,NAAT,Diagnostic test detecting target DNA or RNA using amplification or related molecular methods.,Molecular diagnostics,CDC; molecular diagnostics references,molecular test
+Loop-mediated isothermal amplification,LAMP,Nucleic-acid amplification method performed at a constant temperature using multiple primers.,Molecular diagnostics,Molecular diagnostics references,LAMP
+Lateral flow assay,LFA,Rapid test format in which a liquid sample migrates along a membrane and produces a visible or instrument-read signal.,Point-of-care testing,Clinical diagnostics references,lateral-flow test; rapid test
+Point-of-care testing,POCT,Testing performed near the patient rather than solely in a central laboratory.,Point-of-care testing,ISO 22870; ISO 15189,near-patient testing
+Chemiluminescent immunoassay,CLIA,Immunoassay using a chemiluminescent reaction to generate a measurable signal.,Immunology,Clinical diagnostics references,chemiluminescence immunoassay
+Electrochemiluminescence immunoassay,ECLIA,Immunoassay measuring light generated by an electrochemically initiated luminescence reaction.,Immunology,Clinical diagnostics references,ECL assay
+Antigen test,,"Test designed to detect a component of a pathogen or other target, often through immunochemical recognition.",Immunology,Clinical diagnostics references,antigen assay
+Antibody test,,"Test detecting antibodies; results may reflect prior exposure, vaccination, or current immune response depending on context.",Immunology,Clinical diagnostics references,serology test
+Immunoglobulin M,IgM,Antibody class often produced early in an immune response; interpretation depends on assay and clinical context.,Immunology,Clinical immunology references,IgM
+Immunoglobulin G,IgG,Antibody class commonly associated with longer-term immune responses; a positive result does not alone establish timing or active infection.,Immunology,Clinical immunology references,IgG
+Antinuclear antibody,ANA,Autoantibody test used in evaluating selected systemic autoimmune diseases; a positive result is not diagnostic by itself.,Immunology,Clinical immunology references,ANA
+Rheumatoid factor,RF,Antibody measurement that may support evaluation of rheumatoid arthritis and other conditions but is not disease-specific.,Immunology,Clinical immunology references,RF
+Flow cytometry,,Technique measuring physical or fluorescent characteristics of individual cells or particles as they pass through an instrument.,Hematology,Clinical laboratory references,flow cytometric analysis
+Immunohistochemistry,IHC,Method using antibodies to detect specific antigens in tissue sections.,Pathology,Pathology references,IHC
+Cytology,,Study or diagnostic examination of individual cells or cell samples.,Pathology,Pathology references,cytological examination
+Histopathology,,Microscopic examination of tissue to assess disease-related structural changes.,Pathology,Pathology references,surgical pathology
+Companion diagnostic,CDx,Test essential for safe and effective use of a corresponding therapeutic product in the intended patient population.,Oncology,FDA companion diagnostic guidance,CDx
+Circulating tumor DNA,ctDNA,Tumor-derived DNA fragments found in blood or other body fluids and studied for selected cancer applications.,Oncology,Oncology molecular diagnostics references,ctDNA
+Variant of uncertain significance,VUS,Genetic variant for which available evidence is insufficient to classify as benign or pathogenic under a defined framework.,Genomics,ACMG/AMP guidance,VUS
+Variant allele fraction,VAF,Proportion of sequencing reads at a genomic position that contain a specified variant.,Genomics,Genomics laboratory references,VAF
+Copy number variation,CNV,Genomic alteration involving deletion or duplication of DNA segments relative to a reference genome.,Genomics,Genomics laboratory references,copy number variant
+Whole exome sequencing,WES,Sequencing focused on protein-coding regions of the genome for selected genetic investigations.,Genomics,Genomics laboratory references,exome sequencing
+Targeted gene panel,,Sequencing assay designed to analyze a defined set of genes associated with a disease or clinical question.,Genomics,Genomics laboratory references,gene panel
+Variant calling,,Process of identifying candidate genomic differences from sequencing data relative to a reference sequence.,Genomics,Genomics bioinformatics references,variant detection
+Reference genome,,Representative genome sequence used as a coordinate framework for aligning and interpreting sequencing data.,Genomics,Genomics references,genome reference
+Read depth,,"Number of sequencing reads covering a genomic position or region, used to assess coverage and confidence.",Genomics,Sequencing quality references,coverage depth
+Analytical validation,,Evidence that a method meets predefined analytical performance requirements for its intended use.,Analytical performance,CLSI; ISO 15189,method validation
+Clinical validation,,Evidence that a test's performance supports its intended clinical use in the target population and setting.,Clinical performance,FDA diagnostic guidance; EU IVDR,clinical performance validation
+Verification,,Documented confirmation that a method or system meets specified requirements in the user's setting.,Quality,ISO 15189; applicable regulations,method verification
+Intended use,,"Purpose, target population, user, specimen, setting, and clinical role for which a diagnostic product is designed and evaluated.",Regulatory,FDA; IVDR,intended purpose
+Instructions for use,IFU,"Manufacturer-provided information describing intended use, operating procedures, limitations, warnings, and other required information.",Regulatory,Applicable device regulations,package insert
+In vitro diagnostic device,IVD,"Medical device intended to examine human-derived specimens to provide diagnostic, monitoring, or related information.",Regulatory,EU IVDR; FDA IVD guidance,in vitro diagnostic
+Research use only,RUO,Designation for products intended for research use and not diagnostic procedures; it does not itself establish regulatory compliance.,Regulatory,FDA applicable guidance,RUO
+Investigational use only,IUO,Labeling designation for products being investigated and not represented for routine diagnostic use; exact rules depend on jurisdiction.,Regulatory,FDA applicable regulations,IUO
+Design controls,,"Structured process for planning, documenting, reviewing, verifying, and validating medical-device design activities.",Quality,ISO 13485; FDA QMSR,design and development controls
+Risk management,,"Systematic identification, evaluation, control, and monitoring of risks throughout a device lifecycle.",Quality,ISO 14971,device risk management
+Usability engineering,,Process for analyzing and reducing use-related risks and supporting safe and effective device use.,Quality,IEC 62366-1,human factors engineering
+Software as a medical device,SaMD,Software intended for medical purposes that performs those purposes without being part of a hardware medical device.,Regulatory,IMDRF SaMD framework; applicable regulations,SaMD
+Design verification,,Objective evidence that design outputs meet specified design input requirements.,Quality,ISO 13485; FDA QMSR,verification testing
+Design validation,,Objective evidence that a device meets user needs and intended uses under defined conditions.,Quality,ISO 13485; FDA QMSR,validation testing
+Change control,,"Documented process for evaluating, approving, implementing, and reviewing changes to products, processes, software, or documents.",Quality,ISO 13485; QMS procedures,configuration change control
+Traceability matrix,,"Structured mapping between requirements and related design, risk, verification, validation, and test evidence.",Quality,Systems engineering; medical-device QMS,requirements traceability matrix; RTM
+Complaint handling,,"Documented process for receiving, evaluating, investigating, and responding to product complaints.",Quality,Applicable medical-device regulations,complaint management
+Post-market surveillance,PMS,Activities to collect and evaluate information about a device after market placement.,Regulatory,EU MDR/IVDR; FDA requirements,postmarket surveillance
+Unique device identification,UDI,"System for identifying medical devices through device and production identifiers, as applicable.",Regulatory,FDA UDI; EU MDR/IVDR,UDI
+Clinical Laboratory Improvement Amendments,CLIA,"U.S. federal requirements governing many laboratories that test human specimens for health assessment or diagnosis, subject to scope and exemptions.",Regulatory,CMS CLIA,CLIA
+College of American Pathologists,CAP,Organization that accredits laboratories and provides proficiency testing and laboratory quality programs.,Regulatory,CAP laboratory accreditation programs,CAP accreditation
+Laboratory information system,LIS,"Software used to manage laboratory workflows, orders, specimens, results, quality processes, and reporting.",Healthcare IT,HL7; laboratory informatics references,LIS
+Laboratory information management system,LIMS,"Software used to track samples, workflows, results, and metadata, often in research or industrial laboratories.",Healthcare IT,Laboratory informatics references,LIMS
+Fast Healthcare Interoperability Resources,FHIR,HL7 standard for exchanging healthcare information using defined resources and modern web-based approaches.,Healthcare IT,HL7 FHIR specification,FHIR
+Logical Observation Identifiers Names and Codes,LOINC,"Terminology standard for identifying laboratory tests, clinical observations, and related measurements.",Healthcare IT,LOINC official terminology,LOINC
+Systematized Nomenclature of Medicine Clinical Terms,SNOMED CT,Clinical terminology used to represent concepts consistently in electronic health information.,Healthcare IT,SNOMED International,SNOMED
+Electronic signature,,"Electronic process or symbol used to sign a record, subject to applicable identity, intent, and record-control requirements.",Regulatory,21 CFR Part 11; applicable regulations,e-signature
+21 CFR Part 11,,U.S. FDA regulations addressing criteria for trustworthy and reliable electronic records and electronic signatures within their scope.,Regulatory,FDA 21 CFR Part 11,Part 11
+Cybersecurity risk management,,"Identification and mitigation of cybersecurity risks affecting device safety, effectiveness, data integrity, or availability.",Privacy and security,FDA medical-device cybersecurity guidance,medical device cybersecurity
+Audit trail,,Chronological record of relevant system actions and changes supporting traceability and accountability.,Healthcare IT,FDA electronic records guidance; QMS procedures,audit log
+Protected health information,PHI,Individually identifiable health information protected under applicable HIPAA rules when held or transmitted by covered entities or business associates.,Privacy and security,HHS HIPAA guidance,PHI
+Role-based access control,RBAC,Access-control approach granting permissions based on assigned roles and responsibilities.,Privacy and security,Security engineering references,RBAC
+Device telemetry,,Automated collection and transmission of instrument measurements and status data for monitoring or analysis.,Diagnostic instruments,Device engineering references,telemetry
+Mean time between failures,MTBF,Reliability metric representing average operating time between failures for a repairable system under stated assumptions.,Diagnostic instruments,Reliability engineering references,MTBF
+Mean time to repair,MTTR,Metric representing average time required to restore a failed system to operation; definition should be stated.,Diagnostic instruments,Reliability engineering references,MTTR
+Preventive maintenance,PM,Planned maintenance intended to reduce failure likelihood and preserve instrument performance.,Diagnostic instruments,Manufacturer service documentation; QMS procedures,scheduled maintenance
+Instrument middleware,,Software connecting laboratory analyzers with laboratory information systems and possibly routing results or applying rules.,Healthcare IT,Laboratory informatics references,analyzer middleware
+Turnaround time,TAT,"Elapsed time between defined start and end points for a laboratory process, such as receipt to result release.",Laboratory operations,Laboratory quality management references,TAT
+Reflex testing,,Additional testing automatically initiated when an initial result meets predefined criteria.,Laboratory operations,Laboratory testing protocols,reflex assay
+Critical result,,Result considered to indicate a potentially life-threatening condition and requiring prompt communication under laboratory policy.,Laboratory operations,ISO 15189; laboratory policies,panic value; critical value
+Autoverification,,Automated release of results meeting predefined rules and quality criteria without manual review of each result.,Laboratory operations,Laboratory informatics references,autovalidation
+Method comparison,,Study comparing results from a candidate method with a comparator method across suitable specimens.,Analytical performance,CLSI EP09,method-comparison study
+Precision study,,Study designed to estimate variability under defined repeatability or reproducibility conditions.,Analytical performance,CLSI EP05,precision evaluation
+Linearity,,Extent to which measured results are proportional to analyte concentration over a stated interval.,Analytical performance,CLSI EP06,linearity assessment
+Lot-to-lot verification,,Documented check that a new reagent or consumable lot performs acceptably before routine use.,Quality control,CLSI; reagent verification guidance,reagent lot verification
+Computer system validation,CSV,Documented evidence that a computerized system is fit for intended use and meets applicable requirements.,Quality,GAMP; applicable regulatory guidance,CSV
+Software bill of materials,SBOM,"Inventory of software components and dependencies included in a product, supporting vulnerability and supply-chain risk management.",Software quality,NTIA; FDA cybersecurity guidance,SBOM
+Data integrity,,"Completeness, consistency, accuracy, and reliability of data throughout its lifecycle.",Quality,FDA data integrity guidance; ALCOA+,data reliability
+ALCOA+,,"Data integrity principles: attributable, legible, contemporaneous, original, accurate, plus complete, consistent, enduring, and available.",Quality,Data integrity guidance,ALCOA plus
+Emergency use authorization,EUA,Regulatory mechanism that may permit use of certain medical products during a declared emergency when statutory criteria are met.,Regulatory,FDA EUA guidance,EUA
+Premarket notification,510(k),U.S. FDA submission pathway for certain devices to demonstrate substantial equivalence to a legally marketed predicate.,Regulatory,FDA 510(k) guidance,510(k) submission
+Premarket approval,PMA,U.S. FDA pathway requiring evidence of safety and effectiveness for certain higher-risk medical devices.,Regulatory,FDA PMA guidance,PMA
+EU In Vitro Diagnostic Regulation,IVDR,"EU Regulation 2017/746 governing in vitro diagnostic medical devices, including classification, conformity assessment, and post-market obligations.",Regulatory,Regulation (EU) 2017/746,EU IVDR
+EU Medical Device Regulation,MDR,EU Regulation 2017/745 governing medical devices other than IVDs; MDR can have other meanings in laboratories.,Regulatory,Regulation (EU) 2017/745,EU MDR
+Conformity assessment,,Process demonstrating that a product meets applicable regulatory requirements before market placement or use.,Regulatory,EU MDR/IVDR; applicable regulations,conformity evaluation
+Performance evaluation report,PER,Report documenting evidence for an IVD's performance evaluation under the applicable regulatory framework.,Regulatory,EU IVDR,PER
+Clinical evidence,,Body of information supporting clinical performance and clinical validity for a diagnostic product's intended purpose.,Clinical performance,FDA; EU IVDR; diagnostic evidence guidance,clinical performance evidence
+Clinical utility,,Extent to which use of a test leads to improved health outcomes or meaningful clinical decisions in its intended context.,Clinical performance,Diagnostic evidence methodology,clinical usefulness
+Reference method,,Method accepted as suitable for establishing a reference value or classification for a defined measurement or diagnostic comparison.,Analytical performance,Metrology; CLSI method evaluation guidance,reference procedure
+Comparator method,,Method selected as a basis for comparison with a candidate test in a performance evaluation.,Analytical performance,CLSI EP09,comparison method
+Sample size calculation,,Statistical calculation estimating the number of specimens or participants needed for planned precision or power.,Statistics,Biostatistics references,power calculation
+Power analysis,,Method estimating the probability that a study detects a specified effect under its assumptions and design.,Statistics,Biostatistics references,statistical power
+Prevalence,,Proportion of a population with a condition at a specified time or during a defined period.,Statistics,Epidemiology references,disease prevalence
+Spectrum bias,,Bias arising when diagnostic performance is evaluated in a population unlike the intended-use population in severity or characteristics.,Clinical performance,Diagnostic accuracy methodology,spectrum effect
+Verification bias,,Bias occurring when the reference standard is applied differently depending on the index test result.,Clinical performance,Diagnostic accuracy methodology,work-up bias
+Blinding,,Study design practice keeping specified participants or assessors unaware of selected information to reduce bias.,Clinical performance,Clinical study methodology,masking
+Real-world evidence,RWE,"Clinical evidence derived from analysis of real-world data, with strength depending on data quality and study design.",Clinical performance,FDA real-world evidence framework,RWE
+Real-world data,RWD,"Data relating to health status or healthcare delivery collected from sources such as records, claims, registries, or devices.",Clinical performance,FDA real-world evidence framework,RWD
+Companion diagnostic claim,,Defined claim linking a diagnostic test to safe and effective use of a corresponding therapy in a specified population.,Regulatory,FDA companion diagnostic guidance,CDx claim
+Good laboratory practice,GLP,Quality system for nonclinical laboratory studies within its scope; distinct from clinical laboratory accreditation.,Quality,OECD GLP principles; applicable regulations,GLP
+Good clinical practice,GCP,"Ethical and scientific quality standards for designing, conducting, recording, and reporting clinical trials.",Clinical research,ICH E6,GCP
+Good documentation practices,GDP,"Practices supporting accurate, complete, attributable, legible, contemporaneous, and traceable records.",Quality,Data integrity guidance,GDP
+Root cause analysis,RCA,Structured investigation to identify underlying causes of a failure or nonconformance rather than only symptoms.,Quality,Quality management references,RCA
+Failure mode and effects analysis,FMEA,"Prospective method for identifying potential failure modes, effects, and risk-reduction actions.",Quality,ISO 14971; quality engineering references,FMEA
+"Failure mode, effects, and criticality analysis",FMECA,Extension of FMEA that also evaluates the criticality of potential failure modes.,Quality,Reliability engineering references,FMECA
+Design input,,Documented requirement defining what a medical device or system must do or satisfy.,Quality,ISO 13485; FDA QMSR,design requirement
+Design output,,Documented results of design activities evaluated against design inputs and used for production or service.,Quality,ISO 13485; FDA QMSR,design deliverable
+Validation protocol,,"Approved plan specifying validation objectives, methods, acceptance criteria, responsibilities, and required records.",Quality,QMS procedures; applicable standards,validation plan
+Acceptance criteria,,"Predefined measurable conditions that results must satisfy for a test, verification, validation, or release decision to pass.",Quality,QMS procedures; applicable standards,pass criteria
+Nonconformity,,Failure to fulfill a specified requirement.,Quality,ISO 9000; ISO 13485,non-conformance
+Supplier quality,,"Activities for assessing, approving, monitoring, and controlling suppliers whose products or services affect quality.",Quality,ISO 13485; supplier quality procedures,supplier management
+Software verification,,Evidence that software implementation and outputs meet specified requirements and design specifications.,Software quality,IEC 62304; software lifecycle practices,software verification
+Software validation,,Evidence that software satisfies user needs and intended use in its specified environment.,Software quality,IEC 62304; software lifecycle practices,software validation
+Interoperability,,Ability of systems or organizations to exchange information and use the information exchanged effectively.,Healthcare IT,HL7; FHIR; health informatics references,system interoperability
+Health Level Seven,HL7,Standards-development organization whose standards support exchange and integration of health information.,Healthcare IT,HL7 standards,HL7
+Electronic health record,EHR,Digital system containing patient health information and clinical documentation used by authorized care teams.,Healthcare IT,Health IT references,electronic medical record; EMR
+Diagnostic algorithm,,Defined sequence of tests or decision rules used to interpret findings and determine next diagnostic steps.,Clinical laboratory,Clinical testing guidelines,testing algorithm
+False positive,,Positive result in a person or specimen that does not have the target condition or analyte under the reference definition.,Clinical performance,Diagnostic accuracy methodology,false-positive result
+False negative,,Negative result in a person or specimen that has the target condition or analyte under the reference definition.,Clinical performance,Diagnostic accuracy methodology,false-negative result
+Indeterminate result,,Result that does not meet criteria for positive or negative interpretation and requires defined handling.,Clinical performance,Assay IFU,equivocal result
+Invalid result,,Result that fails predefined assay or system validity criteria and should not be interpreted as valid positive or negative.,Clinical performance,Assay IFU,test invalid
+Screening test,,Test used to identify people who may need further assessment; not necessarily diagnostic by itself.,Clinical laboratory,Public health screening guidance,screening assay
+Confirmatory test,,Follow-up test used to establish or rule out an initial screening or preliminary result under a defined algorithm.,Clinical laboratory,Clinical testing guidelines,confirmation assay
+Human papillomavirus,HPV,"Group of viruses, some types associated with cervical and other cancers; testing is used in defined screening and diagnostic pathways.",Molecular diagnostics,WHO; clinical guidelines,HPV
+Respiratory syncytial virus,RSV,"Respiratory virus that can cause significant lower respiratory tract disease, especially in infants and older adults.",Microbiology,CDC; clinical virology references,RSV
+SARS-CoV-2,,Coronavirus responsible for COVID-19; diagnostic methods include nucleic-acid amplification and antigen tests.,Microbiology,CDC; WHO,COVID-19 virus
+Hepatitis B surface antigen,HBsAg,Viral antigen used in testing for hepatitis B infection as part of an appropriate serologic algorithm.,Immunology,CDC; hepatitis testing guidance,HBsAg
+Hepatitis C virus antibody,anti-HCV,Antibody test used in screening for hepatitis C exposure; reactive results generally need follow-up testing for current infection.,Immunology,CDC; hepatitis testing guidance,HCV antibody
+Human immunodeficiency virus antigen/antibody test,HIV Ag/Ab,Combined assay detecting HIV antigen and antibodies; follow-up follows the applicable diagnostic algorithm.,Immunology,CDC; HIV testing guidance,HIV combo test
+C-reactive protein high sensitivity,hs-CRP,High-sensitivity measurement of CRP used in selected cardiovascular risk assessments and other contexts.,Clinical chemistry,Clinical laboratory references,hs-CRP
+B-type natriuretic peptide,BNP,Biomarker used with clinical assessment to support evaluation of heart failure.,Clinical chemistry,Clinical laboratory references,BNP
+N-terminal pro-B-type natriuretic peptide,NT-proBNP,Biomarker used with clinical assessment to support evaluation of heart failure and related conditions.,Clinical chemistry,Clinical laboratory references,NT-proBNP
+Lactate,,"Metabolite measured in blood or other specimens in selected evaluations of perfusion, metabolism, or critical illness.",Clinical chemistry,Clinical laboratory references,lactic acid
+Blood gas analysis,BGA,"Measurement of blood gas and acid-base parameters, often including pH, carbon dioxide, and oxygen-related values.",Clinical chemistry,Clinical laboratory references,arterial blood gas; ABG
+Urine albumin-to-creatinine ratio,UACR,"Urine ratio used to assess albuminuria, particularly in evaluation and monitoring of kidney disease.",Clinical chemistry,KDIGO; clinical laboratory references,ACR
+Fecal immunochemical test,FIT,"Stool test detecting human hemoglobin using antibodies, commonly used in colorectal cancer screening programs.",Clinical laboratory,Clinical screening guidance,FIT
+Celiac serology,,"Blood testing for selected antibodies used in evaluation of celiac disease, interpreted with clinical context and other criteria.",Immunology,Clinical guidelines,celiac antibody testing
+Antimicrobial stewardship,AMS,Coordinated interventions to improve appropriate antimicrobial use and limit resistance.,Microbiology,CDC; WHO,AMS
+Healthcare-associated infection,HAI,Infection acquired while receiving healthcare that was not present or incubating at admission under the applicable definition.,Microbiology,CDC; WHO,nosocomial infection
+Biosafety level,BSL,Containment practices and facility requirements appropriate to risks of work with specified biological agents or materials.,Laboratory safety,CDC/NIH BMBL,BSL
+Personal protective equipment,PPE,"Equipment worn to reduce exposure to hazards, selected according to task and risk assessment.",Laboratory safety,OSHA; biosafety guidance,PPE
+Biological safety cabinet,BSC,"Ventilated enclosure designed to provide defined levels of personnel, product, and environmental protection when used correctly.",Laboratory safety,CDC/NIH BMBL; NSF/ANSI 49,biosafety cabinet
+Chemical safety data sheet,SDS,"Document describing chemical hazards, handling, storage, exposure controls, and emergency measures.",Laboratory safety,OSHA Hazard Communication; GHS,safety data sheet; MSDS
+Cleanroom classification,,Classification of room air cleanliness based on airborne particle concentration limits and measurement methods.,Manufacturing,ISO 14644 series,cleanroom class
+Sterilization,,Validated process intended to render a product free of viable microorganisms to a specified sterility assurance level.,Manufacturing,ISO 11135; ISO 11137; ISO 17665,sterilisation
+Bioburden,,Population of viable microorganisms present on or in a product before a defined microbial reduction or sterilization process.,Manufacturing,ISO 11737 series,microbial load
+Service-level agreement,SLA,Documented agreement defining service expectations and measurable commitments such as availability or response time.,Service operations,Service management references,SLA
+Recovery time objective,RTO,Target maximum time to restore a service or system after disruption.,Service operations,Business continuity references,RTO
+Recovery point objective,RPO,Target maximum acceptable data loss measured in time after a disruption.,Service operations,Business continuity references,RPO
+Software requirements specification,SRS,"Controlled document defining functional, performance, interface, and other software requirements.",Software quality,IEC 62304; software engineering practices,SRS
+Software of unknown provenance,SOUP,Software item already developed and generally available whose development processes or records may not be known; term used in IEC 62304.,Software quality,IEC 62304,SOUP
+Application programming interface,API,Defined interface through which software systems exchange data or invoke functions.,Healthcare IT,Software interface specifications,API
+FHIR Observation resource,,"FHIR resource used to represent measurements and simple assertions, including many laboratory results.",Healthcare IT,HL7 FHIR specification,Observation
+FHIR DiagnosticReport resource,,FHIR resource representing a diagnostic report and potentially grouping observations and findings.,Healthcare IT,HL7 FHIR specification,DiagnosticReport
+ISO 15189,,International standard specifying requirements for quality and competence in medical laboratories.,Regulatory,ISO 15189,medical laboratory quality standard
+ISO 13485,,International standard specifying quality management system requirements for organizations involved in medical devices.,Regulatory,ISO 13485,medical device QMS standard
+ISO 14971,,International standard describing application of risk management to medical devices throughout their lifecycle.,Regulatory,ISO 14971,medical device risk management standard
+IEC 62304,,Standard defining software lifecycle processes for medical device software.,Regulatory,IEC 62304,medical device software lifecycle
+IEC 62366-1,,"Standard addressing usability engineering for medical devices, including analysis and mitigation of use-related risks.",Regulatory,IEC 62366-1,medical device usability standard
+ISO 22870,,Standard specifying requirements for point-of-care testing and intended to be used with ISO 15189.,Regulatory,ISO 22870,POCT standard
+CLSI,,"Clinical and Laboratory Standards Institute, which develops standards and guidelines used in laboratory medicine and diagnostic testing.",Regulatory,CLSI standards catalogue,Clinical and Laboratory Standards Institute
+EUCAST,,"European Committee on Antimicrobial Susceptibility Testing, developing methods and breakpoint tables for susceptibility interpretation.",Microbiology,EUCAST official methods and tables,
+MIQE guidelines,MIQE,Guidelines describing minimum information to report for quantitative real-time PCR experiments to improve transparency and reproducibility.,Molecular diagnostics,MIQE publication,Minimum Information for Publication of Quantitative Real-Time PCR Experiments
+Quality management system regulation,QMSR,"FDA quality management system regulation for medical devices, aligned substantially with ISO 13485:2016; check current FDA guidance for applicability and dates.",Regulatory,FDA QMSR,QMSR
+Post-market performance follow-up,PMPF,Activities to proactively collect and evaluate performance data for an IVD after market placement under applicable IVDR requirements.,Regulatory,EU IVDR,PMPF
+Performance study,,Study designed to establish or confirm analytical or clinical performance of an in vitro diagnostic device.,Clinical performance,EU IVDR; FDA guidance,IVD performance study
+Scientific validity,,Evidence supporting association between an analyte or marker and a clinical condition or physiological state for a defined purpose.,Clinical performance,EU IVDR; diagnostic evidence guidance,
+Electronic laboratory reporting,ELR,Automated transmission of reportable laboratory results from laboratories to public health agencies in a defined format.,Healthcare IT,CDC; HL7 public health reporting references,ELR
+Device fleet,,"Managed set of deployed diagnostic instruments tracked for status, location, maintenance, software version, and service history.",Diagnostic instruments,Asset management and service operations references,instrument fleet
+Device heartbeat,,Periodic signal indicating that a device or service is communicating and responsive.,Diagnostic instruments,Device monitoring practices,heartbeat
+Heartbeat timeout,,Condition in which an expected heartbeat is not received within a defined interval.,Diagnostic instruments,Device monitoring practices,missed heartbeat
+Instrument status,,"Defined state describing equipment availability or condition, such as ready, running, maintenance, or error.",Diagnostic instruments,Manufacturer documentation,device state
+Service ticket,,"Tracked record of a reported service request or problem, including owner, status, priority, and resolution.",Service operations,Service management practices,support ticket
+First-time fix rate,FTFR,Proportion of service incidents resolved during the initial service visit or intervention without a follow-up visit for the same issue.,Service operations,Service management practices,first visit fix rate
+No fault found,NFF,Service outcome in which no reproducible fault is identified under the diagnostic procedures performed.,Service operations,Service management practices,no trouble found
+Field safety corrective action,FSCA,Manufacturer action to prevent or reduce the risk of a serious incident involving a device already made available on the market.,Regulatory,EU MDR/IVDR,FSCA
+Field safety notice,FSN,Manufacturer communication to customers or users describing a field safety corrective action and relevant instructions.,Regulatory,EU MDR/IVDR,FSN
+Design history file,DHF,Compilation of records describing the design history of a finished device under applicable quality-system requirements.,Quality,FDA device quality system requirements,DHF
+Device history record,DHR,Records demonstrating that a finished device or lot was manufactured according to applicable manufacturing requirements.,Quality,FDA device quality system requirements,DHR
+Device master record,DMR,Compilation of records containing procedures and specifications for manufacturing a finished device.,Quality,FDA device quality system requirements,DMR
+Nonconformance report,NCR,"Formal record describing failure to meet requirements and its assessment, disposition, and associated actions.",Quality,ISO 13485; QMS procedures,NCR
+Out of specification,OOS,"Result outside established acceptance criteria or specifications, requiring documented investigation and disposition.",Quality,Quality systems guidance,OOS
+Out of trend,OOT,"Result within specification but deviating from an expected pattern or historical trend, potentially requiring investigation.",Quality,Quality systems guidance,OOT
+Positive control,,"Material expected to produce a positive result, used to demonstrate specified assay functions are working.",Quality control,Assay validation guidance,
+Negative control,,"Material expected to produce a negative result, used to help detect contamination or nonspecific reactivity.",Quality control,Assay validation guidance,
+Internal amplification control,IAC,Target or control sequence included to indicate whether amplification and detection proceeded adequately.,Molecular diagnostics,Molecular diagnostics references,IAC
+PCR inhibitor,,Substance in a specimen or reagent that reduces amplification efficiency or prevents a valid PCR reaction.,Molecular diagnostics,Molecular diagnostics references,amplification inhibitor
+Nucleic acid extraction,,Process isolating DNA or RNA from a specimen while removing substances that may inhibit downstream analysis.,Molecular diagnostics,Molecular diagnostics references,DNA/RNA extraction
+Primer,,Short nucleic-acid sequence providing a starting point for DNA synthesis in amplification or sequencing workflows.,Molecular diagnostics,Molecular biology references,PCR primer
+Probe,,Labeled or otherwise detectable molecule designed to bind a target sequence or analyte.,Molecular diagnostics,Molecular biology references,detection probe
+Amplicon,,DNA or RNA-derived fragment produced by an amplification process.,Molecular diagnostics,Molecular biology references,amplification product
+Digital PCR,dPCR,PCR approach partitioning a sample into many reactions and estimating target concentration from positive partitions.,Molecular diagnostics,Molecular diagnostics references,dPCR
+Single nucleotide variant,SNV,Change at a single nucleotide position in a genome; the term describes an observed sequence difference regardless of population frequency.,Genomics,Genomics references,SNV
+Insertion-deletion,indel,Genetic variant involving insertion or deletion of one or more nucleotides relative to a reference sequence.,Genomics,Genomics references,indel
+Structural variant,SV,"Genomic alteration involving larger-scale changes such as deletions, duplications, inversions, or translocations.",Genomics,Genomics references,SV
+Tumor mutational burden,TMB,"Measure of somatic mutations in a defined amount of tumor genomic sequence, with assay-specific methods and thresholds.",Oncology,Oncology biomarker guidance,TMB
+Microsatellite instability,MSI,"Length changes in short repetitive DNA sequences due to impaired mismatch repair, used in selected cancer evaluations.",Oncology,Oncology molecular diagnostics references,MSI
+Mismatch repair deficiency,dMMR,"Loss or dysfunction of DNA mismatch repair proteins or activity, assessed in selected cancer diagnostic workflows.",Oncology,Oncology molecular diagnostics references,dMMR
+HER2,,Protein and gene target assessed in selected cancers to support classification and treatment decisions.,Oncology,Oncology diagnostic references,ERBB2
+Estrogen receptor,ER,Receptor assessed in selected breast cancer pathology workflows to support tumor characterization and treatment decisions.,Oncology,Oncology diagnostic references,ER
+Progesterone receptor,PR,Receptor assessed in selected breast cancer pathology workflows to support tumor characterization and treatment decisions.,Oncology,Oncology diagnostic references,PR
+Ki-67,,Cellular proliferation marker assessed by immunohistochemistry in selected pathology contexts.,Oncology,Pathology references,MKI67
+Fluorescence in situ hybridization probe,,Fluorescently labeled nucleic-acid probe designed to hybridize to a specific chromosome or genomic region.,Cytogenetics,Cytogenetics references,FISH probe
+Chromosomal microarray,CMA,Method for detecting copy-number changes and selected genomic imbalances across the genome.,Genomics,Clinical genetics references,array CGH; SNP array
+Karyotype,,"Description or image of an individual's chromosomes arranged by number, size, and morphology.",Cytogenetics,Cytogenetics references,chromosome analysis
+Newborn screening,NBS,Screening of newborns for selected conditions under a defined public health program and follow-up algorithm.,Clinical laboratory,Public health screening guidance,newborn screen
+Dried blood spot,DBS,Specimen prepared by applying blood to filter paper and drying it for selected testing and storage workflows.,Laboratory operations,Newborn screening and specimen guidance,DBS
+Noninvasive prenatal testing,NIPT,Analysis of cell-free DNA in maternal blood to screen for selected fetal chromosomal conditions; screening is not diagnostic confirmation.,Genomics,Clinical genetics guidelines,NIPT; cfDNA screening
+Tandem mass spectrometry,MS/MS,"Mass spectrometry technique using sequential mass analysis stages, used in selected newborn screening and biochemical testing.",Analytical chemistry,Clinical laboratory references,MS/MS
+Urine dipstick,,Chemical strip test used to screen urine for selected analytes or characteristics.,Urinalysis,Clinical laboratory references,reagent strip
+Urine specific gravity,SG,"Measure related to urine density compared with water, used as an indicator of concentration.",Urinalysis,Clinical laboratory references,specific gravity
+Urine leukocyte esterase,LE,"Urine strip test detecting an enzyme associated with white blood cells, used as one indicator of inflammation or infection.",Urinalysis,Clinical laboratory references,LE
+Fecal occult blood test,FOBT,Test that detects hidden blood in stool; method types and recommended uses differ.,Clinical laboratory,Clinical screening guidance,FOBT
+Prostate-specific antigen,PSA,Protein measured in blood that may support evaluation or monitoring of prostate conditions; not specific for cancer.,Clinical chemistry,Clinical laboratory references,PSA
+Cystatin C,,Protein measured in blood that can be used with validated equations to estimate glomerular filtration.,Clinical chemistry,KDIGO; clinical laboratory references,
+Blood urea nitrogen,BUN,"Measurement of urea nitrogen in blood, used with other information to assess kidney function and metabolic status.",Clinical chemistry,Clinical laboratory references,urea nitrogen
+Mean platelet volume,MPV,"Average platelet size in a blood sample, interpreted with other hematology findings and method limitations.",Hematology,Clinical laboratory references,MPV
+Red cell distribution width,RDW,"Measure of variation in red blood cell size, used with other indices in evaluating anemia.",Hematology,Clinical laboratory references,RDW
+Absolute neutrophil count,ANC,"Calculated or measured number of neutrophils in a blood volume, used in selected infection-risk assessments.",Hematology,Clinical laboratory references,ANC
+Cerebrospinal fluid,CSF,"Fluid surrounding the brain and spinal cord analyzed for infectious, inflammatory, malignant, or other conditions.",Laboratory,Clinical laboratory references,CSF
+Synovial fluid,,"Fluid from a joint that may be analyzed for cells, crystals, and microorganisms in selected conditions.",Laboratory,Clinical laboratory references,joint fluid
+Pleural fluid,,"Fluid from the space around the lungs analyzed for selected chemical, microbiological, or cytological purposes.",Laboratory,Clinical laboratory references,pleural effusion fluid
+Fungal culture,,Culture-based test used to recover and help identify fungi from an appropriate clinical specimen.,Microbiology,Clinical microbiology references,mycology culture
+Mycoplasma testing,,"Testing designed to detect mycoplasma contamination in relevant biological materials, cell cultures, or manufacturing processes.",Microbiology,Applicable pharmacopeial and laboratory guidance,mycoplasma detection
+Carbapenemase,,Enzyme that hydrolyzes carbapenem antibiotics and can contribute to clinically important antimicrobial resistance.,Microbiology,CDC; clinical microbiology references,carbapenemase enzyme
+Extended-spectrum beta-lactamase,ESBL,Enzyme that can confer resistance to many penicillins and cephalosporins; interpretation follows organism-specific guidance.,Microbiology,CLSI; EUCAST; CDC,ESBL
+Methicillin-resistant Staphylococcus aureus,MRSA,Staphylococcus aureus with resistance to methicillin and related beta-lactam antibiotics under applicable criteria.,Microbiology,CDC; CLSI,MRSA
+Vancomycin-resistant Enterococcus,VRE,Enterococcus species classified as resistant to vancomycin under applicable susceptibility criteria.,Microbiology,CDC; CLSI,VRE
+Minimum bactericidal concentration,MBC,Lowest antimicrobial concentration that kills a defined proportion of bacterial inoculum under specified conditions.,Microbiology,Antimicrobial testing references,MBC
+E-test,,Gradient diffusion method used to estimate the MIC of an antimicrobial agent for a microorganism.,Microbiology,CLSI; EUCAST; manufacturer instructions,epsilometer test
+Kirby-Bauer disk diffusion,,Standardized antimicrobial susceptibility method interpreting inhibition-zone diameters using defined criteria.,Microbiology,CLSI; EUCAST,disk diffusion
+Antibiogram,,Summary of antimicrobial susceptibility patterns for organisms isolated in a defined population and period.,Microbiology,CLSI; antimicrobial stewardship references,cumulative antibiogram
+Syndromic panel,,Multiplex test panel designed to detect multiple potential causes associated with a clinical syndrome.,Molecular diagnostics,Assay IFU; clinical diagnostics references,syndromic testing
+Respiratory pathogen panel,,Diagnostic panel testing for selected respiratory pathogens; targets and performance vary by product.,Molecular diagnostics,Assay IFU,respiratory panel
+Bloodstream infection panel,,Diagnostic panel detecting selected pathogens and sometimes resistance markers in blood or positive blood-culture material.,Molecular diagnostics,Assay IFU,BSI panel
+Cross-reactivity,,Test response caused by a non-intended substance or target due to shared or similar recognition features.,Analytical performance,Immunoassay validation references,
+Hook effect,,Assay phenomenon in which very high analyte concentrations produce unexpectedly low signal or result in some immunoassays.,Analytical performance,Immunoassay references,prozone effect
+Heterophile antibody interference,,Interference from antibodies binding assay reagents nonspecifically and causing erroneous immunoassay results.,Analytical performance,Immunoassay references,heterophile interference
+Biotin interference,,Interference in assays using biotin-streptavidin chemistry when biotin alters assay signal or result.,Analytical performance,FDA safety communications; assay IFU,biotin effect
+Matrix effect,,Influence from sample components that alters measurement response or assay performance.,Analytical performance,Analytical chemistry references,matrix interference
+Commutability,,Extent to which a reference material behaves like patient samples across measurement procedures.,Analytical performance,JCTLM; metrology references,commutable material
+Reference material,,Material sufficiently homogeneous and stable for use in measurement or examination of specified properties.,Analytical performance,ISO Guide 30; metrology references,RM
+Certified reference material,CRM,Reference material with documentation from an authoritative body providing property values and associated uncertainty and traceability.,Analytical performance,ISO 17034; ISO Guide 30,CRM
+Metrological traceability,,Property of a measurement result related to a reference through a documented unbroken chain of calibrations.,Analytical performance,ISO 17511; metrology references,measurement traceability
+Gage repeatability and reproducibility,Gage R&R,Measurement-system study estimating variation associated with equipment and appraisers under a defined design.,Analytical performance,AIAG MSA; measurement system analysis references,GRR
+Measurement system analysis,MSA,"Evaluation of a measurement process's variation, bias, stability, linearity, and other characteristics.",Analytical performance,AIAG MSA; metrology references,MSA
+Statistical process control,SPC,Use of statistical methods and control charts to monitor process behavior and distinguish variation types.,Manufacturing,Quality engineering references,SPC
+Process capability index,Cpk,"Statistic describing how well a stable process distribution fits within specification limits, accounting for centering.",Manufacturing,Quality engineering references,Cpk
+Overall equipment effectiveness,OEE,"Metric combining availability, performance, and quality to summarize equipment effectiveness under a defined method.",Manufacturing,Manufacturing operations references,OEE
+First-pass yield,FPY,Proportion of units or results meeting requirements on the first attempt without rework or repeat processing.,Manufacturing,Quality engineering references,first time yield
+Failure rate,,Frequency of failures per unit of exposure or operating time under defined conditions.,Diagnostic instruments,Reliability engineering references,failure frequency
+Mean time to failure,MTTF,Average operating time until failure for a non-repairable item or under a defined time-to-failure model.,Diagnostic instruments,Reliability engineering references,MTTF
+Corrective maintenance,,Maintenance performed to restore equipment after a fault or failure.,Diagnostic instruments,Maintenance management references,repair maintenance
+Predictive maintenance,,Maintenance planned using condition or trend data to anticipate failure before it occurs.,Diagnostic instruments,Reliability engineering references,condition-based maintenance
+Instrument qualification,,Documented evidence that an instrument is suitable for intended use at installation and under specified operating conditions.,Diagnostic instruments,Validation practice references,equipment qualification
+Installation qualification,IQ,Documented evidence that equipment or a system is installed according to approved specifications and manufacturer requirements.,Quality,Validation practice references,IQ
+Operational qualification,OQ,Documented evidence that equipment or a system operates as intended across specified operating ranges.,Quality,Validation practice references,OQ
+Performance qualification,PQ,Documented evidence that equipment or a process performs effectively and reproducibly under routine or representative conditions.,Quality,Validation practice references,PQ
+Factory acceptance testing,FAT,Testing before shipment or installation to demonstrate that equipment or a system meets specified requirements at the supplier site.,Diagnostic instruments,Commissioning and validation practices,FAT
+Site acceptance testing,SAT,Testing at the installation site to confirm equipment or a system meets defined acceptance requirements in its intended environment.,Diagnostic instruments,Commissioning and validation practices,SAT
+Instrument acceptance test,,Documented checks confirming newly installed or serviced equipment meets defined acceptance requirements.,Diagnostic instruments,Manufacturer service documentation; QMS procedures,acceptance testing
+Return to service,,"Controlled decision and process to make equipment available after maintenance, repair, or a safety-related hold.",Diagnostic instruments,Maintenance and quality procedures,release to service
+Device configuration record,,"Record identifying hardware, software, firmware, options, and other configuration elements of a specific device.",Diagnostic instruments,Configuration management practices,configuration record
+Service bulletin,,"Manufacturer communication describing a service issue, correction, update, or recommended action for affected equipment.",Diagnostic instruments,Manufacturer service documentation,technical service bulletin
+Field service report,FSR,"Record documenting service activity, issue, work performed, parts, test results, and disposition.",Diagnostic instruments,Service quality procedures,service report
+Work order,WO,"Authorized record defining maintenance, service, manufacturing, or other work to be performed and documented.",Service operations,Maintenance and quality procedures,WO
+Remote diagnostics,,"Use of remotely collected logs, measurements, or status to troubleshoot equipment without immediate on-site access.",Diagnostic instruments,Manufacturer service documentation,remote troubleshooting
+Remote monitoring,,"Collection and review of instrument status, performance, or diagnostic data from a remote location with appropriate controls.",Diagnostic instruments,Device engineering references,
+Instrument uptime,,Proportion of time an instrument is operational and available during a defined interval.,Diagnostic instruments,Reliability engineering references,availability
+Equipment downtime,,"Time during which equipment is unavailable due to failure, maintenance, or another defined cause.",Diagnostic instruments,Reliability engineering references,downtime
+Service backlog,,Number or age of unresolved service requests or work orders at a defined time.,Service operations,Service management practices,open work backlog
+Customer site,,"Location where a diagnostic device or service is installed, operated, maintained, or supported.",Service operations,Service management practices,deployment site
+Device lifecycle status,,"Defined device state such as development, released, active, serviced, retired, or recalled.",Diagnostic instruments,Asset management practices,lifecycle state
+Obsolescence management,,"Planning and control of risks from unavailable components, materials, software, or support over a product lifecycle.",Manufacturing,Lifecycle and supply-chain management references,obsolescence planning
+Software update,,"Controlled modification to software or firmware requiring impact assessment, verification, validation, and release documentation as applicable.",Software quality,IEC 62304; applicable regulations,software revision
+Regression testing,,Testing after a change to confirm previously functioning capabilities remain correct and no unintended effects were introduced.,Software quality,Software engineering practices,regression test
+Test coverage,,"Measure of how much of a defined requirement set, code structure, risk, or behavior is exercised by testing.",Software quality,Software testing references,coverage
+Software anomaly,,Discrepancy between expected and actual software behavior that may indicate a defect or requirement issue.,Software quality,IEC 62304; software engineering practices,software defect
+Secure development lifecycle,SDL,"Practices integrating security requirements, threat analysis, testing, and remediation into software development and maintenance.",Privacy and security,Secure software development references,SSDLC
+Software composition analysis,SCA,"Analysis of software dependencies for licenses, known vulnerabilities, and supply-chain risks.",Privacy and security,Secure development references,dependency scanning
+Vulnerability management,,"Processes for identifying, assessing, prioritizing, remediating, and tracking security vulnerabilities.",Privacy and security,FDA cybersecurity guidance; security frameworks,
+Encryption at rest,,Cryptographic protection of stored data so unauthorized access to storage does not reveal the data.,Privacy and security,Security engineering references,data-at-rest encryption
+Encryption in transit,,Cryptographic protection of data moving between systems to reduce unauthorized disclosure or alteration.,Privacy and security,Security engineering references,transport encryption
+Multi-factor authentication,MFA,Authentication requiring two or more distinct categories of evidence to verify identity.,Privacy and security,NIST digital identity guidance,MFA
+Least privilege,,Security principle granting users and services only permissions needed for assigned tasks.,Privacy and security,NIST; security engineering references,minimum necessary access
+Data retention,,"Policy-defined period and process for retaining, archiving, and disposing of records or data.",Privacy and security,Applicable regulations; records management policies,retention policy
+Clinical decision support,CDS,Software or tools providing knowledge or patient-specific information to support clinical decisions; regulatory status depends on functionality and intended use.,Diagnostic software,FDA CDS guidance; applicable regulations,CDSS
+Machine learning model,,Computational model fitted to data to make predictions or classifications; clinical use requires appropriate validation and monitoring.,Diagnostic software,FDA AI/ML guidance; software lifecycle references,ML model
+Training dataset,,Data used to fit or optimize a machine-learning model.,Diagnostic software,AI/ML lifecycle guidance,training data
+Validation dataset,,"Data used during model development to tune choices or assess interim performance, distinct from a final independent test set where applicable.",Diagnostic software,AI/ML lifecycle guidance,validation data
+Test dataset,,Dataset reserved for final evaluation of model performance under a specified study design.,Diagnostic software,AI/ML lifecycle guidance,holdout set
+Data drift,,Change over time in input data characteristics that may affect model behavior or performance.,Diagnostic software,AI/ML lifecycle guidance,input drift
+Concept drift,,"Change over time in the relationship between model inputs and target outcome, potentially degrading predictive performance.",Diagnostic software,AI/ML lifecycle guidance,target drift
+Algorithmic bias,,"Systematic differences in model outputs or errors across groups or contexts that may arise from data, design, or deployment.",Diagnostic software,AI/ML risk management guidance,model bias
+Model performance monitoring,,"Ongoing evaluation of deployed model performance, data distribution, and intended-use conditions.",Diagnostic software,AI/ML lifecycle guidance,model monitoring
+NIST AI Risk Management Framework,AI RMF,"Framework for managing AI risks through governance, mapping, measurement, and management activities.",Diagnostic software,NIST AI RMF,NIST AI RMF
+Good machine learning practice,GMLP,"Principles for developing, evaluating, and monitoring machine-learning-enabled medical devices throughout their lifecycle.",Diagnostic software,FDA/IMDRF GMLP principles,GMLP
+Predetermined change control plan,PCCP,"Plan describing specified future modifications to an AI-enabled device and how changes will be developed, validated, and controlled.",Regulatory,FDA AI/ML guidance; applicable regulations,PCCP
+Image segmentation,,Process of identifying and delineating regions or structures within a medical image.,Medical imaging,Medical image analysis references,segmentation
+Computed tomography,CT,Imaging method using X-rays and computational reconstruction to create cross-sectional images.,Medical imaging,Radiology references,CT scan
+Magnetic resonance imaging,MRI,Imaging method using magnetic fields and radiofrequency energy to produce images of internal structures.,Medical imaging,Radiology references,MR imaging
+Ultrasound imaging,US,Imaging method using high-frequency sound waves to visualize tissues and structures.,Medical imaging,Radiology references,sonography
+Positron emission tomography,PET,Imaging method detecting signals from radiotracers to assess selected physiological or molecular processes.,Medical imaging,Radiology references,PET imaging
+DICOM,,"Standard for storing, transmitting, and managing medical imaging information and related data.",Medical imaging,DICOM standard,Digital Imaging and Communications in Medicine
+Picture archiving and communication system,PACS,"System used to store, retrieve, distribute, and display medical images.",Medical imaging,Radiology informatics references,PACS
+Radiology information system,RIS,"System supporting radiology workflows such as scheduling, orders, reporting, and tracking.",Medical imaging,Radiology informatics references,RIS
+Digital pathology,,"Use of digital images and software to acquire, manage, analyze, and review pathology slides.",Pathology,Digital pathology standards and guidance,whole-slide imaging
+Whole-slide image,WSI,High-resolution digital scan of an entire pathology slide.,Pathology,Digital pathology references,WSI
+Computer-aided diagnosis,CAD,Software that analyzes medical data or images to assist clinicians; intended use and regulatory status vary.,Medical imaging,FDA software/device guidance,computer-assisted diagnosis
+Image artifact,,"Image feature caused by acquisition, processing, hardware, or other factors rather than underlying anatomy or pathology.",Medical imaging,Radiology references,imaging artifact
+Image registration,,Alignment of two or more images into a common coordinate frame for comparison or combined analysis.,Medical imaging,Medical image analysis references,image alignment
+Image quality phantom,,Test object with known properties used to evaluate selected performance characteristics of an imaging system.,Medical imaging,Imaging quality assurance references,phantom
+Radiation dose,,Measure of energy deposited or biological effect associated with ionizing radiation; quantity and unit depend on context.,Medical imaging,Radiation protection references,dose
+Diagnostic reference level,DRL,Benchmark used to identify unusually high or low typical radiation doses for defined examinations; not a patient-specific dose limit.,Medical imaging,ICRP; radiation protection guidance,DRL
+Cytogenetics,,"Study of chromosomes and their structure, number, and abnormalities.",Cytogenetics,Cytogenetics references,
+Fluorescence in situ hybridization,FISH,Cytogenetic technique using fluorescent probes to detect specified chromosomal regions or abnormalities.,Cytogenetics,Cytogenetics references,FISH
+Cell-free DNA,cfDNA,"DNA fragments circulating outside intact cells in body fluids, originating from normal or diseased tissues.",Molecular diagnostics,Molecular diagnostics references,cfDNA
+Germline variant,,Genetic variant present in germ cells and potentially inherited by offspring.,Genomics,Clinical genetics references,constitutional variant
+Somatic variant,,"Genetic variant acquired in non-germline cells, relevant to cancer and other somatic conditions.",Genomics,Genomics references,acquired variant
+Pathogenic variant,,Genetic variant classified as disease-causing under a defined interpretation framework and evidence set.,Genomics,ACMG/AMP guidance,disease-causing variant
+Pharmacogenomics,PGx,Study of how genetic variation influences drug response and can inform selected medication decisions.,Genomics,CPIC; pharmacogenomics references,pharmacogenetics
+Metagenomic sequencing,,Sequencing genetic material from a mixed sample to characterize organisms without requiring a single predefined target.,Genomics,Genomics and clinical microbiology references,metagenomics
+16S ribosomal RNA gene,16S rRNA gene,Bacterial gene commonly used for broad-range bacterial identification and phylogenetic analysis.,Microbiology,Clinical microbiology references,16S rRNA
+Viral load,,"Quantitative estimate of viral nucleic acid in a specimen, usually reported in assay-specific units.",Molecular diagnostics,Clinical virology references,viral RNA level
+Specimen type,,"Defined biological material accepted for a particular test, such as serum, plasma, whole blood, swab, or tissue.",Laboratory operations,Assay instructions for use,sample type
+Specimen adequacy,,"Assessment that a specimen meets defined requirements for quantity, quality, collection, and suitability.",Laboratory operations,Laboratory SOPs; assay IFU,sample adequacy
+Quantity not sufficient,QNS,Specimen condition where insufficient sample volume prevents completion of requested testing.,Laboratory operations,Laboratory SOPs,QNS
+Specimen stability,,Time and conditions under which a specimen retains characteristics necessary for valid testing.,Laboratory operations,CLSI specimen handling guidance,sample stability
+Open-vial stability,,Validated period during which reagent or control remains acceptable after opening under specified conditions.,Reagents and consumables,Stability study guidance; product IFU,on-board stability
+Reagent stability,,Period and conditions under which a reagent retains specified performance characteristics.,Reagents and consumables,Stability study guidance; product IFU,reagent shelf life
+Cartridge-based assay,,Test format in which sample processing and analytical steps are contained within a disposable or replaceable cartridge.,Diagnostic instruments,Manufacturer product documentation,cartridge test
+Sample-to-answer system,,Diagnostic system designed to automate multiple steps from specimen introduction to result generation within its intended use.,Diagnostic instruments,Manufacturer product documentation,sample to result
+Multiplex assay,,Assay designed to detect or measure multiple targets in a single run or specimen.,Molecular diagnostics,Assay instructions for use,multiplex test
+Diagnostic device fleet,,"Managed set of deployed diagnostic instruments tracked for status, location, maintenance, software version, and service history.",Diagnostic instruments,Asset management references,instrument fleet
+Device connectivity,,Capability to exchange data or commands between a diagnostic instrument and other systems over defined interfaces.,Diagnostic instruments,Manufacturer interface specifications,instrument connectivity
+Instrument log,,"Time-stamped record of instrument events, warnings, errors, and operational activities used for troubleshooting and traceability.",Diagnostic instruments,Manufacturer documentation; quality procedures,event log
+Alert threshold,,Defined value or condition that triggers an alert when monitored data cross the threshold or satisfy a rule.,Service operations,Monitoring system specifications,alarm threshold
+Remote service session,,"Controlled remote interaction used to diagnose or resolve an issue, with appropriate authorization, security, and records.",Service operations,Service and security procedures,remote assistance
+Service-level objective,SLO,"Target level for a service metric such as availability or response time, used to manage service reliability.",Service operations,Service management practices,SLO
+Mean time to acknowledge,MTTA,Average elapsed time between an event or alert and acknowledgement by a responsible person or system.,Service operations,Service management practices,MTTA
+Mean time to resolution,,"Service metric for average time to resolve an incident; MTTR can mean repair or resolution, so definition should be stated.",Service operations,Service management practices,MTTR
+Graceful degradation,,Design approach in which a system continues to provide reduced but useful functionality during partial failure.,Service operations,Reliability engineering references,degraded mode
+Circuit breaker,,Resilience pattern that temporarily stops calls to a failing dependency to reduce cascading failures and allow recovery.,Healthcare IT,Distributed systems references,circuit breaker pattern
+Dead-letter queue,DLQ,"Queue for messages that cannot be processed successfully after defined attempts, allowing investigation and recovery.",Healthcare IT,Messaging system documentation,DLQ
+Transactional outbox,,"Pattern storing an event in the same database transaction as a business change, then publishing it through a separate process.",Healthcare IT,Distributed systems references,outbox pattern
+Eventual consistency,,Consistency model in which distributed views may temporarily differ but are expected to converge when updates propagate.,Healthcare IT,Distributed systems references,
+Strong consistency,,Consistency model in which reads reflect the latest completed write according to defined guarantees.,Healthcare IT,Distributed systems references,
+Idempotent operation,,Operation that produces the same intended effect when repeated with the same inputs under specified semantics.,Healthcare IT,API and distributed systems references,idempotent request
+Rate limiting,,Control restricting request frequency or volume to protect service availability and enforce usage policies.,Privacy and security,API security references,throttling
+Tenant isolation,,Controls preventing data or operations belonging to one customer or organization from being accessed by another tenant.,Privacy and security,Multi-tenant system security references,tenant separation
+Row-level security,RLS,Database access controls restricting which rows a user or role can read or modify according to policy.,Healthcare IT,Database security references,RLS
+Access recertification,,Periodic confirmation by an authorized owner that assigned permissions remain appropriate.,Privacy and security,Identity governance references,access certification
+Threat modeling,,"Structured analysis of potential threats, attack paths, assets, and mitigations for a system.",Privacy and security,Security engineering references,threat analysis
+Common Vulnerabilities and Exposures,CVE,Standardized identifier for a publicly disclosed cybersecurity vulnerability.,Privacy and security,CVE Program,CVE
+Common Vulnerability Scoring System,CVSS,Framework assigning severity scores to vulnerabilities based on defined characteristics and assumptions.,Privacy and security,FIRST CVSS specification,CVSS
+Incident response plan,IRP,"Documented plan for detecting, reporting, analyzing, containing, and recovering from security incidents.",Privacy and security,NIST incident response guidance,IR plan
+Security information and event management,SIEM,"Technology collecting and analyzing security logs and events to support monitoring, detection, and investigation.",Privacy and security,Security operations references,SIEM
+Data loss prevention,DLP,"Controls intended to detect and prevent unauthorized disclosure, transfer, or loss of sensitive information.",Privacy and security,Security engineering references,DLP
+Device identity,,"Unique identity assigned to a device to support authentication, inventory, access control, and traceability.",Privacy and security,Device security references,instrument identity
+Mutual TLS,mTLS,TLS configuration in which both client and server authenticate using certificates.,Privacy and security,IETF TLS specifications,mTLS
+Secure boot,,Mechanism verifying software authenticity or integrity during startup before allowing execution.,Privacy and security,Embedded security references,verified boot
+Firmware signing,,Cryptographic signing of firmware to help verify authenticity and integrity before installation or execution.,Privacy and security,Embedded security references,signed firmware
+Patch management,,"Process of evaluating, testing, approving, deploying, and tracking software or firmware updates.",Privacy and security,FDA cybersecurity guidance; security practices,security patching
+Business impact analysis,BIA,Structured assessment of how disruption affects critical activities and recovery priorities.,Service operations,ISO 22301; continuity practices,BIA
+Business continuity,,Planning and capabilities intended to keep critical operations functioning or restore them after disruption.,Service operations,ISO 22301; business continuity references,continuity planning
+Disaster recovery,DR,"Processes and technical capabilities for restoring systems, services, and data after a disruptive event.",Service operations,ISO 22301; disaster recovery practices,DR
+Backup point-in-time recovery,PITR,"Recovery of a database to a selected time using backups and transaction logs, where supported and configured.",Healthcare IT,Database operations references,PITR
+Database replication,,"Maintaining copies of data across database instances to support availability, scale, or recovery.",Healthcare IT,Database systems references,replication
+Replication lag,,Delay between a source database change and its visibility on a replica.,Healthcare IT,Database systems references,replica lag
+Health endpoint,,API endpoint reporting selected health or readiness information about a service.,Healthcare IT,Cloud-native operations references,health check endpoint
+Distributed tracing,,"Tracking a request across multiple software components to identify latency, failures, and dependencies.",Service operations,Software engineering practices,request tracing
+Structured logging,,"Recording events in a consistent machine-readable format to support filtering, correlation, and analysis.",Service operations,Software engineering practices,structured logs
+Observability,,"Ability to infer internal system state from outputs such as logs, metrics, traces, and events.",Service operations,Software engineering practices,system observability
+Service restoration,,Process of returning a system or service to an acceptable operational state after interruption.,Service operations,IT service management references,restoration
+Incident triage,,"Initial assessment of an incident to determine severity, impact, urgency, ownership, and containment needs.",Service operations,Incident management practices,incident assessment
+First response time,FRT,Elapsed time from receipt of a service request or incident to the first qualifying response.,Service operations,Service management practices,response time
+Service availability,,Proportion of a defined period during which a service is available under an agreed measurement method.,Service operations,Reliability engineering references,availability
+Change failure rate,CFR,"Proportion of deployed changes resulting in incidents, rollbacks, or other defined failures during a period.",Service operations,Software delivery metrics references,CFR
+Release readiness review,,"Review of testing, risks, documentation, support, security, and operational readiness before release.",Quality,Release management practices,go/no-go review
+User acceptance test,UAT,Testing by intended users or representatives to determine whether a system meets agreed user and operational requirements.,Software quality,Software testing practices,UAT
+API contract,,"Formal description of API operations, inputs, outputs, errors, authentication, and behavioral expectations.",Healthcare IT,API specification practices,interface contract
+OpenAPI specification,,"Standard description format for HTTP APIs, including endpoints, parameters, requests, responses, and security schemes.",Healthcare IT,OpenAPI Specification,OAS
+Schema validation,,"Checking structured data against a defined schema for required fields, types, formats, and constraints.",Healthcare IT,Data validation references,payload validation
+Database migration,,"Controlled change to database schema or data supported by scripts, verification, backup, and rollback planning.",Healthcare IT,Database engineering practices,schema migration
+Optimistic concurrency control,,Strategy detecting conflicting updates at commit or write time rather than locking all relevant data in advance.,Healthcare IT,Database systems references,optimistic locking
+Read replica,,"Replicated database instance primarily used for read queries or reporting, subject to replication lag and consistency constraints.",Healthcare IT,Database systems references,read-only replica
+Message broker,,"Middleware that accepts, routes, stores, and delivers messages between producers and consumers.",Healthcare IT,Messaging system references,message queue service
+At-least-once delivery,,Messaging guarantee in which a message may be delivered more than once but is intended not to be lost under stated conditions.,Healthcare IT,Messaging system references,at least once
+Exactly-once processing,,Guarantee or design objective that a logical event's effects occur once within a defined system boundary and assumptions.,Healthcare IT,Messaging system references,exactly once
+Dead-letter message,,Message routed to a dead-letter destination after failing normal processing according to defined policy.,Healthcare IT,Messaging system documentation,poison message
+Event schema registry,,Service managing versions of event schemas and compatibility rules for producers and consumers.,Healthcare IT,Streaming systems references,schema registry
+Message ordering,,Maintaining or explicitly managing the sequence of messages when order affects correctness.,Healthcare IT,Messaging system references,event ordering
+Exponential backoff,,"Retry strategy that increases delay between attempts exponentially, often with jitter to reduce synchronized load.",Healthcare IT,Distributed systems references,exponential retry
+Backpressure,,Mechanism slowing or limiting producers when downstream consumers cannot process incoming work at the current rate.,Healthcare IT,Reactive systems references,flow control
+Queue depth,,Number of items waiting in a queue at a specified time.,Healthcare IT,Messaging and operations references,queue length
+Consumer lag,,Difference between the latest available event position and the position processed by a consumer.,Healthcare IT,Streaming systems references,consumer offset lag
+Multi-tenancy,,Architecture in which one system serves multiple customers while maintaining appropriate data and access separation.,Healthcare IT,Software architecture references,multi-tenant architecture
+Tenant context,,Identity and organization-specific information used to scope a request or operation to the correct tenant.,Healthcare IT,Multi-tenant architecture references,organization context
+Cross-tenant access,,Attempt to access another tenant's data or operations; should be prevented unless explicitly authorized.,Privacy and security,Multi-tenant security references,tenant boundary violation
+Authorization regression test,,Test confirming previously established access-control rules continue to be enforced after a change.,Privacy and security,Security testing practices,access control regression
+Insecure direct object reference,IDOR,Access-control vulnerability where manipulating an object identifier exposes or modifies a resource without proper authorization.,Privacy and security,OWASP,IDOR
+Broken access control,,Security weakness in which authorization rules fail to restrict actions or resource access as intended.,Privacy and security,OWASP,
+Input validation,,"Checking incoming data against expected types, ranges, formats, and business rules before processing.",Privacy and security,OWASP; secure coding practices,input checking
+SQL injection,,Injection vulnerability in which untrusted input alters the structure or behavior of a database query.,Privacy and security,OWASP,SQLi
+Cross-site scripting,XSS,Vulnerability allowing untrusted content to execute as script in another user's browser under affected conditions.,Privacy and security,OWASP,XSS
+Cross-origin resource sharing,CORS,Browser mechanism controlling whether web pages may access resources from another origin.,Privacy and security,W3C; browser security references,CORS
+Single sign-on,SSO,Authentication arrangement allowing users to access multiple authorized applications through a shared identity provider or session.,Privacy and security,Identity management references,SSO
+OpenID Connect,OIDC,Identity layer built on OAuth 2.0 that supports authentication and standardized identity claims.,Privacy and security,OpenID Connect specifications,OIDC
+JSON Web Token,JWT,"Compact token format for representing claims, often used in authentication and authorization systems.",Privacy and security,RFC 7519,JWT
+Data controller,,Entity determining purposes and means of personal data processing under GDPR or related legal frameworks.,Privacy and security,GDPR,controller
+Data processor,,Entity processing personal data on behalf of a controller under GDPR or related frameworks.,Privacy and security,GDPR,processor
+Business associate agreement,BAA,"Agreement defining permitted uses, safeguards, and responsibilities for protected health information where HIPAA requires it.",Privacy and security,HHS HIPAA guidance,BAA
+Data protection impact assessment,DPIA,Assessment required in certain GDPR contexts to evaluate risks to individuals from personal data processing.,Privacy and security,GDPR; regulator guidance,DPIA
+Privacy by design,,Integrating privacy considerations and safeguards into system and process design and operation.,Privacy and security,Privacy engineering references,privacy engineering
+Data provenance,,"Information describing the origin, history, transformations, and context of data used in analysis or reporting.",Healthcare IT,Data governance references,data lineage
+Terminology mapping,,Mapping equivalent or related clinical concepts between terminology systems while preserving meaning and provenance.,Healthcare IT,LOINC; SNOMED CT; health informatics references,code mapping
+Data dictionary,,"Structured description of data elements, including names, definitions, formats, permissible values, and relationships.",Healthcare IT,Data management references,metadata dictionary
+Electronic audit trail,,"Secure, computer-generated, time-stamped record allowing reconstruction of relevant actions or changes to electronic records.",Regulatory,21 CFR Part 11; applicable guidance,
+System validation status,,Documented status indicating whether a computerized system has required validation evidence for its intended use.,Quality,GAMP; applicable regulatory guidance,validated system status
+Validated state,,Condition in which a system remains supported by current validation evidence and controlled changes for its intended use.,Quality,GAMP; QMS procedures,maintained validated state
+Periodic system review,,"Scheduled review of a computerized system's performance, incidents, changes, security, and continued suitability.",Quality,GAMP; computerized system governance,
+System criticality assessment,,"Documented evaluation of a system's potential impact on patient safety, product quality, data integrity, and compliance.",Quality,GAMP; risk-based validation practices,system risk classification
+Cloud service assessment,,"Evaluation of a cloud service's security, availability, data handling, compliance, and operational controls for a defined use.",Privacy and security,Cloud security and quality guidance,cloud risk assessment
+Cloud shared responsibility,,Model defining which security and operational controls are managed by a cloud provider and which remain the customer's responsibility.,Privacy and security,Cloud security references,shared responsibility model
+Data residency,,"Geographic location or jurisdiction in which data are stored or processed, as governed by system design or requirements.",Privacy and security,Privacy and data governance references,data localization
+ISO 27001,,International standard specifying requirements for an information security management system.,Privacy and security,ISO/IEC 27001,ISMS standard
+Information security management system,ISMS,"Management system for establishing, implementing, maintaining, and improving information security controls and processes.",Privacy and security,ISO/IEC 27001,ISMS
+Threat actor,,"Individual, group, or process that may intentionally or unintentionally cause harm to a system or its data.",Privacy and security,Security threat modeling references,attacker
+Attack vector,,Path or method by which a threat actor could exploit a vulnerability or reach a target.,Privacy and security,Security threat modeling references,attack path
+Indicator of compromise,IOC,Observable artifact or behavior that may indicate a security compromise.,Privacy and security,Security operations references,IOC
+Secure configuration baseline,,Approved configuration defining required security and operational settings for a system or device.,Privacy and security,Security configuration guidance,configuration baseline
+Software provenance,,"Information about the origin, build process, dependencies, and integrity of software artifacts.",Software quality,Software supply chain security references,software origin
+Reproducible build,,Build process producing the same or verifiably equivalent artifact from the same source and specified environment.,Software quality,Software supply chain security references,deterministic build
+Software version,,"Identifier for a software release or configuration, used to distinguish changes and support traceability.",Software quality,Configuration management references,version number
+Architecture decision record,ADR,"Concise record of an important architecture decision, including context, decision, and consequences.",Software quality,Software architecture practices,ADR
+Functional requirement,,Requirement specifying a behavior or function the system must perform.,Software quality,Systems engineering practices,functional spec
+Nonfunctional requirement,NFR,"Requirement specifying a quality attribute or constraint such as performance, security, availability, or usability.",Software quality,Systems engineering practices,quality attribute requirement
+Requirements traceability,,"Ability to follow links between requirements and related design, risk, implementation, and test evidence.",Quality,Systems engineering practices,requirements traceability
+Risk-based testing,,"Prioritization of testing based on assessed risk, intended use, and potential consequences of failure.",Software quality,Software testing practices; ISO 14971,risk-prioritized testing
+Test summary report,,"Report summarizing test execution, results, deviations, unresolved issues, and conclusions against acceptance criteria.",Software quality,Software testing practices,test completion report
+Test tool validation,,Evidence that a software tool used for testing produces reliable and appropriate results for its intended purpose.,Software quality,Computerized system validation practices,
+Deployment validation,,Verification that a deployed software or instrument configuration is installed correctly and performs as intended.,Software quality,Software lifecycle practices,post-deployment verification
+Configuration management,,"Identification and control of product components, versions, and changes throughout development and maintenance.",Software quality,IEC 62304; ISO 13485,version control
+Feature flag,,"Configuration mechanism enabling or disabling a software feature without a full redeployment, subject to governance.",Software quality,Software delivery practices,feature toggle
+Canary deployment,,Rollout strategy exposing a new version to a small subset before expanding based on monitoring.,Service operations,Software deployment practices,canary release
+Blue-green deployment,,Deployment strategy maintaining two production-like environments and switching traffic between them to support controlled release and rollback.,Service operations,Software deployment practices,blue/green deployment
+Production monitoring,,"Monitoring of a deployed system's operation, errors, performance, availability, and quality signals.",Service operations,Reliability engineering practices,operational monitoring
+Service dependency map,,"Representation of dependencies among services, systems, networks, and data stores used for impact analysis and troubleshooting.",Service operations,Reliability engineering practices,dependency map
+Single point of failure,SPOF,Component or dependency whose failure can cause system failure because no effective alternative exists.,Service operations,Reliability engineering references,SPOF
+Load testing,,"Testing system behavior under a specified workload to evaluate performance, stability, and resource use.",Software quality,Software testing practices,load test
+Stress testing,,"Testing beyond expected operating conditions to understand system limits, failure behavior, and recovery characteristics.",Software quality,Software testing practices,stress test
+Soak testing,,"Testing a system under sustained workload over time to identify leaks, degradation, or long-duration failures.",Software quality,Software testing practices,endurance test
+Latency percentile,,"Percentile statistic, such as p95 or p99, describing response-time distribution and tail latency.",Service operations,Performance engineering practices,p95/p99 latency
+Error rate,,"Proportion or frequency of failed operations, invalid results, or errors over a defined interval and denominator.",Service operations,Reliability engineering references,failure rate
+Alert deduplication,,Combining repeated or equivalent alerts into one notification or incident to reduce noise while preserving important information.,Service operations,Monitoring system practices,alert grouping
+Alert suppression,,"Temporarily preventing specified alerts from generating notifications under defined conditions, with safeguards.",Service operations,Monitoring system practices,notification suppression
+Escalation policy,,Documented process for routing an unresolved issue or alert to a higher support level or responsible role.,Service operations,Service management procedures,escalation process
+Service knowledge base,,"Curated collection of technical articles, known issues, procedures, and resolutions used by support teams.",Service operations,Service management practices,knowledge base
+Operational runbook,,"Documented procedures for diagnosing, responding to, and recovering from common operational conditions.",Service operations,Service management practices,runbook
+Remote software deployment,,Distribution and installation of approved software or firmware updates on remote instruments under controlled security and validation processes.,Diagnostic instruments,Software lifecycle; cybersecurity guidance,over-the-air update
+Firmware rollback,,"Controlled return to a previously approved firmware version when a newer version causes unacceptable behavior, where supported and validated.",Diagnostic instruments,Software lifecycle and service procedures,version rollback
+Service restoration verification,,Confirmation that a system or service has returned to required functional and performance levels after an incident.,Service operations,Reliability engineering practices,recovery verification
+Customer impact assessment,,"Evaluation of which customers, sites, devices, or workflows may be affected by a product or service issue.",Service operations,QMS and service procedures,customer impact
+Affected result identification,,"Controlled process to identify results potentially impacted by a product, instrument, software, reagent, or process issue.",Laboratory operations,Laboratory quality procedures,impacted result tracing
+Retrospective result review,,Review of previously generated results to determine whether an identified issue may have affected validity or clinical interpretation.,Laboratory operations,Laboratory quality procedures,historical result review
+Product impact assessment,,"Evaluation of how a nonconformity, change, or failure may affect devices, lots, users, results, or clinical outcomes.",Quality,QMS procedures,product impact
+Patient impact assessment,,"Evaluation of whether an issue could have affected patient testing, result interpretation, treatment, or safety.",Quality,Clinical safety and QMS procedures,patient impact
+Recall scope,,"Defined products, lots, units, customers, and jurisdictions included in a recall or field correction.",Regulatory,Applicable recall procedures,affected population
+Recall effectiveness check,,Documented assessment of whether a recall or field action reached affected customers and achieved its intended action.,Regulatory,FDA recall guidance; applicable regulations,recall effectiveness
+Customer notification,,"Controlled communication to customers about a product issue, change, safety concern, or required action.",Regulatory,Applicable device regulations; QMS procedures,customer advisory
+Complaint trend report,,"Report analyzing complaint counts, rates, categories, and changes over time to identify potential quality or safety signals.",Quality,QMS complaint procedures,complaint analysis
+Post-market surveillance plan,PMS plan,"Plan describing how post-market information will be collected, evaluated, and used to identify trends and manage risks.",Regulatory,EU MDR/IVDR; FDA requirements,PMS plan
+Post-market surveillance report,PMS report,Report summarizing post-market surveillance activities and findings under applicable device regulations.,Regulatory,EU MDR/IVDR; FDA requirements,PMS report
+Regulatory intelligence,,"Systematic monitoring and interpretation of regulatory changes, guidance, and standards affecting a product or quality system.",Regulatory,Regulatory affairs practices,regulatory monitoring
+Standards gap assessment,,Structured comparison of current processes or evidence against requirements of a specified standard or regulation.,Regulatory,Quality and regulatory practices,gap analysis
+Compliance matrix,,"Structured mapping of applicable requirements to evidence, owners, and status to support regulatory or quality reviews.",Regulatory,Quality and regulatory practices,requirements compliance matrix
+Regulatory applicability assessment,,"Documented evaluation of which regulations, standards, and guidance apply based on intended use and jurisdiction.",Regulatory,Regulatory affairs practices,applicability review
+Regulatory classification,,"Assignment of a product to a category under a regulatory scheme based on intended purpose, risk, and defined criteria.",Regulatory,Applicable regulations,device classification
+Predicate device,,"Legally marketed device used as a comparison reference in certain regulatory pathways, such as FDA 510(k), when criteria are met.",Regulatory,FDA 510(k) guidance,predicate
+Substantial equivalence,,Regulatory determination that a new device is as safe and effective as a legally marketed predicate under the 510(k) framework.,Regulatory,FDA 510(k) guidance,SE
+Declaration of conformity,DoC,Manufacturer's formal statement that a product meets specified applicable requirements under the relevant conformity framework.,Regulatory,EU MDR/IVDR; applicable regulations,DoC
+Notified body,,Organization designated by an EU member state to perform specified conformity-assessment activities under applicable product legislation.,Regulatory,EU MDR/IVDR,
+Person responsible for regulatory compliance,PRRC,"Role under EU MDR/IVDR with defined responsibilities for ensuring regulatory compliance, subject to applicable requirements.",Regulatory,EU MDR/IVDR,PRRC
+ISO 20395,,Standard describing requirements for evaluating quantitative real-time PCR methods for nucleic-acid quantification.,Molecular diagnostics,ISO 20395,qPCR performance standard
+ISO 20166,,"Series addressing pre-examination processes for molecular diagnostics, including selected specimen types and workflows.",Molecular diagnostics,ISO 20166 series,molecular pre-examination standard
+ISO 22367,,Standard applying risk management to medical laboratories within its scope and edition.,Regulatory,ISO 22367,medical laboratory risk management
+ISO 15190,,Standard specifying requirements for safety in medical laboratories.,Laboratory safety,ISO 15190,medical laboratory safety
+ISO 20658,,Standard addressing requirements for collection and transport of samples for medical laboratory examinations.,Laboratory operations,ISO 20658,sample collection and transport standard
+ISO 17025,,International standard specifying competence requirements for testing and calibration laboratories.,Regulatory,ISO/IEC 17025,testing laboratory competence
+ISO 17043,,International standard specifying general requirements for proficiency testing providers.,Regulatory,ISO/IEC 17043,proficiency testing provider standard
+ISO 17034,,International standard specifying requirements for the competence of reference material producers.,Regulatory,ISO 17034,reference material producer standard
+ISO 2859,,"Series of standards for sampling procedures for inspection by attributes, including acceptance sampling schemes.",Manufacturing,ISO 2859 series,acceptance sampling standard
+ISO 14644,,"Series of standards for cleanrooms and associated controlled environments, including classification and monitoring.",Manufacturing,ISO 14644 series,cleanroom standard
+ISO 8655,,Series of standards covering piston-operated volumetric apparatus and related test methods.,Diagnostic instruments,ISO 8655 series,pipette standard
+ISO 5725,,"Series of standards addressing accuracy, trueness, and precision of measurement methods and results.",Analytical performance,ISO 5725 series,measurement accuracy standard
+ISO 17511,,"Standard addressing metrological traceability of values assigned to calibrators, control materials, and human samples for IVD procedures.",Analytical performance,ISO 17511,IVD metrological traceability
+ISO 19011,,"Guidelines for auditing management systems, including audit principles and management of audit programs.",Quality,ISO 19011,management system audit guideline
+ISO 31000,,Standard providing principles and guidelines for risk management across organizational contexts.,Quality,ISO 31000,risk management standard
+ISO 22301,,Standard specifying requirements for a business continuity management system.,Service operations,ISO 22301,business continuity standard
+ISO 10993,,Series of standards addressing biological evaluation of medical devices and materials within its scope.,Regulatory,ISO 10993 series,biological evaluation standard
+ISO 11737,,"Series addressing microbiological methods for medical-device sterilization, including bioburden and sterility testing.",Manufacturing,ISO 11737 series,bioburden and sterility standard
+ISO 11607,,Series addressing packaging for terminally sterilized medical devices.,Manufacturing,ISO 11607 series,sterile barrier packaging standard
+IEC 61010,,"Series of safety standards for electrical equipment for measurement, control, and laboratory use.",Regulatory,IEC 61010 series,laboratory equipment safety
+IEC 61326,,"Series of EMC requirements for electrical equipment for measurement, control, and laboratory use.",Regulatory,IEC 61326 series,laboratory equipment EMC
+Centers for Disease Control and Prevention,CDC,"U.S. public health agency providing surveillance, laboratory, infection-prevention, and diagnostic guidance.",Regulatory,CDC official guidance,CDC
+World Health Organization,WHO,"United Nations agency providing international public health guidance, standards, and technical resources.",Regulatory,WHO official guidance,WHO
+International Medical Device Regulators Forum,IMDRF,Voluntary group of medical-device regulators working toward harmonized regulatory approaches.,Regulatory,IMDRF official documents,IMDRF
+National Institute of Standards and Technology,NIST,"U.S. institute publishing standards and guidance relevant to measurement, cybersecurity, and technology.",Regulatory,NIST publications,NIST
+Joint Committee for Traceability in Laboratory Medicine,JCTLM,International committee supporting recognition of reference measurement services and materials for laboratory medicine.,Analytical performance,JCTLM database and guidance,JCTLM
+American College of Medical Genetics and Genomics,ACMG,Organization publishing guidance relevant to genetic testing and variant interpretation.,Genomics,ACMG publications,ACMG
+Association for Molecular Pathology,AMP,Organization publishing guidance and resources relevant to molecular diagnostic testing.,Molecular diagnostics,AMP publications,AMP
+Clinical Pharmacogenetics Implementation Consortium,CPIC,Consortium publishing evidence-based guidelines for using pharmacogenetic results in medication decisions.,Genomics,CPIC guidelines,CPIC
+ABR,Antibiotic Resistance,The ability of microorganisms to survive exposure to an antimicrobial agent.,Microbiology,CDC antimicrobial resistance guidance,
+AC,Activated Clotting Time,"A point-of-care test used to monitor high-dose anticoagulation, especially during procedures.",Coagulation,CLSI coagulation testing guidance,ACT
+ACE,Angiotensin-Converting Enzyme,An enzyme measured in selected clinical contexts; results require interpretation with clinical findings.,Clinical Chemistry,Clinical laboratory practice,
+ACT,Activated Clotting Time,A whole-blood clotting test often used to monitor heparin during cardiac and vascular procedures.,Coagulation,CLSI coagulation testing guidance,
+ADA,Adenosine Deaminase,An enzyme assay used as an adjunct in evaluating selected infectious or inflammatory conditions.,Clinical Chemistry,Clinical laboratory practice,
+ADAMTS13,A Disintegrin And Metalloproteinase with Thrombospondin Motifs 13,A protease activity assay used in evaluation of thrombotic thrombocytopenic purpura.,Hematology,ISTH TTP guidance,
+AER,Albumin Excretion Rate,A measure of urinary albumin excretion used in kidney disease assessment.,Urinalysis,KDIGO guidance,
+AFB,Acid-Fast Bacilli,"Bacteria detected using acid-fast staining and related methods, including mycobacteria.",Microbiology,CDC tuberculosis laboratory guidance,
+AFU,Arbitrary Fluorescence Units,Instrument-dependent units used to report fluorescence signal intensity.,Instrumentation,Laboratory instrument documentation,
+AG,Antigen,A substance recognized by an antibody or immune receptor; detected by many diagnostic assays.,Immunology,WHO laboratory guidance,
+AHR,Aryl Hydrocarbon Receptor,A receptor sometimes assessed in research assays; not a routine diagnostic marker in most settings.,Molecular Biology,Scientific literature,
+AI,Artificial Intelligence,"Computational methods used to perform tasks such as image interpretation, signal analysis, and workflow support.",Healthcare IT,FDA AI-enabled medical device resources,
+AID,Autoimmune Disease,A group of disorders in which immune responses target the body's own tissues.,Immunology,Clinical laboratory practice,
+AIF,Antibody Index Factor,A context-dependent abbreviation; use the assay-specific definition stated by the laboratory.,Immunology,Laboratory-specific terminology,
+AIP,Acute Interstitial Pneumonia,A clinical condition; laboratory tests may support differential diagnosis but do not establish it alone.,Clinical Diagnostics,Clinical reference terminology,
+ALB,Albumin,"A protein measured in serum or urine for assessment of nutrition, liver function, and kidney-related conditions.",Clinical Chemistry,Clinical laboratory practice,
+ALP,Alkaline Phosphatase,"An enzyme measured in serum, commonly interpreted in liver and bone evaluation.",Clinical Chemistry,Clinical laboratory practice,
+ALT,Alanine Aminotransferase,A serum enzyme used in assessment of hepatocellular injury.,Clinical Chemistry,Clinical laboratory practice,SGPT
+AMA,Antimitochondrial Antibody,An autoantibody test used as part of evaluation for primary biliary cholangitis.,Immunology,Clinical laboratory practice,
+ANCA,Antineutrophil Cytoplasmic Antibody,Autoantibodies assessed in evaluation of selected vasculitides and related conditions.,Immunology,Clinical laboratory practice,
+AP,Alkaline Phosphatase,An enzyme measured in serum; interpret with other liver and bone markers.,Clinical Chemistry,Clinical laboratory practice,ALP
+AR,Antimicrobial Resistance,The ability of a microorganism to resist the effects of an antimicrobial drug.,Microbiology,WHO antimicrobial resistance resources,AMR
+ARB,Antibiotic-Resistant Bacteria,Bacteria that are not susceptible to one or more antimicrobial agents.,Microbiology,CDC antimicrobial resistance guidance,
+ARDS,Acute Respiratory Distress Syndrome,A severe respiratory condition for which laboratory testing may support assessment of causes and complications.,Clinical Diagnostics,Clinical reference terminology,
+ASO,Antistreptolysin O,An antibody test that can support evidence of recent streptococcal infection in appropriate contexts.,Immunology,Clinical laboratory practice,
+AST,Aspartate Aminotransferase,"A serum enzyme measured in evaluation of liver, muscle, and other tissue injury.",Clinical Chemistry,Clinical laboratory practice,
+AT,Antithrombin,A natural anticoagulant measured in selected evaluations of thrombosis or heparin response.,Coagulation,Clinical laboratory practice,ATIII
+ATCC,American Type Culture Collection,"A biological resource center providing reference microorganisms, cell lines, and other materials.",Microbiology,ATCC,
+AU,Arbitrary Units,Units defined by a particular method or assay rather than a universal SI unit.,Laboratory Reporting,Laboratory method documentation,
+AUS,Atypical Squamous Cells of Undetermined Significance,A cervical cytology reporting category indicating atypical squamous cells of uncertain significance.,Pathology,Bethesda System,ASC-US
+B2M,Beta-2 Microglobulin,"A protein measured in selected hematology, renal, and immune-related evaluations.",Clinical Chemistry,Clinical laboratory practice,β2M
+BAL,Bronchoalveolar Lavage,"A respiratory specimen collected from the lower airways for microbiology, cytology, or other analyses.",Specimen Management,Clinical laboratory practice,
+BASO,Basophil,A type of white blood cell reported in a differential blood count.,Hematology,Clinical laboratory practice,
+BCR-ABL1,Breakpoint Cluster Region-Abelson 1,A fusion gene used in diagnosis and monitoring of chronic myeloid leukemia and some acute leukemias.,Molecular Diagnostics,WHO classification; hematology guidance,
+BD,Blood Donation,Collection of blood for transfusion or related services; testing includes donor screening.,Transfusion Medicine,AABB standards,
+BGA,Blood Gas Analysis,"Measurement of blood pH and gas-related parameters, often on arterial or venous samples.",Blood Gas,Clinical laboratory practice,
+BHI,Brain Heart Infusion,A nutrient-rich culture medium used for growth of a variety of microorganisms.,Microbiology,Clinical microbiology methods,
+BID,Twice Daily,A dosing-frequency abbreviation; it may appear in clinical context but is not a laboratory test.,Clinical Documentation,Medication terminology,
+BIL,Bilirubin,A pigment measured in blood or other specimens to evaluate bilirubin metabolism and hepatobiliary conditions.,Clinical Chemistry,Clinical laboratory practice,
+BMD,Bone Mineral Density,"A measurement of bone mineral content per area or volume, generally obtained by imaging rather than routine lab assay.",Clinical Diagnostics,Clinical reference terminology,
+BUN,Blood Urea Nitrogen,A blood measurement used with other tests to assess kidney function and nitrogen metabolism.,Clinical Chemistry,Clinical laboratory practice,
+C&S,Culture and Sensitivity,A common shorthand for culture with antimicrobial susceptibility testing.,Microbiology,Clinical microbiology methods,
+CA,Cancer Antigen,"A family of tumor-associated markers, such as CA 125; interpretation depends on the specific assay and context.",Tumor Markers,Clinical laboratory practice,
+CA 125,Cancer Antigen 125,A biomarker used in selected ovarian cancer monitoring and evaluation contexts.,Tumor Markers,Clinical laboratory practice,
+CA 15-3,Cancer Antigen 15-3,A biomarker used in selected breast cancer monitoring contexts.,Tumor Markers,Clinical laboratory practice,
+CA 19-9,Cancer Antigen 19-9,A biomarker used in selected pancreatic and gastrointestinal disease monitoring contexts.,Tumor Markers,Clinical laboratory practice,
+CA 27.29,Cancer Antigen 27.29,A biomarker sometimes used to monitor breast cancer in conjunction with clinical assessment.,Tumor Markers,Clinical laboratory practice,
+CBA,Cell-Based Assay,An assay that measures a biological response or target in cells.,Assay Methods,Assay validation guidance,
+CBC,Complete Blood Count,A panel measuring blood cell counts and commonly related indices.,Hematology,CLSI hematology guidance,FBC
+CBG,Capillary Blood Glucose,"A glucose measurement from capillary blood, commonly obtained at point of care.",Point-of-Care Testing,Clinical laboratory practice,
+CBT,Clot-Based Test,A test measuring coagulation through clot formation; exact meaning depends on context.,Coagulation,Laboratory method documentation,
+CCP,Cyclic Citrullinated Peptide,An antibody target used in evaluation of rheumatoid arthritis.,Immunology,Clinical laboratory practice,anti-CCP
+CD,Cluster of Differentiation,A nomenclature system for cell-surface molecules used in immunophenotyping.,Flow Cytometry,Human Cell Differentiation Molecules,
+CD4,Cluster of Differentiation 4,A T-cell marker used in immunophenotyping and monitoring selected immune conditions.,Flow Cytometry,Clinical laboratory practice,
+CD8,Cluster of Differentiation 8,A marker commonly used to identify cytotoxic T lymphocytes.,Flow Cytometry,Clinical laboratory practice,
+CEA,Carcinoembryonic Antigen,"A tumor marker used in selected cancer monitoring contexts, not as a stand-alone screening test.",Tumor Markers,Clinical laboratory practice,
+CFU/mL,Colony-Forming Units per Milliliter,A concentration unit used to report viable microbial counts in liquid specimens.,Microbiology,Clinical microbiology methods,
+CH50,Total Hemolytic Complement 50,A functional assay of the classical complement pathway.,Immunology,Clinical laboratory practice,
+CK,Creatine Kinase,An enzyme measured in evaluation of muscle injury and selected cardiac or neurologic conditions.,Clinical Chemistry,Clinical laboratory practice,CPK
+CK-MB,Creatine Kinase-MB,A creatine kinase isoenzyme historically used in cardiac injury evaluation; troponin is generally preferred.,Clinical Chemistry,Clinical laboratory practice,
+CMV,Cytomegalovirus,A virus assessed by serology or molecular tests in selected diagnostic and transplant contexts.,Virology,CDC CMV resources,
+CNA,Columbia Nalidixic Acid Agar,A selective culture medium used to isolate Gram-positive organisms from mixed specimens.,Microbiology,Clinical microbiology methods,
+CNV,Copy Number Variation,"A genomic change involving gain or loss of DNA segments, assessed by molecular methods.",Genomics,Clinical genomics guidance,
+CO2,Carbon Dioxide,A chemistry analyte commonly reported as total carbon dioxide or bicarbonate-related content.,Clinical Chemistry,Clinical laboratory practice,TCO2
+CoA,Certificate of Analysis,"A document reporting specified results for a material, reagent, or product lot.",Quality and Regulation,Quality management systems,
+COPD,Chronic Obstructive Pulmonary Disease,A chronic lung disease; laboratory tests may help evaluate differential diagnoses and comorbidities.,Clinical Diagnostics,Clinical reference terminology,
+CTA,Computed Tomography Angiography,An imaging technique; laboratory tests may support contrast safety or differential diagnosis.,Clinical Diagnostics,Clinical reference terminology,
+CTAD,Citrate-Theophylline-Adenosine-Dipyridamole,An anticoagulant mixture used for selected platelet function specimens.,Coagulation,Laboratory specimen collection guidance,
+D-Dimer,D-Dimer,A fibrin degradation product measured to support evaluation of venous thromboembolism in appropriate clinical pathways.,Coagulation,Clinical laboratory practice,
+DCA,Direct Chemiluminescent Assay,A chemiluminescence-based immunoassay format; exact use varies by platform.,Immunoassay,Instrument-specific documentation,
+DIC,Disseminated Intravascular Coagulation,A syndrome of systemic coagulation activation assessed using multiple clinical and laboratory findings.,Coagulation,Clinical laboratory practice,
+DILI,Drug-Induced Liver Injury,"Liver injury associated with medication or other chemical exposure, evaluated with clinical and laboratory evidence.",Clinical Chemistry,Clinical reference terminology,
+DMSO,Dimethyl Sulfoxide,A solvent and cryoprotectant used in some laboratory procedures; handling is method-specific.,Laboratory Operations,Laboratory safety documentation,
+DNase,Deoxyribonuclease,An enzyme that degrades DNA; DNase testing or treatment may be used in selected laboratory workflows.,Molecular Biology,Laboratory method documentation,
+DPO,Dual Priming Oligonucleotide,A primer design approach used in some PCR assays to improve target specificity.,Molecular Diagnostics,Assay-specific documentation,
+DTT,Dithiothreitol,"A reducing agent used in selected laboratory protocols, including some immunohematology procedures.",Laboratory Operations,Laboratory method documentation,
+EBV,Epstein-Barr Virus,A virus assessed by serology or molecular testing in selected infectious disease evaluations.,Virology,CDC EBV resources,
+EDTA,Ethylenediaminetetraacetic Acid,A chelating anticoagulant used in hematology and other specimen collection applications.,Specimen Management,CLSI specimen collection guidance,
+ELFA,Enzyme-Linked Fluorescent Assay,An immunoassay format in which enzyme activity generates a fluorescent signal.,Immunoassay,Platform-specific documentation,
+EMIT,Enzyme Multiplied Immunoassay Technique,A homogeneous enzyme immunoassay format used for selected analytes and drugs.,Immunoassay,Assay method documentation,
+EQA,External Quality Assessment,An external process comparing laboratory performance with peers or reference targets.,Quality Control,ISO 15189:2022,Proficiency testing
+ESR,Erythrocyte Sedimentation Rate,A nonspecific test reflecting sedimentation of red blood cells over time.,Hematology,Clinical laboratory practice,
+FACS,Fluorescence-Activated Cell Sorting,A flow-cytometry-based technique that sorts cells according to measured characteristics.,Flow Cytometry,Flow cytometry method guidance,
+FDP,Fibrin Degradation Products,"Fragments produced during fibrin or fibrinogen breakdown, measured in selected coagulation evaluations.",Coagulation,Clinical laboratory practice,
+FEU,Fibrinogen Equivalent Units,Units used by many D-dimer assays; results and cutoffs depend on assay and reporting convention.,Coagulation,Assay instructions; CLSI guidance,
+FFPE,"Formalin-Fixed, Paraffin-Embedded",Tissue preparation commonly used in pathology and molecular testing.,Pathology,Molecular pathology guidance,
+FITC,Fluorescein Isothiocyanate,A fluorescent label used in immunofluorescence and flow cytometry assays.,Flow Cytometry,Laboratory reagent documentation,
+FPIA,Fluorescence Polarization Immunoassay,A homogeneous immunoassay format used for selected small molecules and therapeutic drugs.,Immunoassay,Assay method documentation,
+FSH,Follicle-Stimulating Hormone,A hormone measured in evaluation of reproductive and endocrine function.,Endocrinology,Clinical laboratory practice,
+FT3,Free Triiodothyronine,The unbound fraction of triiodothyronine measured in selected thyroid evaluations.,Endocrinology,Clinical laboratory practice,
+FT4,Free Thyroxine,The unbound fraction of thyroxine measured in thyroid function assessment.,Endocrinology,Clinical laboratory practice,
+G6PD,Glucose-6-Phosphate Dehydrogenase,An enzyme measured to assess deficiency associated with red-cell vulnerability to oxidative stress.,Hematology,Clinical laboratory practice,
+GGT,Gamma-Glutamyl Transferase,An enzyme measured in hepatobiliary evaluation and interpretation of selected liver test patterns.,Clinical Chemistry,Clinical laboratory practice,
+GFR,Glomerular Filtration Rate,"A measure of kidney filtration, estimated or measured using validated methods.",Clinical Chemistry,KDIGO guidance,
+GI,Gastrointestinal,"Relating to the digestive tract; used in specimen, infection, and diagnostic contexts.",Clinical Diagnostics,Clinical terminology,
+GNR,Gram-Negative Rod,A descriptive microscopy term for rod-shaped bacteria that stain Gram-negative.,Microbiology,Clinical microbiology methods,
+GPC,Gram-Positive Cocci,A descriptive microscopy term for spherical bacteria that stain Gram-positive.,Microbiology,Clinical microbiology methods,
+GPR,Gram-Positive Rod,A descriptive microscopy term for rod-shaped bacteria that stain Gram-positive.,Microbiology,Clinical microbiology methods,
+H&E,Hematoxylin and Eosin,A routine histology stain used to assess tissue morphology.,Pathology,Histopathology methods,
+HBeAg,Hepatitis B e Antigen,A hepatitis B marker associated with viral replication in relevant clinical contexts.,Virology,CDC hepatitis B guidance,
+HBV,Hepatitis B Virus,A virus detected by serologic and molecular methods in hepatitis B diagnosis and monitoring.,Virology,CDC hepatitis B guidance,
+HCV,Hepatitis C Virus,A virus assessed using antibody and nucleic acid tests for diagnosis and monitoring.,Virology,CDC hepatitis C guidance,
+HDL-C,High-Density Lipoprotein Cholesterol,The cholesterol content associated with high-density lipoproteins.,Clinical Chemistry,Clinical laboratory practice,HDL
+HE4,Human Epididymis Protein 4,A biomarker used with other information in selected ovarian cancer risk assessment and monitoring contexts.,Tumor Markers,Clinical laboratory practice,
+HGB,Hemoglobin,The oxygen-carrying protein measured as part of a blood count.,Hematology,Clinical laboratory practice,Hb
+HIL,"Hemolysis, Icterus, Lipemia",A set of specimen interference indices that can affect some laboratory methods.,Quality Control,CLSI interference guidance,
+HIV,Human Immunodeficiency Virus,A virus detected using validated antigen/antibody and nucleic acid testing algorithms.,Virology,CDC HIV testing guidance,
+HLA,Human Leukocyte Antigen,"A group of immune-system genes and proteins assessed in transplant, disease association, and selected drug-risk testing.",Immunogenetics,Histocompatibility laboratory standards,
+HPLC,High-Performance Liquid Chromatography,A separation technique used in assays such as hemoglobin variant analysis and therapeutic monitoring.,Analytical Methods,Analytical chemistry methods,
+HRP,Horseradish Peroxidase,An enzyme label commonly used to generate a detectable signal in immunoassays.,Immunoassay,Assay method documentation,
+HSV,Herpes Simplex Virus,A virus assessed using molecular or other validated tests depending on specimen and clinical question.,Virology,CDC STI guidance,
+HTLV,Human T-Lymphotropic Virus,A virus assessed by serology and confirmatory testing in selected screening contexts.,Virology,Clinical laboratory practice,
+IA,Immunoassay,An analytical method using antibody-antigen recognition to detect or quantify a target.,Immunoassay,Assay method documentation,
+IAT,Indirect Antiglobulin Test,An immunohematology test detecting antibodies in serum or plasma that react with red blood cells.,Transfusion Medicine,AABB standards,
+IC,Internal Control,A control included within a process or assay to help monitor validity.,Quality Control,ISO 15189:2022,
+ICP-MS,Inductively Coupled Plasma Mass Spectrometry,A technique used to quantify trace elements and metals in clinical and research specimens.,Analytical Methods,Clinical laboratory method documentation,
+IFA,Indirect Fluorescent Antibody,An immunofluorescence method used to detect antibodies or antigens in selected assays.,Immunology,Assay method documentation,
+IFCC,International Federation of Clinical Chemistry and Laboratory Medicine,An international organization supporting standardization in clinical chemistry and laboratory medicine.,Quality and Regulation,IFCC,
+IgA,Immunoglobulin A,"An antibody class measured in immune, infectious, and selected screening evaluations.",Immunology,Clinical laboratory practice,
+IgE,Immunoglobulin E,An antibody class associated with allergic responses and some parasitic infections.,Immunology,Clinical laboratory practice,
+IL-6,Interleukin 6,A cytokine that may be measured as an inflammatory biomarker in selected clinical contexts.,Immunology,Clinical laboratory practice,
+ISH,In Situ Hybridization,A technique that localizes nucleic acid sequences within cells or tissue.,Molecular Diagnostics,Pathology method guidance,
+ISF,Interstitial Fluid,Fluid between cells; some glucose monitoring technologies measure analytes in this compartment.,Point-of-Care Testing,Device instructions for use,
+ISO,International Organization for Standardization,"An international body publishing standards, including standards relevant to medical laboratories and devices.",Quality and Regulation,ISO standards,
+JAK2,Janus Kinase 2,A gene commonly tested for mutations associated with certain myeloproliferative neoplasms.,Molecular Diagnostics,Hematology diagnostic guidance,
+KOH,Potassium Hydroxide,A reagent used in microscopy preparation to help visualize fungi in selected specimens.,Microbiology,Clinical microbiology methods,
+KPI,Key Performance Indicator,"A defined measure used to monitor laboratory service, quality, turnaround time, or operational performance.",Laboratory Operations,Laboratory quality management,
+LDH,Lactate Dehydrogenase,"An enzyme measured in assessment of tissue injury, hemolysis, and selected hematologic conditions.",Clinical Chemistry,Clinical laboratory practice,
+LDL-C,Low-Density Lipoprotein Cholesterol,The cholesterol content associated with low-density lipoproteins.,Clinical Chemistry,Clinical laboratory practice,LDL
+LFT,Liver Function Test,"A commonly used collective term for laboratory tests that assess liver injury, cholestasis, or synthetic function.",Clinical Chemistry,Clinical laboratory practice,
+LLOQ,Lower Limit of Quantification,The lowest analyte concentration that can be quantified with predefined performance characteristics.,Analytical Performance,ICH Q2; CLSI EP17,
+LQC,Laboratory Quality Control,Control procedures used to monitor whether a test system is performing within specified limits.,Quality Control,ISO 15189:2022,
+MCH,Mean Corpuscular Hemoglobin,"The average amount of hemoglobin per red blood cell, reported as part of a blood count.",Hematology,Clinical laboratory practice,
+MCHC,Mean Corpuscular Hemoglobin Concentration,"The average hemoglobin concentration within red blood cells, calculated from blood count measurements.",Hematology,Clinical laboratory practice,
+MDRD,Modification of Diet in Renal Disease,A formula historically used to estimate glomerular filtration rate from serum creatinine and patient variables.,Clinical Chemistry,KDIGO guidance,
+MFI,Mean Fluorescence Intensity,A fluorescence signal summary used in flow cytometry and some immunoassays; platform definitions vary.,Flow Cytometry,Instrument-specific documentation,
+MPO,Myeloperoxidase,An enzyme or antibody target assessed in selected hematology and immunology investigations.,Hematology,Clinical laboratory practice,
+MT-RNR1,Mitochondrially Encoded 12S rRNA,A mitochondrial gene tested in some pharmacogenomic evaluations related to aminoglycoside-associated hearing loss risk.,Genomics,Pharmacogenomics guidance,
+MTT,Methyl Thiazolyl Tetrazolium,A reagent used in some cell viability assays; interpretation depends on assay design.,Assay Methods,Cell-based assay methods,
+NAT,Nucleic Acid Test,"A test detecting target nucleic acids, commonly used for pathogen detection and molecular diagnostics.",Molecular Diagnostics,CDC laboratory guidance,NAAT
+NAAT,Nucleic Acid Amplification Test,A method that amplifies and detects nucleic acid targets to improve analytical sensitivity.,Molecular Diagnostics,CDC laboratory guidance,
+NCCLS,National Committee for Clinical Laboratory Standards,Former name of the organization now known as Clinical and Laboratory Standards Institute.,Quality and Regulation,CLSI organizational history,
+NGSP,National Glycohemoglobin Standardization Program,A program that standardizes HbA1c test results to support comparability across methods.,Quality and Regulation,NGSP,
+NLR,Neutrophil-to-Lymphocyte Ratio,"A calculated ratio of neutrophil to lymphocyte counts, studied as a nonspecific inflammatory marker.",Hematology,Clinical research literature,
+O&P,Ova and Parasites,Microscopic or other testing of specimens for intestinal parasites and their eggs or cysts.,Microbiology,Clinical parasitology methods,
+OD,Optical Density,A measure of light attenuation used in spectrophotometry and some immunoassays.,Analytical Methods,Analytical chemistry methods,Absorbance
+OCT,Optical Coherence Tomography,"An imaging technique; not a routine laboratory assay, but may appear in diagnostic workflows.",Clinical Diagnostics,Clinical reference terminology,
+OPD,Outpatient Department,A healthcare service area; laboratory workflows may receive outpatient orders and specimens.,Healthcare Operations,Healthcare terminology,
+OR,Odds Ratio,A statistical measure used in clinical research and diagnostic studies to compare odds between groups.,Diagnostic Performance,Biostatistics guidance,
+PE,Pulmonary Embolism,"A condition evaluated using clinical probability, imaging, and selected laboratory tests such as D-dimer.",Clinical Diagnostics,Clinical reference terminology,
+PFA,Platelet Function Analyzer,An instrument/test system assessing aspects of platelet-dependent primary hemostasis.,Coagulation,Laboratory method documentation,
+PFT,Pulmonary Function Test,A group of respiratory function tests; laboratory biomarkers may complement clinical evaluation.,Clinical Diagnostics,Clinical reference terminology,
+PIVKA-II,Protein Induced by Vitamin K Absence or Antagonist-II,A biomarker used in selected hepatocellular carcinoma evaluation contexts.,Tumor Markers,Clinical laboratory practice,DCP
+PLT,Platelet Count,"The number of platelets in a volume of blood, usually reported as part of a complete blood count.",Hematology,Clinical laboratory practice,
+POC,Point of Care,Testing performed near the patient rather than in a central laboratory.,Point-of-Care Testing,ISO 22870; ISO 15189,POCT
+POCT,Point-of-Care Testing,Testing performed close to the patient with results available rapidly for care decisions.,Point-of-Care Testing,ISO 22870; ISO 15189,
+PR3,Proteinase 3,An antigen targeted by certain ANCA tests used in evaluation of selected vasculitides.,Immunology,Clinical laboratory practice,
+PT-INR,Prothrombin Time International Normalized Ratio,A standardized reporting measure derived from prothrombin time and used for selected anticoagulant monitoring.,Coagulation,WHO thromboplastin standardization,
+PTH,Parathyroid Hormone,"A hormone measured in evaluation of calcium, phosphate, and parathyroid disorders.",Endocrinology,Clinical laboratory practice,
+RBC,Red Blood Cell,An erythrocyte; red-cell count and indices are core components of hematology testing.,Hematology,Clinical laboratory practice,
+RIF,Rifampicin,"An antimicrobial drug relevant to susceptibility testing for selected organisms, including Mycobacterium tuberculosis.",Microbiology,WHO TB diagnostic guidance,RMP
+RLU,Relative Light Unit,A relative signal unit used by some luminescence-based instruments and assays.,Instrumentation,Platform-specific documentation,
+ROX,6-Carboxy-X-Rhodamine,A fluorescent reference dye used in some real-time PCR chemistries and instrument workflows.,Molecular Diagnostics,Platform-specific documentation,
+RPR,Rapid Plasma Reagin,A nontreponemal test used in syphilis screening and follow-up under recommended algorithms.,Microbiology,CDC STI treatment guidelines,
+SAA,Serum Amyloid A,An acute-phase protein measured in selected inflammatory contexts.,Clinical Chemistry,Clinical laboratory practice,
+SCC,Squamous Cell Carcinoma Antigen,A tumor-associated marker used in selected clinical monitoring contexts.,Tumor Markers,Clinical laboratory practice,
+SCD,Sickle Cell Disease,An inherited hemoglobin disorder evaluated using hematology and hemoglobin analysis methods.,Hematology,Clinical laboratory practice,
+SD,Standard Deviation,A statistical measure of dispersion used in analytical precision and quality-control calculations.,Quality Control,CLSI EP05,
+SDS,Safety Data Sheet,"A document describing hazards, handling, storage, and emergency measures for a chemical or reagent.",Laboratory Safety,OSHA Hazard Communication,
+SIL,Standardized Incidence Ratio,A statistical ratio used in epidemiology; meaning may vary by context and is not a routine assay name.,Diagnostic Performance,Biostatistics literature,
+SPEP,Serum Protein Electrophoresis,A method separating serum proteins to support evaluation of monoclonal gammopathies and other conditions.,Clinical Chemistry,Clinical laboratory practice,
+SST,Serum Separator Tube,A blood collection tube containing a gel barrier and clot activator in common configurations.,Specimen Management,Tube manufacturer instructions,
+STI,Sexually Transmitted Infection,"An infection transmitted primarily through sexual contact, assessed using organism-specific tests.",Microbiology,CDC STI guidelines,
+TBG,Thyroxine-Binding Globulin,A protein that binds thyroid hormones and can affect interpretation of total hormone measurements.,Endocrinology,Clinical laboratory practice,
+TIBC,Total Iron-Binding Capacity,"A measurement related to transferrin's capacity to bind iron, used in iron status assessment.",Clinical Chemistry,Clinical laboratory practice,
+TMA,Transcription-Mediated Amplification,An isothermal nucleic acid amplification method used in selected molecular diagnostic assays.,Molecular Diagnostics,Molecular diagnostic methods,
+TNF,Tumor Necrosis Factor,A cytokine involved in inflammation; measured in selected research and clinical contexts.,Immunology,Clinical laboratory practice,
+TP,Total Protein,A chemistry measurement of the combined concentration of major serum or plasma proteins.,Clinical Chemistry,Clinical laboratory practice,
+TPHA,Treponema pallidum Hemagglutination Assay,A treponemal serologic test used in syphilis testing algorithms; availability and naming vary by region.,Microbiology,CDC STI treatment guidelines,
+TPPA,Treponema pallidum Particle Agglutination,A treponemal assay used in syphilis diagnosis and confirmatory algorithms.,Microbiology,CDC STI treatment guidelines,
+TRAb,TSH Receptor Antibody,"Antibodies targeting the thyroid-stimulating hormone receptor, used in selected thyroid disease evaluations.",Endocrinology,Clinical laboratory practice,
+TSH,Thyroid-Stimulating Hormone,A hormone measured as a key test in evaluation of thyroid function.,Endocrinology,Clinical laboratory practice,
+TT,Thrombin Time,A coagulation assay measuring clot formation after addition of thrombin to plasma.,Coagulation,CLSI coagulation testing guidance,
+TTP,Thrombotic Thrombocytopenic Purpura,A thrombotic microangiopathy often evaluated with ADAMTS13 testing and other laboratory findings.,Hematology,ISTH TTP guidance,
+UA,Urinalysis,"Testing of urine using physical, chemical, and microscopic methods.",Urinalysis,Clinical laboratory practice,
+UC,Urine Culture,Culture of urine to detect and characterize clinically significant microbial growth.,Microbiology,Clinical microbiology methods,
+UFC,Urinary Free Cortisol,"Measurement of free cortisol excreted in urine, used in selected endocrine evaluations.",Endocrinology,Clinical laboratory practice,
+UPCR,Urine Protein-to-Creatinine Ratio,A ratio used to estimate urinary protein excretion from a spot urine specimen.,Urinalysis,KDIGO guidance,
+UTI,Urinary Tract Infection,"An infection involving the urinary system, assessed with symptoms and selected urine tests.",Microbiology,Clinical laboratory practice,
+VDRL,Venereal Disease Research Laboratory Test,A nontreponemal test used in syphilis screening and selected follow-up contexts.,Microbiology,CDC STI treatment guidelines,
+VTM,Viral Transport Medium,A medium used to preserve viral specimens during transport for testing.,Specimen Management,CDC specimen collection guidance,
+WBC,White Blood Cell,A leukocyte; white-cell counts and differential are core hematology measurements.,Hematology,Clinical laboratory practice,
+WNL,Within Normal Limits,A phrase used in reporting or documentation to indicate results within a stated reference range; avoid where exact values are needed.,Laboratory Reporting,Laboratory reporting practice,
+WT,Wild Type,A reference or non-variant form of a gene or organism under a specified definition.,Molecular Diagnostics,Molecular diagnostic methods,
+Xpert MTB/RIF,Xpert Mycobacterium tuberculosis/Rifampicin Resistance,A molecular test family detecting M. tuberculosis complex and rifampicin resistance-associated targets.,Molecular Diagnostics,WHO TB diagnostic guidance,
+ZPP,Zinc Protoporphyrin,A red-cell analyte that may be used in evaluation of iron-restricted erythropoiesis or lead exposure.,Hematology,Clinical laboratory practice,
+AAMI,Association for the Advancement of Medical Instrumentation,An organization publishing standards and technical guidance for medical technology.,Quality and Regulation,Clinical laboratory practice; domain-specific guidance,
+ABSI,Automated Bloodstream Infection Surveillance,A surveillance concept using laboratory and clinical data to identify bloodstream infection events.,Microbiology,Clinical laboratory practice; domain-specific guidance,
+AD,Alzheimer Disease,A neurodegenerative condition for which selected biomarkers may support evaluation.,Clinical Diagnostics,Clinical laboratory practice; domain-specific guidance,
+AF,Atrial Fibrillation,A cardiac arrhythmia; laboratory testing may evaluate contributing conditions.,Clinical Diagnostics,Clinical laboratory practice; domain-specific guidance,
+AHRQ,Agency for Healthcare Research and Quality,"A US agency supporting healthcare quality, safety, and evidence research.",Quality and Regulation,Clinical laboratory practice; domain-specific guidance,
+AIHA,Autoimmune Hemolytic Anemia,Anemia caused by immune-mediated red-cell destruction.,Hematology,Clinical laboratory practice; domain-specific guidance,
+AIMS,Automated Instrument Management System,Software used to monitor or administer diagnostic instrument fleets.,Device Operations,Clinical laboratory practice; domain-specific guidance,
+ALC,Absolute Lymphocyte Count,The number of lymphocytes per volume of blood.,Hematology,Clinical laboratory practice; domain-specific guidance,
+APC,Antigen-Presenting Cell,A cell that presents antigen-derived peptides to T cells.,Immunology,Clinical laboratory practice; domain-specific guidance,
+APTT-R,Activated Partial Thromboplastin Time Ratio,A ratio of patient aPTT to a specified reference or control result.,Coagulation,Clinical laboratory practice; domain-specific guidance,
+ARMS,Amplification-Refractory Mutation System,A PCR-based approach for detecting selected sequence variants.,Molecular Diagnostics,Clinical laboratory practice; domain-specific guidance,
+ASR,Analyte-Specific Reagent,"A reagent intended to detect a specific analyte, subject to applicable regulatory definitions.",Quality and Regulation,Clinical laboratory practice; domain-specific guidance,
+BAP,Blood Agar Plate,A culture medium used to support growth and observe hemolysis patterns.,Microbiology,Clinical laboratory practice; domain-specific guidance,
+BCR,B-cell Receptor,A receptor complex on B lymphocytes involved in antigen recognition.,Immunology,Clinical laboratory practice; domain-specific guidance,
+BGA-QC,Blood Gas Analyzer Quality Control,Quality-control procedures used to monitor blood gas analyzer performance.,Quality Control,Clinical laboratory practice; domain-specific guidance,
+BMT,Bone Marrow Transplant,"A treatment context involving specialized hematology, immunology, and infectious disease testing.",Transfusion Medicine,Clinical laboratory practice; domain-specific guidance,
+BSA,Bovine Serum Albumin,A protein commonly used as a blocking agent or assay reagent.,Laboratory Operations,Clinical laboratory practice; domain-specific guidance,
+C3,Complement Component 3,A central complement protein measured in selected immune and inflammatory evaluations.,Immunology,Clinical laboratory practice; domain-specific guidance,
+C4,Complement Component 4,A complement protein measured in selected autoimmune and immune-complex evaluations.,Immunology,Clinical laboratory practice; domain-specific guidance,
+CAH,Congenital Adrenal Hyperplasia,A group of inherited disorders assessed with hormone and newborn-screening tests.,Endocrinology,Clinical laboratory practice; domain-specific guidance,
+CAP,College of American Pathologists,"An organization providing laboratory accreditation, proficiency testing, and educational resources.",Quality and Regulation,Clinical laboratory practice; domain-specific guidance,
+CBFB-MYH11,Core-Binding Factor Beta-Myosin Heavy Chain 11 Fusion,A fusion gene associated with a subset of acute myeloid leukemia.,Molecular Diagnostics,Clinical laboratory practice; domain-specific guidance,
+CCP2,Cyclic Citrullinated Peptide 2,A synthetic peptide antigen used in some anti-CCP antibody assays.,Immunology,Clinical laboratory practice; domain-specific guidance,
+CDI,Clostridioides difficile Infection,"An infection evaluated using toxin, antigen, and/or nucleic acid testing algorithms.",Microbiology,Clinical laboratory practice; domain-specific guidance,
+CF,Cystic Fibrosis,An inherited disorder that may be evaluated by molecular and other diagnostic tests.,Molecular Diagnostics,Clinical laboratory practice; domain-specific guidance,
+CGA,Chromogranin A,A protein measured in selected neuroendocrine tumor evaluations.,Tumor Markers,Clinical laboratory practice; domain-specific guidance,
+CHIKV,Chikungunya Virus,A mosquito-borne virus assessed using molecular or serologic methods.,Virology,Clinical laboratory practice; domain-specific guidance,
+CHOL,Cholesterol,A lipid analyte measured in cardiovascular risk assessment.,Clinical Chemistry,Clinical laboratory practice; domain-specific guidance,
+CIN,Cervical Intraepithelial Neoplasia,A histopathologic classification associated with HPV-related cervical lesions.,Pathology,Clinical laboratory practice; domain-specific guidance,
+CJD,Creutzfeldt-Jakob Disease,A rare prion disease assessed using specialized clinical and laboratory investigations.,Clinical Diagnostics,Clinical laboratory practice; domain-specific guidance,
+CML,Chronic Myeloid Leukemia,A myeloid neoplasm commonly monitored with BCR::ABL1 molecular testing.,Hematology,Clinical laboratory practice; domain-specific guidance,
+CNS,Central Nervous System,The brain and spinal cord; CSF and other tests may support evaluation of CNS conditions.,Clinical Diagnostics,Clinical laboratory practice; domain-specific guidance,
+COI,Cutoff Index,A method-specific ratio or index comparing signal with a defined cutoff.,Immunoassay,Clinical laboratory practice; domain-specific guidance,
+CPS,Combined Positive Score,An immunohistochemistry scoring method used for selected PD-L1 testing indications.,Pathology,Clinical laboratory practice; domain-specific guidance,
+CRE,Carbapenem-Resistant Enterobacterales,Enterobacterales resistant to carbapenems under specified criteria.,Microbiology,Clinical laboratory practice; domain-specific guidance,
+CSF-PCR,Cerebrospinal Fluid Polymerase Chain Reaction,PCR testing of CSF for selected pathogen targets.,Molecular Diagnostics,Clinical laboratory practice; domain-specific guidance,
+CST,Cortisol Stimulation Test,A dynamic test assessing adrenal response to stimulation.,Endocrinology,Clinical laboratory practice; domain-specific guidance,
+DAS,Digital Assay System,A platform concept for automated or digital assay measurement; exact usage is vendor-specific.,Instrumentation,Clinical laboratory practice; domain-specific guidance,
+DBS-PCR,Dried Blood Spot PCR,PCR performed on nucleic acids extracted from dried blood spot specimens.,Molecular Diagnostics,Clinical laboratory practice; domain-specific guidance,
+DHEAS,Dehydroepiandrosterone Sulfate,An adrenal androgen measured in selected endocrine evaluations.,Endocrinology,Clinical laboratory practice; domain-specific guidance,
+DILI-RUCAM,Drug-Induced Liver Injury Roussel Uclaf Causality Assessment Method,A structured scoring approach for assessing likelihood of drug-induced liver injury.,Clinical Chemistry,Clinical laboratory practice; domain-specific guidance,
+DOR,Diagnostic Odds Ratio,A summary measure combining sensitivity and specificity in diagnostic accuracy studies.,Diagnostic Performance,Clinical laboratory practice; domain-specific guidance,
+DTA,Diagnostic Test Accuracy,The ability of a test to correctly classify individuals with and without a target condition.,Diagnostic Performance,Clinical laboratory practice; domain-specific guidance,
+EAC,External Assessment Control,A control material or process used in some external quality assessment schemes.,Quality Control,Clinical laboratory practice; domain-specific guidance,
+ECL,Electrochemiluminescence,A signal-generation method combining electrochemical stimulation with luminescence.,Immunoassay,Clinical laboratory practice; domain-specific guidance,
+ECP,Eosinophil Cationic Protein,A protein measured in selected allergic and inflammatory evaluations.,Immunology,Clinical laboratory practice; domain-specific guidance,
+EDC,Endocrine-Disrupting Chemical,A chemical that may interfere with endocrine function; specialized testing depends on exposure context.,Clinical Chemistry,Clinical laboratory practice; domain-specific guidance,
+EEG,Electroencephalogram,A recording of brain electrical activity; not a laboratory assay but relevant to diagnostic workflows.,Clinical Diagnostics,Clinical laboratory practice; domain-specific guidance,
+EHR,Electronic Health Record,A digital record of patient health information and care history.,Healthcare IT,Clinical laboratory practice; domain-specific guidance,
+EQA-S,External Quality Assessment Scheme,A structured program for comparing laboratory performance with assigned or peer-group targets.,Quality Control,Clinical laboratory practice; domain-specific guidance,
+ESR1,Estrogen Receptor 1,A gene whose variants may be relevant in selected oncology testing.,Molecular Diagnostics,Clinical laboratory practice; domain-specific guidance,
+F1+2,Prothrombin Fragment 1+2,A marker of thrombin generation measured in selected specialized coagulation studies.,Coagulation,Clinical laboratory practice; domain-specific guidance,
+FDPs,Fibrin/Fibrinogen Degradation Products,Fragments produced during breakdown of fibrin or fibrinogen.,Coagulation,Clinical laboratory practice; domain-specific guidance,
+FLC,Free Light Chain,Unbound immunoglobulin light chains measured in selected plasma-cell disorder evaluations.,Clinical Chemistry,Clinical laboratory practice; domain-specific guidance,
+FLT3,FMS-Like Tyrosine Kinase 3,A gene tested for variants relevant to selected acute myeloid leukemia classifications and treatment.,Molecular Diagnostics,Clinical laboratory practice; domain-specific guidance,
+FOXP3,Forkhead Box P3,A transcription factor associated with regulatory T cells and used in selected research or pathology contexts.,Immunology,Clinical laboratory practice; domain-specific guidance,
+FRET,Förster Resonance Energy Transfer,A distance-dependent energy transfer phenomenon used in assay design and molecular detection.,Assay Methods,Clinical laboratory practice; domain-specific guidance,
+GAS,Group A Streptococcus,"Streptococcus pyogenes, detected by culture or rapid tests in appropriate settings.",Microbiology,Clinical laboratory practice; domain-specific guidance,
+GBS,Group B Streptococcus,"Streptococcus agalactiae, screened for in pregnancy and assessed in invasive infections.",Microbiology,Clinical laboratory practice; domain-specific guidance,
+GGT/ALT,Gamma-Glutamyl Transferase to Alanine Aminotransferase Ratio,A calculated ratio sometimes explored in liver disease assessment; not a universal diagnostic criterion.,Clinical Chemistry,Clinical laboratory practice; domain-specific guidance,
+GPC3,Glypican 3,A protein marker assessed in selected liver tumor pathology contexts.,Tumor Markers,Clinical laboratory practice; domain-specific guidance,
+HAP,Hospital-Acquired Pneumonia,Pneumonia acquired in a hospital setting; microbiology may support organism identification.,Microbiology,Clinical laboratory practice; domain-specific guidance,
+HBeAb,Hepatitis B e Antibody,An antibody marker used in hepatitis B serologic interpretation.,Virology,Clinical laboratory practice; domain-specific guidance,
+HBcAb,Hepatitis B Core Antibody,An antibody to hepatitis B core antigen used in serologic testing algorithms.,Virology,Clinical laboratory practice; domain-specific guidance,
+HBsAb,Hepatitis B Surface Antibody,An antibody marker used to assess immunity to hepatitis B in appropriate contexts.,Virology,Clinical laboratory practice; domain-specific guidance,
+HCC,Hepatocellular Carcinoma,"A primary liver cancer for which imaging, pathology, and selected biomarkers may be used.",Tumor Markers,Clinical laboratory practice; domain-specific guidance,
+HCG,Human Chorionic Gonadotropin,A hormone measured in pregnancy testing and selected tumor evaluations.,Endocrinology,Clinical laboratory practice; domain-specific guidance,
+HCT,Hematocrit,The proportion of blood volume occupied by red blood cells.,Hematology,Clinical laboratory practice; domain-specific guidance,
+HIT,Heparin-Induced Thrombocytopenia,An immune-mediated adverse reaction evaluated with clinical scoring and laboratory assays.,Coagulation,Clinical laboratory practice; domain-specific guidance,
+HLA-B27,Human Leukocyte Antigen B27,An HLA marker associated with certain spondyloarthritis conditions.,Immunogenetics,Clinical laboratory practice; domain-specific guidance,
+HPA,Human Platelet Antigen,Platelet antigens relevant to selected alloimmune and transfusion investigations.,Transfusion Medicine,Clinical laboratory practice; domain-specific guidance,
+HRM,High-Resolution Melting,A post-PCR analysis method used to screen sequence variants based on DNA melting behavior.,Molecular Diagnostics,Clinical laboratory practice; domain-specific guidance,
+HTLV-I/II,Human T-Lymphotropic Virus Types I and II,Viruses assessed by screening and confirmatory serologic tests.,Virology,Clinical laboratory practice; domain-specific guidance,
+IA-2,Insulinoma-Associated Antigen-2,An autoantibody target included in selected type 1 diabetes evaluations.,Immunology,Clinical laboratory practice; domain-specific guidance,
+IL-10,Interleukin 10,An anti-inflammatory cytokine measured in selected research and clinical contexts.,Immunology,Clinical laboratory practice; domain-specific guidance,
+IL-8,Interleukin 8,A chemokine associated with neutrophil recruitment and inflammation.,Immunology,Clinical laboratory practice; domain-specific guidance,
+IM,Immunometric Assay,An immunoassay format that measures analyte using antibody-based binding interactions.,Immunoassay,Clinical laboratory practice; domain-specific guidance,
+IMWG,International Myeloma Working Group,A professional group publishing diagnostic and response criteria for plasma-cell disorders.,Quality and Regulation,Clinical laboratory practice; domain-specific guidance,
+ISLH,International Society for Laboratory Hematology,A professional society supporting laboratory hematology research and practice.,Quality and Regulation,Clinical laboratory practice; domain-specific guidance,
+JCV,John Cunningham Virus,"A polyomavirus assessed in selected clinical contexts, often with molecular methods.",Virology,Clinical laboratory practice; domain-specific guidance,
+KIM-1,Kidney Injury Molecule 1,A biomarker studied or used in selected kidney injury assessment contexts.,Clinical Chemistry,Clinical laboratory practice; domain-specific guidance,
+LAC,Lupus Anticoagulant,An antiphospholipid antibody activity assessed with a panel of coagulation-based tests.,Coagulation,Clinical laboratory practice; domain-specific guidance,
+LC-MS/MS,Liquid Chromatography-Tandem Mass Spectrometry,"A combined separation and mass spectrometry technique used for sensitive, selective quantification.",Analytical Methods,Clinical laboratory practice; domain-specific guidance,
+LDT,Laboratory-Developed Test,"A test designed, manufactured, and used within a laboratory under applicable regulatory requirements.",Quality and Regulation,Clinical laboratory practice; domain-specific guidance,
+LPA,Line Probe Assay,A hybridization-based assay used to detect selected genetic targets or resistance markers.,Molecular Diagnostics,Clinical laboratory practice; domain-specific guidance,
+MALDI,Matrix-Assisted Laser Desorption/Ionization,"An ionization technique used in mass spectrometry, including microbial identification.",Analytical Methods,Clinical laboratory practice; domain-specific guidance,
+MDS,Myelodysplastic Syndrome,"A group of clonal bone marrow disorders assessed with blood, marrow, cytogenetic, and molecular studies.",Hematology,Clinical laboratory practice; domain-specific guidance,
+MERS-CoV,Middle East Respiratory Syndrome Coronavirus,A coronavirus detected using validated molecular methods in appropriate epidemiologic contexts.,Virology,Clinical laboratory practice; domain-specific guidance,
+MMA,Methylmalonic Acid,A metabolite measured in evaluation of vitamin B12 status and selected metabolic disorders.,Clinical Chemistry,Clinical laboratory practice; domain-specific guidance,
+MMR,Mismatch Repair,A DNA repair pathway assessed in selected tumor testing and hereditary cancer evaluation.,Molecular Diagnostics,Clinical laboratory practice; domain-specific guidance,
+MOG-IgG,Myelin Oligodendrocyte Glycoprotein Immunoglobulin G,An antibody assessed in selected evaluations of inflammatory demyelinating disease.,Immunology,Clinical laboratory practice; domain-specific guidance,
+MRD,Measurable Residual Disease,"A measure of low-level disease after treatment, assessed with sensitive flow or molecular methods.",Hematology,Clinical laboratory practice; domain-specific guidance,
+MRSA-PCR,Methicillin-Resistant Staphylococcus aureus Polymerase Chain Reaction,PCR testing for selected genetic targets associated with MRSA.,Molecular Diagnostics,Clinical laboratory practice; domain-specific guidance,
+MSSA,Methicillin-Susceptible Staphylococcus aureus,S. aureus classified as susceptible to methicillin-class agents under standardized criteria.,Microbiology,Clinical laboratory practice; domain-specific guidance,
+MTHFR,Methylenetetrahydrofolate Reductase,A gene sometimes tested in selected contexts; common polymorphism testing has limited clinical utility for many indications.,Molecular Diagnostics,Clinical laboratory practice; domain-specific guidance,
+MUC1,Mucin 1,A protein/gene target appearing in selected tumor-marker and molecular research contexts.,Tumor Markers,Clinical laboratory practice; domain-specific guidance,
+NAD,Nicotinamide Adenine Dinucleotide,A coenzyme involved in cellular redox reactions and used in some biochemical assay systems.,Laboratory Operations,Clinical laboratory practice; domain-specific guidance,
+NEFA,Non-Esterified Fatty Acids,Circulating fatty acids measured in selected metabolic and research applications.,Clinical Chemistry,Clinical laboratory practice; domain-specific guidance,
+NET,Neutrophil Extracellular Trap,"A web-like structure released by neutrophils, studied in inflammation and thrombosis research.",Immunology,Clinical laboratory practice; domain-specific guidance,
+NHL,Non-Hodgkin Lymphoma,"A group of lymphoid malignancies evaluated using pathology, immunophenotyping, and molecular tests.",Hematology,Clinical laboratory practice; domain-specific guidance,
+NIPT-A,Non-Invasive Prenatal Testing for Aneuploidy,A screening application using cell-free DNA to estimate risk for selected fetal chromosomal abnormalities.,Genomics,Clinical laboratory practice; domain-specific guidance,
+NLRP3,NLR Family Pyrin Domain Containing 3,"A gene encoding a component of the inflammasome, assessed in selected genetic investigations.",Molecular Diagnostics,Clinical laboratory practice; domain-specific guidance,
+NSE,Neuron-Specific Enolase,A biomarker used in selected neuroendocrine and neurologic disease contexts.,Tumor Markers,Clinical laboratory practice; domain-specific guidance,
+OCT2,Organic Cation Transporter 2,A transporter involved in drug handling and studied in pharmacology and toxicology.,Clinical Chemistry,Clinical laboratory practice; domain-specific guidance,
+OIA,Optical Immunoassay,An immunoassay format detecting changes in optical properties after binding.,Immunoassay,Clinical laboratory practice; domain-specific guidance,
+OPN,Osteopontin,A protein investigated as a biomarker in selected inflammatory and cancer contexts.,Tumor Markers,Clinical laboratory practice; domain-specific guidance,
+PAPP-A,Pregnancy-Associated Plasma Protein A,A protein measured in selected prenatal screening algorithms.,Endocrinology,Clinical laboratory practice; domain-specific guidance,
+PAX8,Paired Box 8,A transcription factor assessed by immunohistochemistry in selected tumor classification.,Pathology,Clinical laboratory practice; domain-specific guidance,
+PBG,Porphobilinogen,A metabolite measured in evaluation of acute hepatic porphyria.,Clinical Chemistry,Clinical laboratory practice; domain-specific guidance,
+PCA,Prostate Cancer Antigen,A context-dependent phrase; use the specific validated biomarker name when reporting.,Tumor Markers,Clinical laboratory practice; domain-specific guidance,
+PDW,Platelet Distribution Width,An index describing variation in platelet size.,Hematology,Clinical laboratory practice; domain-specific guidance,
+PGR,Progesterone Receptor,"A receptor assessed in selected tumor pathology, particularly breast cancer.",Pathology,Clinical laboratory practice; domain-specific guidance,
+PIV,Peripheral Intravenous,A vascular access route; specimen collection conditions can affect some laboratory results.,Clinical Diagnostics,Clinical laboratory practice; domain-specific guidance,
+PJP,Pneumocystis jirovecii Pneumonia,An opportunistic infection assessed using respiratory specimens and organism-specific testing.,Microbiology,Clinical laboratory practice; domain-specific guidance,
+PML-RARA,Promyelocytic Leukemia-Retinoic Acid Receptor Alpha Fusion,A fusion gene central to diagnosis and monitoring of acute promyelocytic leukemia.,Molecular Diagnostics,Clinical laboratory practice; domain-specific guidance,
+PNA,Peptide Nucleic Acid,A synthetic nucleic acid analog used in selected hybridization probes and molecular assays.,Molecular Diagnostics,Clinical laboratory practice; domain-specific guidance,
+PONV,Postoperative Nausea and Vomiting,A clinical condition; laboratory testing may be used to assess alternative causes when indicated.,Clinical Diagnostics,Clinical laboratory practice; domain-specific guidance,
+PRA,Panel Reactive Antibody,A measure of HLA sensitization used in transplant evaluation.,Immunogenetics,Clinical laboratory practice; domain-specific guidance,
+PRL,Prolactin,A hormone measured in evaluation of pituitary and reproductive conditions.,Endocrinology,Clinical laboratory practice; domain-specific guidance,
+PTHrP,Parathyroid Hormone-Related Protein,A protein measured in selected evaluations of hypercalcemia and malignancy.,Clinical Chemistry,Clinical laboratory practice; domain-specific guidance,
+QFT,QuantiFERON-TB,A commercial interferon-gamma release assay used to assess immune sensitization to tuberculosis antigens.,Microbiology,Clinical laboratory practice; domain-specific guidance,
+RBC-I,Red Blood Cell Indices,"Calculated or measured parameters such as MCV, MCH, and MCHC.",Hematology,Clinical laboratory practice; domain-specific guidance,
+RDT,Rapid Diagnostic Test,"A test designed to provide results quickly, often near the patient or in decentralized settings.",Point-of-Care Testing,Clinical laboratory practice; domain-specific guidance,
+RET,Reticulocyte Count,A measurement of immature red blood cells used to assess marrow response.,Hematology,Clinical laboratory practice; domain-specific guidance,
+RIFLE,"Risk, Injury, Failure, Loss, End-Stage Kidney Disease",A historical classification framework for acute kidney injury.,Clinical Chemistry,Clinical laboratory practice; domain-specific guidance,
+RIN,RNA Integrity Number,A score summarizing RNA integrity for certain analytical platforms.,Molecular Diagnostics,Clinical laboratory practice; domain-specific guidance,
+RNP,Ribonucleoprotein,A complex of RNA and protein; antibodies to RNP are assessed in selected autoimmune evaluations.,Immunology,Clinical laboratory practice; domain-specific guidance,
+SARS,Severe Acute Respiratory Syndrome,A respiratory disease syndrome associated with SARS coronavirus infections.,Virology,Clinical laboratory practice; domain-specific guidance,
+SCCmec,Staphylococcal Cassette Chromosome mec,A mobile genetic element carrying mec-associated resistance determinants in staphylococci.,Microbiology,Clinical laboratory practice; domain-specific guidance,
+SCT,Silica Clotting Time,A coagulation assay used in some lupus anticoagulant testing algorithms.,Coagulation,Clinical laboratory practice; domain-specific guidance,
+SLE,Systemic Lupus Erythematosus,"A systemic autoimmune disease evaluated with clinical, serologic, and other findings.",Immunology,Clinical laboratory practice; domain-specific guidance,
+SMA,Smooth Muscle Antibody,An autoantibody assessed in selected autoimmune liver disease investigations.,Immunology,Clinical laboratory practice; domain-specific guidance,
+SMN1,Survival Motor Neuron 1,A gene analyzed in testing for spinal muscular atrophy.,Molecular Diagnostics,Clinical laboratory practice; domain-specific guidance,
+SNR,Signal-to-Noise Ratio,A measure comparing analytical signal magnitude with background noise.,Analytical Performance,Clinical laboratory practice; domain-specific guidance,
+SOP-QC,Standard Operating Procedure for Quality Control,"A documented procedure specifying QC execution, review, and response to out-of-range results.",Quality Control,Clinical laboratory practice; domain-specific guidance,
+SP-D,Surfactant Protein D,A protein studied as a biomarker in selected lung and inflammatory conditions.,Clinical Chemistry,Clinical laboratory practice; domain-specific guidance,
+SSTI,Skin and Soft Tissue Infection,An infection category where microbiological testing may guide treatment in selected cases.,Microbiology,Clinical laboratory practice; domain-specific guidance,
+TAT-Q,Turnaround Time for Quality Review,A locally defined metric for time required to complete result review and release.,Laboratory Operations,Clinical laboratory practice; domain-specific guidance,
+TBNK,"T, B, and Natural Killer Cells",A lymphocyte subset panel used in selected immune evaluations.,Flow Cytometry,Clinical laboratory practice; domain-specific guidance,
+Tg,Thyroglobulin,A protein measured in selected thyroid cancer monitoring contexts.,Endocrinology,Clinical laboratory practice; domain-specific guidance,
+TgAb,Thyroglobulin Antibody,An antibody that can interfere with or inform interpretation of thyroglobulin measurements.,Endocrinology,Clinical laboratory practice; domain-specific guidance,
+TPOAb,Thyroid Peroxidase Antibody,An autoantibody used in evaluation of autoimmune thyroid disease.,Endocrinology,Clinical laboratory practice; domain-specific guidance,
+TRF,Transferrin,An iron transport protein measured in selected iron status evaluations.,Clinical Chemistry,Clinical laboratory practice; domain-specific guidance,
+TTR,Transthyretin,A transport protein sometimes measured as prealbumin in selected contexts.,Clinical Chemistry,Clinical laboratory practice; domain-specific guidance,
+UACR,Urine Albumin-to-Creatinine Ratio,A spot urine ratio used to assess albuminuria.,Urinalysis,Clinical laboratory practice; domain-specific guidance,
+UFC/mg,Urinary Free Cortisol per Milligram,A ratio form used in some specialized urine reporting; use method-specific units.,Endocrinology,Clinical laboratory practice; domain-specific guidance,
+ULN,Upper Limit of Normal,The upper boundary of a stated reference interval or decision threshold.,Laboratory Reporting,Clinical laboratory practice; domain-specific guidance,
+UMI,Unique Molecular Identifier,A short sequence tag used to distinguish original molecules in sequencing workflows.,Molecular Diagnostics,Clinical laboratory practice; domain-specific guidance,
+UPT,Urine Pregnancy Test,A qualitative urine test detecting human chorionic gonadotropin.,Point-of-Care Testing,Clinical laboratory practice; domain-specific guidance,
+VCA-IgM,Viral Capsid Antigen Immunoglobulin M,An EBV antibody marker used in serologic interpretation.,Virology,Clinical laboratory practice; domain-specific guidance,
+VCA-IgG,Viral Capsid Antigen Immunoglobulin G,An EBV antibody marker used in serologic interpretation.,Virology,Clinical laboratory practice; domain-specific guidance,
+VZV,Varicella-Zoster Virus,A virus assessed by molecular or serologic methods for chickenpox or shingles contexts.,Virology,Clinical laboratory practice; domain-specific guidance,
+WAI,Westgard Alarm Index,A locally or vendor-defined alert metric; consult the applicable QC software documentation.,Quality Control,Clinical laboratory practice; domain-specific guidance,
+WBC-DIFF,White Blood Cell Differential,"A breakdown of white blood cell types, measured or calculated by an analyzer.",Hematology,Clinical laboratory practice; domain-specific guidance,
+WHO-IS,WHO International Standard,A reference preparation established to support measurement standardization for specified analytes.,Quality and Regulation,Clinical laboratory practice; domain-specific guidance,
+WT1,Wilms Tumor 1,A gene/protein assessed in selected hematologic and pathology applications.,Molecular Diagnostics,Clinical laboratory practice; domain-specific guidance,
+XDR,Extensively Drug-Resistant,A resistance category indicating susceptibility to only a limited number of antimicrobial options under defined criteria.,Microbiology,Clinical laboratory practice; domain-specific guidance,
+ZIKV,Zika Virus,A virus assessed with molecular or serologic methods in appropriate clinical and epidemiologic contexts.,Virology,Clinical laboratory practice; domain-specific guidance,

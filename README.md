@@ -115,6 +115,17 @@ TermBox lets users load CSV files as searchable glossaries and look up terms, ac
 ```
 This is what you paste into the **"Single purpose"** field during submission. It must describe one narrow action — loading and searching a glossary. Do not mention features like dark mode or resizing here; those are incidental to the core purpose.
 
+### Permission justification
+
+Paste each entry below into the corresponding permission row in the CWS dashboard.
+
+| Permission | Justification |
+|---|---|
+| `storage` | Persists glossary sources, term data, and user preferences (dark mode, font size, popup size) locally on the user's device via `chrome.storage.local`. No data ever leaves the device. |
+| `optional_host_permissions: <all_urls>` | Required only when the user explicitly types a URL and clicks **Load**. The extension requests permission for that specific origin at that moment — it is never granted at install time. Without this, the extension cannot fetch a user-supplied CSV URL. Users who only load local files are never prompted for this permission at all. |
+
+The manifest declares no other permissions (`activeTab`, `tabs`, `scripting`, `cookies`, `history`, etc. are all absent — they are not needed).
+
 ### Name (45 chars max)
 ```
 TermBox — Glossary & Acronym Lookup

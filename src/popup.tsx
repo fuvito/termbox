@@ -87,7 +87,7 @@ function autoName(raw: string): string {
 function loadFromFile(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
-    reader.onload = e => resolve(e.target!.result as string)
+    reader.onload = e => resolve(e.target?.result as string)
     reader.onerror = () => reject(new Error('Failed to read file'))
     reader.readAsText(file, 'utf-8')
   })
@@ -118,7 +118,7 @@ function AboutView({ onBack, theme, prefs }: {
     <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: `1px solid ${theme.border}` }}>
       <span style={{ fontSize: fs - 1, color: theme.muted }}>{label}</span>
       {url ? (
-        <button onClick={() => openUrl(url)}
+        <button type="button" onClick={() => openUrl(url)}
           style={{ background: 'none', border: 'none', color: theme.primary, fontSize: fs - 1, cursor: 'pointer', padding: 0, fontFamily: 'inherit' }}>
           {value}
         </button>
@@ -132,7 +132,7 @@ function AboutView({ onBack, theme, prefs }: {
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: theme.bg }}>
 
       <header style={{ background: BRAND, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
-        <button onClick={onBack}
+        <button type="button" onClick={onBack}
           style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: 20, padding: '0 4px 0 0', lineHeight: 1, opacity: 0.85 }}>
           ←
         </button>
@@ -157,7 +157,7 @@ function AboutView({ onBack, theme, prefs }: {
           Version {__APP_VERSION__}
         </p>
         <p style={{ fontSize: fs - 1, color: theme.secondary, textAlign: 'center', lineHeight: 1.65, maxWidth: 240, margin: '0 0 28px' }}>
-          Instant glossary search from any CSV file. Free, open-source, and fully offline.
+          Build your own glossary or acronym finder from any CSV. Free, open-source, and fully offline.
         </p>
 
         {/* Info rows */}
@@ -318,7 +318,7 @@ function SourcesView({
 
       {/* Header */}
       <header style={{ background: BRAND, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
-        <button onClick={onBack}
+        <button type="button" onClick={onBack}
           style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: 20, padding: '0 4px 0 0', lineHeight: 1, opacity: 0.85 }}>
           ←
         </button>
@@ -368,7 +368,7 @@ function SourcesView({
                 </div>
               </div>
               {source.type === 'url' && (
-                <button
+                <button type="button"
                   onClick={() => { void handleRefresh(source) }}
                   disabled={isBusy}
                   title="Refresh from URL"
@@ -376,7 +376,7 @@ function SourcesView({
                   {loadingId === source.id ? '⌛' : '↻'}
                 </button>
               )}
-              <button
+              <button type="button"
                 onClick={() => { void handleDelete(source.id) }}
                 disabled={isBusy}
                 title="Delete source"
@@ -401,7 +401,6 @@ function SourcesView({
         {showUrlInput ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             <input
-              autoFocus
               type="url"
               placeholder="https://example.com/glossary.csv"
               value={urlInput}
@@ -416,7 +415,7 @@ function SourcesView({
               }}
             />
             <div style={{ display: 'flex', gap: 8 }}>
-              <button
+              <button type="button"
                 onClick={() => { void handleUrlLoad() }}
                 disabled={!urlInput.trim() || isBusy}
                 style={{
@@ -427,7 +426,7 @@ function SourcesView({
                 }}>
                 {isBusy ? 'Loading…' : 'Load'}
               </button>
-              <button
+              <button type="button"
                 onClick={() => { setShowUrlInput(false); setUrlInput(''); setError(null) }}
                 style={{
                   background: 'none', border: `1px solid ${theme.border}`, borderRadius: 6,
@@ -439,7 +438,7 @@ function SourcesView({
           </div>
         ) : (
           <div style={{ display: 'flex', gap: 8 }}>
-            <button
+            <button type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={isBusy}
               style={{
@@ -449,7 +448,7 @@ function SourcesView({
               }}>
               + Add from file
             </button>
-            <button
+            <button type="button"
               onClick={() => { setShowUrlInput(true); setError(null) }}
               disabled={isBusy}
               style={{
@@ -470,7 +469,6 @@ function SourcesView({
 
 function SearchView({
   sources,
-  activeSourceId,
   glossary,
   onOpenSources,
   onOpenAbout,
@@ -480,7 +478,6 @@ function SearchView({
   setSize,
 }: {
   sources: GlossarySource[]
-  activeSourceId: string | 'all' | null
   glossary: TermEntry[]
   onOpenSources: () => void
   onOpenAbout: () => void
@@ -548,23 +545,28 @@ function SearchView({
   return (
     <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', width: '100%', height: '100%', background: theme.bg, overflow: 'hidden' }}>
 
-      {/* Resize handles */}
+      {/* Resize handles — pointer-only drag controls, no keyboard equivalent */}
+      {/* biome-ignore lint/a11y/noStaticElementInteractions: drag handle */}
       <div style={edgeH}  onMouseDown={makeResizer({ bottom: true })} />
+      {/* biome-ignore lint/a11y/noStaticElementInteractions: drag handle */}
       <div style={edgeVR} onMouseDown={makeResizer({ right: true })} />
+      {/* biome-ignore lint/a11y/noStaticElementInteractions: drag handle */}
       <div style={edgeVL} onMouseDown={makeResizer({ left: true })} />
       {/* Bottom-right corner */}
+      {/* biome-ignore lint/a11y/noStaticElementInteractions: drag handle */}
       <div
         onMouseDown={makeResizer({ right: true, bottom: true })}
         style={{ position: 'absolute', right: 0, bottom: 0, width: 14, height: 14, cursor: 'nwse-resize', zIndex: 11 }}>
-        <svg width="9" height="9" viewBox="0 0 9 9" style={{ position: 'absolute', right: 2, bottom: 2 }}>
+        <svg aria-hidden="true" width="9" height="9" viewBox="0 0 9 9" style={{ position: 'absolute', right: 2, bottom: 2 }}>
           <path d="M9 3 L3 9 M9 6 L6 9 M9 0 L0 9" stroke={theme.muted} strokeWidth="1.2" opacity="0.5" />
         </svg>
       </div>
       {/* Bottom-left corner */}
+      {/* biome-ignore lint/a11y/noStaticElementInteractions: drag handle */}
       <div
         onMouseDown={makeResizer({ left: true, bottom: true })}
         style={{ position: 'absolute', left: 0, bottom: 0, width: 14, height: 14, cursor: 'nesw-resize', zIndex: 11 }}>
-        <svg width="9" height="9" viewBox="0 0 9 9" style={{ position: 'absolute', left: 2, bottom: 2 }}>
+        <svg aria-hidden="true" width="9" height="9" viewBox="0 0 9 9" style={{ position: 'absolute', left: 2, bottom: 2 }}>
           <path d="M0 3 L6 9 M0 6 L3 9 M0 0 L9 9" stroke={theme.muted} strokeWidth="1.2" opacity="0.5" />
         </svg>
       </div>
@@ -573,15 +575,15 @@ function SearchView({
       <header style={{ background: BRAND, padding: '10px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
         <span style={{ fontWeight: 700, color: '#fff', fontSize: 20, letterSpacing: '-0.3px' }}>TermBox</span>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <button style={hdrBtn} title="Decrease font size" onClick={() => prefs.setFontSize(Math.max(11, prefs.fontSize - 1))}>A−</button>
-          <button style={hdrBtn} title="Increase font size" onClick={() => prefs.setFontSize(Math.min(17, prefs.fontSize + 1))}>A+</button>
-          <button style={hdrBtn} title={prefs.dark ? 'Light mode' : 'Dark mode'} onClick={() => prefs.setDark(!prefs.dark)}>
+          <button type="button" style={hdrBtn} title="Decrease font size" onClick={() => prefs.setFontSize(Math.max(11, prefs.fontSize - 1))}>A−</button>
+          <button type="button" style={hdrBtn} title="Increase font size" onClick={() => prefs.setFontSize(Math.min(17, prefs.fontSize + 1))}>A+</button>
+          <button type="button" style={hdrBtn} title={prefs.dark ? 'Light mode' : 'Dark mode'} onClick={() => prefs.setDark(!prefs.dark)}>
             {prefs.dark ? '☀' : '☾'}
           </button>
-          <button onClick={onOpenSources} style={{ ...hdrBtn, fontSize: 17, padding: '1px 5px' }} title="Manage sources">
+          <button type="button" onClick={onOpenSources} style={{ ...hdrBtn, fontSize: 17, padding: '1px 5px' }} title="Manage sources">
             ≡
           </button>
-          <button onClick={onOpenAbout} style={{ ...hdrBtn, fontSize: 15, padding: '1px 5px' }} title="About TermBox">
+          <button type="button" onClick={onOpenAbout} style={{ ...hdrBtn, fontSize: 15, padding: '1px 5px' }} title="About TermBox">
             ⓘ
           </button>
         </div>
@@ -590,7 +592,7 @@ function SearchView({
       {/* Empty state when no sources */}
       {noSources ? (
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '32px 20px', background: theme.bg }}>
-          <svg width="48" height="48" fill="none" stroke={theme.muted} strokeWidth={1.2} viewBox="0 0 24 24" style={{ marginBottom: 16, opacity: 0.45 }}>
+          <svg aria-hidden="true" width="48" height="48" fill="none" stroke={theme.muted} strokeWidth={1.2} viewBox="0 0 24 24" style={{ marginBottom: 16, opacity: 0.45 }}>
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
             <polyline points="14 2 14 8 20 8" />
             <line x1="16" y1="13" x2="8" y2="13" />
@@ -598,9 +600,9 @@ function SearchView({
             <line x1="10" y1="9" x2="8" y2="9" />
           </svg>
           <p style={{ fontSize: fs, color: theme.muted, marginBottom: 16, textAlign: 'center', lineHeight: 1.5 }}>
-            Load a CSV to get started
+            Load a CSV glossary or acronym list to get started
           </p>
-          <button
+          <button type="button"
             onClick={onOpenSources}
             style={{ background: BRAND, color: '#fff', border: 'none', borderRadius: 6, padding: '8px 20px', fontSize: fs, cursor: 'pointer' }}>
             Add a glossary
@@ -624,7 +626,7 @@ function SearchView({
                   background: theme.bg, color: theme.text,
                 }}
               />
-              <button
+              <button type="button"
                 onClick={handleSearch}
                 disabled={!canSearch}
                 style={{
@@ -632,7 +634,7 @@ function SearchView({
                   cursor: canSearch ? 'pointer' : 'not-allowed', opacity: canSearch ? 1 : 0.4,
                   display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                 }}>
-                <svg width="15" height="15" fill="none" stroke="#fff" strokeWidth={2.5} viewBox="0 0 24 24">
+                <svg aria-hidden="true" width="15" height="15" fill="none" stroke="#fff" strokeWidth={2.5} viewBox="0 0 24 24">
                   <circle cx={11} cy={11} r={8} />
                   <path d="m21 21-4.35-4.35" strokeLinecap="round" />
                 </svg>
@@ -655,7 +657,7 @@ function SearchView({
           <div style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
             {!hasSearched && (
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '48px 20px 56px', color: theme.muted }}>
-                <svg width="54" height="54" fill="none" stroke="currentColor" strokeWidth={1.2} viewBox="0 0 24 24" style={{ marginBottom: 12, opacity: 0.35 }}>
+                <svg aria-hidden="true" width="54" height="54" fill="none" stroke="currentColor" strokeWidth={1.2} viewBox="0 0 24 24" style={{ marginBottom: 12, opacity: 0.35 }}>
                   <circle cx={11} cy={11} r={8} />
                   <path d="m21 21-4.35-4.35" strokeLinecap="round" />
                 </svg>
@@ -675,7 +677,8 @@ function SearchView({
                   <li
                     key={r.id}
                     style={{ padding: '10px 14px', borderBottom: `1px solid ${theme.border}`, cursor: 'pointer', background: expanded === r.id ? theme.bg : theme.surface }}
-                    onClick={() => setExpanded(expanded === r.id ? null : r.id)}>
+                    onClick={() => setExpanded(expanded === r.id ? null : r.id)}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setExpanded(expanded === r.id ? null : r.id) }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
                       <strong style={{ fontSize: fs, color: theme.text }}>{r.term}</strong>
                       {r.fullForm && (
@@ -750,7 +753,7 @@ function App() {
   useEffect(() => {
     // Width must be set explicitly to override popup.html's min-width rule.
     // Height is left to the browser — it auto-sizes to the outer div's height.
-    document.body.style.width = size.w + 'px'
+    document.body.style.width = `${size.w}px`
   }, [size.w])
 
   const reload = useCallback(async () => {
@@ -772,7 +775,7 @@ function App() {
         if (src.type === 'url' && src.autoRefresh && src.url) {
           void (async () => {
             try {
-              const text = await loadFromUrl(src.url!)
+              const text = await loadFromUrl(src.url as string)
               const rows = parseCsv(text)
               const terms = csvToTermEntries(rows, src.id)
               const updated: GlossarySource = { ...src, termCount: terms.length, lastLoaded: new Date().toISOString() }
@@ -799,7 +802,6 @@ function App() {
       {screen === 'search' && (
         <SearchView
           sources={appData.sources}
-          activeSourceId={appData.activeSourceId}
           glossary={appData.glossary}
           onOpenSources={() => setScreen('sources')}
           onOpenAbout={() => setScreen('about')}
@@ -830,6 +832,6 @@ function App() {
   )
 }
 
-createRoot(document.getElementById('root')!).render(
+createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode><App /></StrictMode>,
 )

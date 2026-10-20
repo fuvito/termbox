@@ -2,7 +2,7 @@ import type { TermEntry } from './types'
 
 // Minimal RFC 4180-compliant CSV parser. No external dependencies.
 export function parseCsv(text: string): Record<string, string>[] {
-  const normalized = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n')
+  const normalized = text.replace(/^﻿/, '').replace(/\r\n/g, '\n').replace(/\r/g, '\n')
   const rows: string[][] = []
   let row: string[] = []
   let field = ''
@@ -51,15 +51,15 @@ export function parseCsv(text: string): Record<string, string>[] {
 
 export function csvToTermEntries(rows: Record<string, string>[], sourceId: string): TermEntry[] {
   return rows
-    .filter(row => row['term']?.trim() && row['definition']?.trim())
+    .filter(row => row.term?.trim() && row.definition?.trim())
     .map((row, i) => ({
       id: `${sourceId}_${i}`,
-      term: row['term']!.trim(),
-      fullForm: row['full_form']?.trim() || null,
-      definition: row['definition']!.trim(),
-      domain: row['domain']?.trim() || null,
-      sourceReference: row['source_reference']?.trim() || null,
-      aliases: (row['aliases'] ?? '').split(';').map(a => a.trim()).filter(Boolean),
+      term: row.term?.trim(),
+      fullForm: row.full_form?.trim() || null,
+      definition: row.definition?.trim(),
+      domain: row.domain?.trim() || null,
+      sourceReference: row.source_reference?.trim() || null,
+      aliases: (row.aliases ?? '').split(';').map(a => a.trim()).filter(Boolean),
       sourceId,
     }))
 }

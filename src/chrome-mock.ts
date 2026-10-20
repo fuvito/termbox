@@ -1,6 +1,6 @@
 // Activates only outside a real Chrome extension context (e.g. `npm run serve`).
 // Backs chrome.storage.local with localStorage so the popup works in a browser tab.
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// biome-ignore lint/suspicious/noExplicitAny: globalThis needs any to attach chrome mock
 const g = globalThis as any
 
 if (!g.chrome?.storage) {

@@ -28,7 +28,7 @@ TermBox makes network requests **only when you explicitly ask it to** — specif
 TermBox does **not**:
 - Send analytics or telemetry
 - Contact any TermBox or third-party server
-- Track usage or behaviour
+- Track usage or behavior
 - Embed any ad or tracking SDK
 
 ## Permissions

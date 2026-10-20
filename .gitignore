@@ -1,4 +1,23 @@
-# Logs
+# ─── IntelliJ / JetBrains ────────────────────────────────────────────────────
+.idea/
+*.iml
+*.ipr
+*.iws
+*.idea/
+
+# ─── OS ──────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# ─── VS Code ─────────────────────────────────────────────────────────────────
+.vscode/
+
+# ─── Build output ────────────────────────────────────────────────────────────
+dist/
+
+# ─── Logs
 logs
 *.log
 npm-debug.log*
@@ -80,7 +99,6 @@ out
 
 # Nuxt.js build / generate output
 .nuxt
-dist
 .output
 
 # Gatsby files

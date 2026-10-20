@@ -514,11 +514,16 @@ function SearchView({
 
   const makeResizer = (edges: { right?: boolean; bottom?: boolean }) => (e: React.MouseEvent) => {
     e.preventDefault()
-    const x0 = e.clientX, y0 = e.clientY, w0 = size.w, h0 = size.h
-    const onMove = (ev: MouseEvent) => setSize({
-      w: edges.right  ? Math.max(280, Math.min(700, Math.round(w0 + ev.clientX - x0))) : w0,
-      h: edges.bottom ? Math.max(220, Math.min(550, Math.round(h0 + ev.clientY - y0))) : h0,
-    })
+    // Use movementX/Y (screen-pixel deltas) instead of clientX - x0.
+    // Chrome extension popups are right-anchored: expanding the popup shifts
+    // its left edge, which changes clientX even when the mouse hasn't moved.
+    // movementX is screenX-based so it is immune to that repositioning.
+    let w = size.w, h = size.h
+    const onMove = (ev: MouseEvent) => {
+      if (edges.right)  w = Math.max(280, Math.min(700, w + ev.movementX))
+      if (edges.bottom) h = Math.max(220, Math.min(550, h + ev.movementY))
+      setSize({ w: Math.round(w), h: Math.round(h) })
+    }
     const onUp = () => {
       document.removeEventListener('mousemove', onMove)
       document.removeEventListener('mouseup', onUp)
@@ -773,7 +778,7 @@ function App() {
 
   return (
     <div style={{
-      width: size.w,
+      width: '100%',
       height: size.h,
       boxShadow: 'inset 1px 1px 0 rgba(255,255,255,0.14), inset -1px -1px 0 rgba(0,0,0,0.14)',
       position: 'relative',

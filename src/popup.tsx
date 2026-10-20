@@ -476,6 +476,8 @@ function SearchView({
   onOpenAbout,
   theme,
   prefs,
+  size,
+  setSize,
 }: {
   sources: GlossarySource[]
   activeSourceId: string | 'all' | null
@@ -484,6 +486,8 @@ function SearchView({
   onOpenAbout: () => void
   theme: Theme
   prefs: Prefs
+  size: { w: number; h: number }
+  setSize: (v: { w: number; h: number }) => void
 }) {
   const [query, setQuery] = useState(() => {
     try { return localStorage.getItem('lastQuery') ?? '' } catch { return '' }
@@ -496,15 +500,7 @@ function SearchView({
   const inputRef = useRef<HTMLInputElement>(null)
   const fs = prefs.fontSize
 
-  const defaultH = Math.round(window.screen.availHeight * 0.25)
-  const [size, setSize] = useStoredPref<{ w: number; h: number }>('pref_size', { w: 360, h: defaultH })
-
   useEffect(() => { inputRef.current?.focus() }, [])
-
-  useEffect(() => {
-    document.body.style.width = size.w + 'px'
-    return () => { document.body.style.width = '' }
-  }, [size.w])
 
   const handleSearch = useCallback(() => {
     const q = query.trim()
@@ -544,7 +540,7 @@ function SearchView({
   const edgeV: React.CSSProperties = { position: 'absolute', top: 0, right: 0, width: 5, bottom: 12, cursor: 'ew-resize', zIndex: 10 }
 
   return (
-    <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', width: size.w, height: size.h, background: theme.bg, overflow: 'hidden' }}>
+    <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', width: '100%', height: size.h, background: theme.bg, overflow: 'hidden' }}>
 
       {/* Resize handles */}
       <div style={edgeH} onMouseDown={makeResizer({ bottom: true })} />
@@ -726,10 +722,18 @@ function App() {
   const theme = dark ? DARK : LIGHT
   const prefs: Prefs = { dark, setDark, fontSize, setFontSize }
 
+  const defaultH = Math.round(window.screen.availHeight * 0.25)
+  const [size, setSize] = useStoredPref<{ w: number; h: number }>('pref_size', { w: 360, h: defaultH })
+
   const [screen, setScreen] = useState<Screen>('search')
   const [appData, setAppData] = useState<AppData>({ sources: [], activeSourceId: null, glossary: [] })
 
   useEffect(() => { document.body.style.background = theme.bg }, [theme.bg])
+
+  useEffect(() => {
+    document.body.style.width = size.w + 'px'
+    return () => { document.body.style.width = '' }
+  }, [size.w])
 
   const reload = useCallback(async () => {
     const srcs = await getSources()
@@ -766,7 +770,12 @@ function App() {
   }, [reload])
 
   return (
-    <>
+    <div style={{
+      width: size.w,
+      boxShadow: 'inset 1px 1px 0 rgba(255,255,255,0.14), inset -1px -1px 0 rgba(0,0,0,0.14)',
+      position: 'relative',
+      overflow: 'hidden',
+    }}>
       {screen === 'search' && (
         <SearchView
           sources={appData.sources}
@@ -776,6 +785,8 @@ function App() {
           onOpenAbout={() => setScreen('about')}
           theme={theme}
           prefs={prefs}
+          size={size}
+          setSize={setSize}
         />
       )}
       {screen === 'sources' && (
@@ -795,7 +806,7 @@ function App() {
           prefs={prefs}
         />
       )}
-    </>
+    </div>
   )
 }
 

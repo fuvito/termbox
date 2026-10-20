@@ -126,6 +126,12 @@ Paste each entry below into the corresponding permission row in the CWS dashboar
 
 The manifest declares no other permissions (`activeTab`, `tabs`, `scripting`, `cookies`, `history`, etc. are all absent — they are not needed).
 
+### Remote code
+
+**Answer: No.**
+
+All JavaScript is bundled into the extension package at build time by Vite. Nothing is fetched and executed at runtime. CSV content loaded from user-supplied URLs is treated as plain text data — it is parsed locally and never evaluated as code. The extension contains no `eval()`, `new Function()`, or dynamically injected `<script>` tags.
+
 ### Name (45 chars max)
 ```
 TermBox — Glossary & Acronym Lookup

@@ -4,6 +4,10 @@ A free, open-source browser extension that turns any CSV file into a searchable 
 
 No accounts. No backend. No subscription. Works fully offline after the first load.
 
+| Search | Sources | In Chrome |
+|---|---|---|
+| ![Search view](docs/screenshots/sample_search.png) | ![Sources view](docs/screenshots/glossary_sources.png) | ![In browser](docs/screenshots/full_screen_image.png) |
+
 ---
 
 ## Features

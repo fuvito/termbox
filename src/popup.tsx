@@ -99,6 +99,78 @@ async function loadFromUrl(url: string): Promise<string> {
   return res.text()
 }
 
+declare const __APP_VERSION__: string
+
+// ─── AboutView ────────────────────────────────────────────────────────────────
+
+function AboutView({ onBack, theme, prefs }: {
+  onBack: () => void
+  theme: Theme
+  prefs: Prefs
+}) {
+  const fs = prefs.fontSize
+
+  function openUrl(url: string) {
+    window.open(url, '_blank', 'noopener,noreferrer')
+  }
+
+  const infoRow = (label: string, value: string, url?: string) => (
+    <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: `1px solid ${theme.border}` }}>
+      <span style={{ fontSize: fs - 1, color: theme.muted }}>{label}</span>
+      {url ? (
+        <button onClick={() => openUrl(url)}
+          style={{ background: 'none', border: 'none', color: theme.primary, fontSize: fs - 1, cursor: 'pointer', padding: 0, fontFamily: 'inherit' }}>
+          {value}
+        </button>
+      ) : (
+        <span style={{ fontSize: fs - 1, color: theme.text, fontWeight: 500 }}>{value}</span>
+      )}
+    </div>
+  )
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: theme.bg }}>
+
+      <header style={{ background: BRAND, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+        <button onClick={onBack}
+          style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: 20, padding: '0 4px 0 0', lineHeight: 1, opacity: 0.85 }}>
+          ←
+        </button>
+        <span style={{ fontWeight: 700, color: '#fff', fontSize: 18 }}>About</span>
+      </header>
+
+      <div style={{ flex: 1, padding: '32px 20px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+
+        {/* Logo */}
+        <div style={{
+          width: 64, height: 64, borderRadius: 16, background: BRAND,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          marginBottom: 14, boxShadow: '0 4px 20px rgba(59,75,200,0.28)',
+        }}>
+          <span style={{ color: '#fff', fontWeight: 800, fontSize: 24, letterSpacing: '-0.5px' }}>TB</span>
+        </div>
+
+        <h1 style={{ fontSize: fs + 7, fontWeight: 700, color: theme.text, margin: '0 0 4px', letterSpacing: '-0.3px' }}>
+          TermBox
+        </h1>
+        <p style={{ fontSize: fs - 1, color: theme.muted, margin: '0 0 10px' }}>
+          Version {__APP_VERSION__}
+        </p>
+        <p style={{ fontSize: fs - 1, color: theme.secondary, textAlign: 'center', lineHeight: 1.65, maxWidth: 240, margin: '0 0 28px' }}>
+          Instant glossary search from any CSV file. Free, open-source, and fully offline.
+        </p>
+
+        {/* Info rows */}
+        <div style={{ width: '100%', borderTop: `1px solid ${theme.border}` }}>
+          {infoRow('Author', 'Fuat Yazar')}
+          {infoRow('License', 'MIT')}
+          {infoRow('Source', 'github.com/fuvito/termbox', 'https://github.com/fuvito/termbox')}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ─── SourcesView ──────────────────────────────────────────────────────────────
 
 function SourcesView({
@@ -401,6 +473,7 @@ function SearchView({
   activeSourceId,
   glossary,
   onOpenSources,
+  onOpenAbout,
   theme,
   prefs,
 }: {
@@ -408,6 +481,7 @@ function SearchView({
   activeSourceId: string | 'all' | null
   glossary: TermEntry[]
   onOpenSources: () => void
+  onOpenAbout: () => void
   theme: Theme
   prefs: Prefs
 }) {
@@ -494,6 +568,9 @@ function SearchView({
           </button>
           <button onClick={onOpenSources} style={{ ...hdrBtn, fontSize: 17, padding: '1px 5px' }} title="Manage sources">
             ≡
+          </button>
+          <button onClick={onOpenAbout} style={{ ...hdrBtn, fontSize: 15, padding: '1px 5px' }} title="About TermBox">
+            ⓘ
           </button>
         </div>
       </header>
@@ -635,7 +712,7 @@ function SearchView({
 
 // ─── App ──────────────────────────────────────────────────────────────────────
 
-type Screen = 'search' | 'sources'
+type Screen = 'search' | 'sources' | 'about'
 
 interface AppData {
   sources: GlossarySource[]
@@ -696,6 +773,7 @@ function App() {
           activeSourceId={appData.activeSourceId}
           glossary={appData.glossary}
           onOpenSources={() => setScreen('sources')}
+          onOpenAbout={() => setScreen('about')}
           theme={theme}
           prefs={prefs}
         />
@@ -706,6 +784,13 @@ function App() {
           activeSourceId={appData.activeSourceId}
           onBack={() => setScreen('search')}
           onReload={reload}
+          theme={theme}
+          prefs={prefs}
+        />
+      )}
+      {screen === 'about' && (
+        <AboutView
+          onBack={() => setScreen('search')}
           theme={theme}
           prefs={prefs}
         />

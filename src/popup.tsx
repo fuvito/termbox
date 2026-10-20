@@ -99,6 +99,24 @@ async function loadFromUrl(url: string): Promise<string> {
   return res.text()
 }
 
+function requestOriginPermission(url: string): Promise<boolean> {
+  return new Promise(resolve => {
+    try {
+      const origin = new URL(url).origin
+      chrome.permissions.request({ origins: [`${origin}/*`] }, resolve)
+    } catch { resolve(false) }
+  })
+}
+
+function hasOriginPermission(url: string): Promise<boolean> {
+  return new Promise(resolve => {
+    try {
+      const origin = new URL(url).origin
+      chrome.permissions.contains({ origins: [`${origin}/*`] }, resolve)
+    } catch { resolve(false) }
+  })
+}
+
 declare const __APP_VERSION__: string
 
 // ─── AboutView ────────────────────────────────────────────────────────────────
@@ -231,6 +249,11 @@ function SourcesView({
     const url = urlInput.trim()
     if (!url) return
     setError(null)
+    const granted = await requestOriginPermission(url)
+    if (!granted) {
+      setError('Permission not granted — allow access to this site to load the CSV.')
+      return
+    }
     const id = crypto.randomUUID()
     setLoadingId(id)
     try {
@@ -274,8 +297,13 @@ function SourcesView({
 
   async function handleRefresh(source: GlossarySource) {
     if (!source.url) return
-    setLoadingId(source.id)
     setError(null)
+    const granted = await requestOriginPermission(source.url)
+    if (!granted) {
+      setError('Permission not granted — allow access to refresh this source.')
+      return
+    }
+    setLoadingId(source.id)
     try {
       const text = await loadFromUrl(source.url)
       const rows = parseCsv(text)
@@ -775,6 +803,7 @@ function App() {
         if (src.type === 'url' && src.autoRefresh && src.url) {
           void (async () => {
             try {
+              if (!await hasOriginPermission(src.url as string)) return
               const text = await loadFromUrl(src.url as string)
               const rows = parseCsv(text)
               const terms = csvToTermEntries(rows, src.id)

@@ -28,5 +28,9 @@ if (!g.chrome?.storage) {
       },
     },
     runtime: { onInstalled: { addListener() {} } },
+    permissions: {
+      request(_perms: object, cb: (granted: boolean) => void) { cb(true) },
+      contains(_perms: object, cb: (result: boolean) => void) { cb(true) },
+    },
   }
 }

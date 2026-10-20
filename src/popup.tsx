@@ -791,7 +791,6 @@ function App() {
     <div style={{
       width: '100%',
       height: size.h,
-      boxShadow: 'inset 1px 1px 0 rgba(255,255,255,0.14), inset -1px -1px 0 rgba(0,0,0,0.14)',
       position: 'relative',
       overflow: 'hidden',
       display: 'flex',

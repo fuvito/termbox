@@ -109,6 +109,12 @@ To use it, open TermBox → **≡** → **Add from file** → select `samples/ai
 
 When submitting to the Chrome Web Store, use the following copy. Keywords are woven into the description naturally — the Store's search indexes the description text, so there's no separate keyword field.
 
+### Single purpose statement
+```
+TermBox lets users load CSV files as searchable glossaries and look up terms, acronyms, and definitions from the browser toolbar.
+```
+This is what you paste into the **"Single purpose"** field during submission. It must describe one narrow action — loading and searching a glossary. Do not mention features like dark mode or resizing here; those are incidental to the core purpose.
+
 ### Name (45 chars max)
 ```
 TermBox — Glossary & Acronym Lookup

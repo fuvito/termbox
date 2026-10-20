@@ -132,6 +132,14 @@ The manifest declares no other permissions (`activeTab`, `tabs`, `scripting`, `c
 
 All JavaScript is bundled into the extension package at build time by Vite. Nothing is fetched and executed at runtime. CSV content loaded from user-supplied URLs is treated as plain text data — it is parsed locally and never evaluated as code. The extension contains no `eval()`, `new Function()`, or dynamically injected `<script>` tags.
 
+### Privacy policy URL
+
+```
+https://github.com/fuvito/termbox/blob/main/PRIVACY.md
+```
+
+Paste this into the **"Privacy policy"** field in the CWS dashboard. The page is publicly accessible without login and renders as readable HTML. The policy covers: local-only storage, no analytics, no tracking, and when/why network requests are made.
+
 ### Name (45 chars max)
 ```
 TermBox — Glossary & Acronym Lookup

@@ -36,7 +36,7 @@ TermBox does **not**:
 | Permission | Reason |
 |---|---|
 | `storage` | Save glossary data and preferences locally on your device |
-| `host_permissions: <all_urls>` | Allow fetching CSV files from any URL you explicitly provide in the "Add from URL" field. No background requests are made — this permission is only exercised when you initiate a URL load. |
+| `optional_host_permissions: <all_urls>` | Allow fetching CSV files from any URL you explicitly provide in the "Add from URL" or "Refresh" field. Declared as **optional** — not granted at install time. The extension requests access for the specific origin at the moment you initiate a URL load. Users who only load local files are never prompted for this permission. |
 
 ## Changes
 

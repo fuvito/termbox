@@ -517,7 +517,7 @@ function SearchView({
     const x0 = e.clientX, y0 = e.clientY, w0 = size.w, h0 = size.h
     const onMove = (ev: MouseEvent) => setSize({
       w: edges.right  ? Math.max(280, Math.min(700, Math.round(w0 + ev.clientX - x0))) : w0,
-      h: edges.bottom ? Math.max(180, Math.min(600, Math.round(h0 + ev.clientY - y0))) : h0,
+      h: edges.bottom ? Math.max(220, Math.min(550, Math.round(h0 + ev.clientY - y0))) : h0,
     })
     const onUp = () => {
       document.removeEventListener('mousemove', onMove)
@@ -722,8 +722,9 @@ function App() {
   const theme = dark ? DARK : LIGHT
   const prefs: Prefs = { dark, setDark, fontSize, setFontSize }
 
-  const defaultH = Math.round(window.screen.availHeight * 0.25)
-  const [size, setSize] = useStoredPref<{ w: number; h: number }>('pref_size', { w: 360, h: defaultH })
+  const [rawSize, setSize] = useStoredPref<{ w: number; h: number }>('pref_size', { w: 360, h: 420 })
+  // Clamp stored value to safe bounds — prevents clips when an old value exceeds Chrome's popup cap
+  const size = { w: Math.max(280, Math.min(700, rawSize.w)), h: Math.max(220, Math.min(550, rawSize.h)) }
 
   const [screen, setScreen] = useState<Screen>('search')
   const [appData, setAppData] = useState<AppData>({ sources: [], activeSourceId: null, glossary: [] })
@@ -731,10 +732,10 @@ function App() {
   useEffect(() => { document.body.style.background = theme.bg }, [theme.bg])
 
   useEffect(() => {
+    // Width must be set explicitly to override popup.html's min-width rule.
+    // Height is left to the browser — it auto-sizes to the outer div's height.
     document.body.style.width = size.w + 'px'
-    document.body.style.height = size.h + 'px'
-    document.body.style.overflow = 'hidden'
-  }, [size.w, size.h])
+  }, [size.w])
 
   const reload = useCallback(async () => {
     const srcs = await getSources()

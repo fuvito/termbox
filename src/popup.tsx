@@ -314,7 +314,7 @@ function SourcesView({
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: 300, background: theme.bg }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: theme.bg }}>
 
       {/* Header */}
       <header style={{ background: BRAND, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
@@ -540,7 +540,7 @@ function SearchView({
   const edgeV: React.CSSProperties = { position: 'absolute', top: 0, right: 0, width: 5, bottom: 12, cursor: 'ew-resize', zIndex: 10 }
 
   return (
-    <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', width: '100%', height: size.h, background: theme.bg, overflow: 'hidden' }}>
+    <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', width: '100%', height: '100%', background: theme.bg, overflow: 'hidden' }}>
 
       {/* Resize handles */}
       <div style={edgeH} onMouseDown={makeResizer({ bottom: true })} />
@@ -732,8 +732,9 @@ function App() {
 
   useEffect(() => {
     document.body.style.width = size.w + 'px'
-    return () => { document.body.style.width = '' }
-  }, [size.w])
+    document.body.style.height = size.h + 'px'
+    document.body.style.overflow = 'hidden'
+  }, [size.w, size.h])
 
   const reload = useCallback(async () => {
     const srcs = await getSources()
@@ -772,9 +773,12 @@ function App() {
   return (
     <div style={{
       width: size.w,
+      height: size.h,
       boxShadow: 'inset 1px 1px 0 rgba(255,255,255,0.14), inset -1px -1px 0 rgba(0,0,0,0.14)',
       position: 'relative',
       overflow: 'hidden',
+      display: 'flex',
+      flexDirection: 'column',
     }}>
       {screen === 'search' && (
         <SearchView

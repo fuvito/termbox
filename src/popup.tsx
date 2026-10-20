@@ -1,4 +1,5 @@
 import './chrome-mock'
+import '@fontsource-variable/inter'
 import { StrictMode, useState, useEffect, useRef, useCallback } from 'react'
 import { createRoot } from 'react-dom/client'
 import type { TermEntry, GlossarySource } from './types'

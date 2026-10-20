@@ -78,6 +78,10 @@ To use it, open TermBox → **≡** → **Add from file** → select `samples/bi
 
 ## Installation (Chrome)
 
+### From the Chrome Web Store _(coming soon)_
+
+Search for **TermBox** in the [Chrome Web Store](https://chrome.google.com/webstore) and click **Add to Chrome**.
+
 ### From source (manual)
 
 1. Clone the repo and build:
@@ -121,6 +125,21 @@ Then open [http://localhost:5173/popup.html](http://localhost:5173/popup.html).
 | `npm run dev` | Watch-build to `dist/` — reload unpacked extension in Chrome as you edit |
 | `npm run build` | Production build to `dist/` |
 | `npm run typecheck` | TypeScript type check (no emit) |
+| `npm run icons` | Regenerate `public/icon16/48/128.png` from the Node.js generator script |
+
+### Packaging for the Chrome Web Store
+
+After `npm run build`, zip the contents of the `dist/` folder (not the folder itself):
+
+```bash
+# macOS / Linux
+cd dist && zip -r ../termbox.zip . && cd ..
+
+# Windows (PowerShell)
+Compress-Archive -Path dist\* -DestinationPath termbox.zip -Force
+```
+
+Upload `termbox.zip` at the [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole).
 
 ---
 
@@ -157,6 +176,13 @@ termbox/
 
 ---
 
+## Privacy
+
+TermBox stores data only on your device. No analytics, no tracking, no external servers.
+See [PRIVACY.md](PRIVACY.md) for the full policy.
+
+---
+
 ## License
 
-MIT
+MIT — © [Fuat Yazar](https://github.com/fuvito)

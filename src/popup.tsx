@@ -512,15 +512,15 @@ function SearchView({
     try { localStorage.setItem('lastQuery', q) } catch {}
   }, [query, searchMode, glossary])
 
-  const makeResizer = (edges: { right?: boolean; bottom?: boolean }) => (e: React.MouseEvent) => {
+  const makeResizer = (edges: { right?: boolean; left?: boolean; bottom?: boolean }) => (e: React.MouseEvent) => {
     e.preventDefault()
-    // Use movementX/Y (screen-pixel deltas) instead of clientX - x0.
-    // Chrome extension popups are right-anchored: expanding the popup shifts
-    // its left edge, which changes clientX even when the mouse hasn't moved.
-    // movementX is screenX-based so it is immune to that repositioning.
+    // movementX/Y are screenX-based deltas, unaffected by the popup window
+    // repositioning that happens when Chrome re-anchors a right-anchored popup.
+    // Left-edge resize inverts movementX: dragging left (negative) widens the popup.
     let w = size.w, h = size.h
     const onMove = (ev: MouseEvent) => {
       if (edges.right)  w = Math.max(280, Math.min(700, w + ev.movementX))
+      if (edges.left)   w = Math.max(280, Math.min(700, w - ev.movementX))
       if (edges.bottom) h = Math.max(220, Math.min(550, h + ev.movementY))
       setSize({ w: Math.round(w), h: Math.round(h) })
     }
@@ -541,20 +541,31 @@ function SearchView({
     background: 'rgba(255,255,255,0.15)', border: 'none', borderRadius: 4,
     color: '#fff', cursor: 'pointer', padding: '2px 6px', fontSize: 11, lineHeight: 1.4,
   }
-  const edgeH: React.CSSProperties = { position: 'absolute', bottom: 0, left: 12, right: 12, height: 5, cursor: 'ns-resize', zIndex: 10 }
-  const edgeV: React.CSSProperties = { position: 'absolute', top: 0, right: 0, width: 5, bottom: 12, cursor: 'ew-resize', zIndex: 10 }
+  const edgeH:  React.CSSProperties = { position: 'absolute', bottom: 0, left: 14, right: 14, height: 5, cursor: 'ns-resize', zIndex: 10 }
+  const edgeVR: React.CSSProperties = { position: 'absolute', top: 0, right: 0, width: 5, bottom: 14, cursor: 'ew-resize', zIndex: 10 }
+  const edgeVL: React.CSSProperties = { position: 'absolute', top: 0, left: 0,  width: 5, bottom: 14, cursor: 'ew-resize', zIndex: 10 }
 
   return (
     <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', width: '100%', height: '100%', background: theme.bg, overflow: 'hidden' }}>
 
       {/* Resize handles */}
-      <div style={edgeH} onMouseDown={makeResizer({ bottom: true })} />
-      <div style={edgeV} onMouseDown={makeResizer({ right: true })} />
+      <div style={edgeH}  onMouseDown={makeResizer({ bottom: true })} />
+      <div style={edgeVR} onMouseDown={makeResizer({ right: true })} />
+      <div style={edgeVL} onMouseDown={makeResizer({ left: true })} />
+      {/* Bottom-right corner */}
       <div
         onMouseDown={makeResizer({ right: true, bottom: true })}
         style={{ position: 'absolute', right: 0, bottom: 0, width: 14, height: 14, cursor: 'nwse-resize', zIndex: 11 }}>
         <svg width="9" height="9" viewBox="0 0 9 9" style={{ position: 'absolute', right: 2, bottom: 2 }}>
           <path d="M9 3 L3 9 M9 6 L6 9 M9 0 L0 9" stroke={theme.muted} strokeWidth="1.2" opacity="0.5" />
+        </svg>
+      </div>
+      {/* Bottom-left corner */}
+      <div
+        onMouseDown={makeResizer({ left: true, bottom: true })}
+        style={{ position: 'absolute', left: 0, bottom: 0, width: 14, height: 14, cursor: 'nesw-resize', zIndex: 11 }}>
+        <svg width="9" height="9" viewBox="0 0 9 9" style={{ position: 'absolute', left: 2, bottom: 2 }}>
+          <path d="M0 3 L6 9 M0 6 L3 9 M0 0 L9 9" stroke={theme.muted} strokeWidth="1.2" opacity="0.5" />
         </svg>
       </div>
 

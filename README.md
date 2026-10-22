@@ -318,6 +318,12 @@ termbox/
 
 ---
 
+## Disclaimer
+
+TermBox is designed for glossaries, acronym lists, and terminology only. It is **not** a secure storage solution. Do not use it to store passwords, credentials, API keys, or any sensitive or confidential information. All data is stored in plain text via Chrome's local storage. The user assumes full responsibility for the content they load into the extension.
+
+---
+
 ## Privacy
 
 TermBox stores data only on your device. No analytics, no tracking, no external servers.

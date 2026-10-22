@@ -185,6 +185,11 @@ function AboutView({ onBack, theme, prefs }: {
           {infoRow('License', 'MIT')}
           {infoRow('Source', 'github.com/fuvito/termbox', 'https://github.com/fuvito/termbox')}
         </div>
+
+        {/* Disclaimer */}
+        <p style={{ fontSize: fs - 2, color: theme.muted, textAlign: 'center', lineHeight: 1.55, maxWidth: 260, margin: '24px 0 0' }}>
+          <strong style={{ color: theme.secondary }}>Disclaimer:</strong> TermBox is designed for glossaries and terminology only. Do not use it to store passwords, credentials, or any confidential information. The user assumes full responsibility for the content they load into the extension.
+        </p>
       </div>
     </div>
   )

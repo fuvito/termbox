@@ -12,6 +12,10 @@ No accounts. No backend. No subscription. Works fully offline.
 |---|---|---|
 | ![Search view](docs/screenshots/sample_search.png) | ![Sources view](docs/screenshots/glossary_sources.png) | ![In browser](docs/screenshots/full_screen_image.png) |
 
+## Demo
+
+[![Watch the intro video](https://img.youtube.com/vi/EF23GCdetM4/maxresdefault.jpg)](https://www.youtube.com/watch?v=EF23GCdetM4)
+
 ---
 
 ## Features

@@ -629,6 +629,7 @@ function SearchView({
   glossary,
   onOpenSources,
   onOpenAbout,
+  onReload,
   theme,
   prefs,
   size,
@@ -639,6 +640,7 @@ function SearchView({
   glossary: TermEntry[]
   onOpenSources: () => void
   onOpenAbout: () => void
+  onReload: () => Promise<void>
   theme: Theme
   prefs: Prefs
   size: { w: number; h: number }
@@ -653,7 +655,18 @@ function SearchView({
   const [hasSearched, setHasSearched] = useState(false)
   const [expanded, setExpanded] = useState<string | null>(null)
   const [copiedId, setCopiedId] = useState<string | null>(null)
+  const [contextMenu, setContextMenu] = useState<{ id: string; x: number; y: number } | null>(null)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editForm, setEditForm] = useState({ term: '', fullForm: '', definition: '' })
   const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (!contextMenu) return
+    const close = () => setContextMenu(null)
+    document.addEventListener('click', close)
+    document.addEventListener('contextmenu', close)
+    return () => { document.removeEventListener('click', close); document.removeEventListener('contextmenu', close) }
+  }, [contextMenu])
 
   function copyDefinition(id: string, definition: string) {
     void navigator.clipboard.writeText(definition).then(() => {
@@ -661,6 +674,39 @@ function SearchView({
       setTimeout(() => setCopiedId(prev => prev === id ? null : prev), 1500)
     })
   }
+
+  function openContextMenu(e: React.MouseEvent, r: SearchResult) {
+    e.preventDefault()
+    e.stopPropagation()
+    setContextMenu({ id: r.id, x: e.clientX, y: e.clientY })
+  }
+
+  function startEdit(r: SearchResult) {
+    setEditingId(r.id)
+    setEditForm({ term: r.term, fullForm: r.fullForm ?? '', definition: r.definition })
+    setContextMenu(null)
+  }
+
+  async function handleEditSave(r: SearchResult) {
+    if (!editForm.term.trim() || !editForm.definition.trim()) return
+    const terms = await getTerms(r.sourceId)
+    await setTerms(r.sourceId, terms.map(t => t.id === r.id
+      ? { ...t, term: editForm.term.trim(), fullForm: editForm.fullForm.trim() || null, definition: editForm.definition.trim() }
+      : t
+    ))
+    setEditingId(null)
+    await onReload()
+  }
+
+  async function handleTermDelete(r: SearchResult) {
+    const terms = await getTerms(r.sourceId)
+    const updated = terms.filter(t => t.id !== r.id)
+    await setTerms(r.sourceId, updated)
+    await setSources((await getSources()).map(s => s.id === r.sourceId ? { ...s, termCount: updated.length } : s))
+    setContextMenu(null)
+    await onReload()
+  }
+
   const fs = prefs.fontSize
 
   useEffect(() => { inputRef.current?.focus() }, [])
@@ -854,48 +900,85 @@ function SearchView({
                 {results.map(r => (
                   <li
                     key={r.id}
-                    style={{ padding: '10px 14px', borderBottom: `1px solid ${theme.border}`, cursor: 'pointer', background: expanded === r.id ? theme.bg : theme.surface }}
-                    onClick={() => { copyDefinition(r.id, r.definition); setExpanded(expanded === r.id ? null : r.id) }}
-                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { copyDefinition(r.id, r.definition); setExpanded(expanded === r.id ? null : r.id) } }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
-                      <strong style={{ fontSize: fs, color: theme.text }}>{r.term}</strong>
-                      {r.fullForm && (
-                        <span style={{ fontSize: fs - 1, color: theme.secondary }}>{r.fullForm}</span>
-                      )}
-                      {r.domain && (
-                        <span style={{ fontSize: fs - 2, color: theme.tagText, background: theme.tag, borderRadius: 4, padding: '1px 6px' }}>
-                          {r.domain}
-                        </span>
-                      )}
-                      {showSourceBadge && sourceMap[r.sourceId] && (
-                        <span style={{ fontSize: fs - 2, color: theme.muted, background: theme.border, borderRadius: 4, padding: '1px 6px', marginLeft: 'auto' }}>
-                          {sourceMap[r.sourceId]}
-                        </span>
-                      )}
-                    </div>
-                    <p style={{
-                      fontSize: fs - 1, color: theme.secondary, lineHeight: 1.5, margin: 0,
-                      background: copiedId === r.id ? '#fef9c3' : 'transparent',
-                      borderRadius: copiedId === r.id ? 4 : 0,
-                      padding: copiedId === r.id ? '3px 5px' : '0',
-                      transition: 'background 0.25s',
-                    }}>
-                      {r.definition}
-                    </p>
-                    {copiedId === r.id && (
-                      <p style={{ fontSize: fs - 2, color: '#92400e', margin: '4px 0 0', textAlign: 'right' }}>
-                        ✓ Copied to clipboard
-                      </p>
-                    )}
-                    {expanded === r.id && r.aliases.length > 0 && (
-                      <p style={{ fontSize: fs - 2, color: theme.muted, margin: '6px 0 0' }}>
-                        Also known as: {r.aliases.join(', ')}
-                      </p>
-                    )}
-                    {expanded === r.id && r.sourceReference && (
-                      <p style={{ fontSize: fs - 2, color: theme.muted, margin: '4px 0 0' }}>
-                        Source: {r.sourceReference}
-                      </p>
+                    style={{ padding: '10px 14px', borderBottom: `1px solid ${theme.border}`, cursor: editingId === r.id ? 'default' : 'pointer', background: expanded === r.id ? theme.bg : theme.surface }}
+                    onClick={() => { if (editingId === r.id) return; copyDefinition(r.id, r.definition); setExpanded(expanded === r.id ? null : r.id) }}
+                    onContextMenu={e => openContextMenu(e, r)}
+                    onKeyDown={(e) => { if (editingId === r.id) return; if (e.key === 'Enter' || e.key === ' ') { copyDefinition(r.id, r.definition); setExpanded(expanded === r.id ? null : r.id) } }}>
+
+                    {editingId === r.id ? (
+                      /* ── Inline edit form ── */
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }} onClick={e => e.stopPropagation()}>
+                        <input autoFocus value={editForm.term}
+                          onChange={e => setEditForm(f => ({ ...f, term: e.target.value }))}
+                          onKeyDown={e => { if (e.key === 'Escape') setEditingId(null) }}
+                          placeholder="Term *"
+                          style={{ border: `1px solid ${theme.inputBorder}`, borderRadius: 5, padding: '5px 8px', fontSize: fs - 1, background: theme.bg, color: theme.text, outline: 'none' }} />
+                        <input value={editForm.fullForm}
+                          onChange={e => setEditForm(f => ({ ...f, fullForm: e.target.value }))}
+                          onKeyDown={e => { if (e.key === 'Escape') setEditingId(null) }}
+                          placeholder="Full form (optional)"
+                          style={{ border: `1px solid ${theme.inputBorder}`, borderRadius: 5, padding: '5px 8px', fontSize: fs - 1, background: theme.bg, color: theme.text, outline: 'none' }} />
+                        <input value={editForm.definition}
+                          onChange={e => setEditForm(f => ({ ...f, definition: e.target.value }))}
+                          onKeyDown={e => { if (e.key === 'Enter' && editForm.term.trim() && editForm.definition.trim()) { void handleEditSave(r) } else if (e.key === 'Escape') setEditingId(null) }}
+                          placeholder="Definition *"
+                          style={{ border: `1px solid ${theme.inputBorder}`, borderRadius: 5, padding: '5px 8px', fontSize: fs - 1, background: theme.bg, color: theme.text, outline: 'none' }} />
+                        <div style={{ display: 'flex', gap: 6 }}>
+                          <button type="button" onClick={() => { void handleEditSave(r) }}
+                            disabled={!editForm.term.trim() || !editForm.definition.trim()}
+                            style={{ flex: 1, background: BRAND, color: '#fff', border: 'none', borderRadius: 5, padding: '5px 0', fontSize: fs - 1, cursor: 'pointer', opacity: editForm.term.trim() && editForm.definition.trim() ? 1 : 0.5 }}>
+                            Save
+                          </button>
+                          <button type="button" onClick={() => setEditingId(null)}
+                            style={{ background: 'none', border: `1px solid ${theme.border}`, borderRadius: 5, padding: '5px 10px', fontSize: fs - 1, cursor: 'pointer', color: theme.secondary }}>
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      /* ── Normal result display ── */
+                      <>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
+                          <strong style={{ fontSize: fs, color: theme.text }}>{r.term}</strong>
+                          {r.fullForm && (
+                            <span style={{ fontSize: fs - 1, color: theme.secondary }}>{r.fullForm}</span>
+                          )}
+                          {r.domain && (
+                            <span style={{ fontSize: fs - 2, color: theme.tagText, background: theme.tag, borderRadius: 4, padding: '1px 6px' }}>
+                              {r.domain}
+                            </span>
+                          )}
+                          {showSourceBadge && sourceMap[r.sourceId] && (
+                            <span style={{ fontSize: fs - 2, color: theme.muted, background: theme.border, borderRadius: 4, padding: '1px 6px', marginLeft: 'auto' }}>
+                              {sourceMap[r.sourceId]}
+                            </span>
+                          )}
+                        </div>
+                        <p style={{
+                          fontSize: fs - 1, color: theme.secondary, lineHeight: 1.5, margin: 0,
+                          background: copiedId === r.id ? '#fef9c3' : 'transparent',
+                          borderRadius: copiedId === r.id ? 4 : 0,
+                          padding: copiedId === r.id ? '3px 5px' : '0',
+                          transition: 'background 0.25s',
+                        }}>
+                          {r.definition}
+                        </p>
+                        {copiedId === r.id && (
+                          <p style={{ fontSize: fs - 2, color: '#92400e', margin: '4px 0 0', textAlign: 'right' }}>
+                            ✓ Copied to clipboard
+                          </p>
+                        )}
+                        {expanded === r.id && r.aliases.length > 0 && (
+                          <p style={{ fontSize: fs - 2, color: theme.muted, margin: '6px 0 0' }}>
+                            Also known as: {r.aliases.join(', ')}
+                          </p>
+                        )}
+                        {expanded === r.id && r.sourceReference && (
+                          <p style={{ fontSize: fs - 2, color: theme.muted, margin: '4px 0 0' }}>
+                            Source: {r.sourceReference}
+                          </p>
+                        )}
+                      </>
                     )}
                   </li>
                 ))}
@@ -908,6 +991,42 @@ function SearchView({
               </p>
             )}
           </div>
+
+          {/* Context menu */}
+          {contextMenu && (() => {
+            const r = results.find(x => x.id === contextMenu.id)
+            if (!r) return null
+            const menuW = 130, menuH = 72
+            const x = Math.min(contextMenu.x, size.w - menuW - 4)
+            const y = Math.min(contextMenu.y, size.h - menuH - 4)
+            const menuBtn: React.CSSProperties = {
+              display: 'block', width: '100%', textAlign: 'left', background: 'none',
+              border: 'none', padding: '8px 14px', fontSize: fs - 1, cursor: 'pointer',
+              color: theme.text, fontFamily: 'inherit',
+            }
+            return (
+              <div
+                onClick={e => e.stopPropagation()}
+                style={{
+                  position: 'fixed', top: y, left: x, width: menuW,
+                  background: theme.surface, border: `1px solid ${theme.border}`,
+                  borderRadius: 7, boxShadow: '0 4px 14px rgba(0,0,0,0.18)', zIndex: 200, overflow: 'hidden',
+                }}>
+                <button type="button" style={menuBtn}
+                  onMouseEnter={e => (e.currentTarget.style.background = theme.bg)}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'none')}
+                  onClick={() => startEdit(r)}>
+                  ✏ Edit
+                </button>
+                <button type="button" style={{ ...menuBtn, color: theme.error }}
+                  onMouseEnter={e => (e.currentTarget.style.background = theme.bg)}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'none')}
+                  onClick={() => { void handleTermDelete(r) }}>
+                  ✕ Delete
+                </button>
+              </div>
+            )
+          })()}
         </>
       )}
     </div>
@@ -996,6 +1115,7 @@ function App() {
           glossary={appData.glossary}
           onOpenSources={() => setScreen('sources')}
           onOpenAbout={() => setScreen('about')}
+          onReload={reload}
           theme={theme}
           prefs={prefs}
           size={size}

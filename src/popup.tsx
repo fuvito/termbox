@@ -9,6 +9,7 @@ import { parseCsv, csvToTermEntries, termEntriesToCsv } from './csv'
 import {
   getSources,
   setSources,
+  getTerms,
   setTerms,
   deleteTerms,
   getActiveSourceId,

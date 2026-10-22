@@ -46,3 +46,16 @@ All notable changes to this project are documented here.
 - Dark mode, adjustable font size, resizable popup
 - Fully offline after first load
 - Chrome MV3 extension (Edge compatible out of the box)
+
+---
+
+## Future Releases
+
+Planned features and improvements for upcoming versions. No timeline committed.
+
+| Feature | Notes |
+|---|---|
+| PIN / password lock with client-side encryption | Encrypt stored glossary data using AES-256-GCM (Web Crypto API) so only the user can access it after entering a PIN. Protects against casual snooping; not a substitute for a dedicated password manager. |
+| Firefox support | Manifest and API adjustments for Firefox 109+ |
+| Safari support | Xcode wrapper via `safari-web-extension-converter` |
+| Edit / delete individual terms | Modify or remove a single term from a manually created glossary without deleting the whole source |

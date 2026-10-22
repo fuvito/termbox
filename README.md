@@ -31,8 +31,7 @@ No accounts. No backend. No subscription. Works fully offline.
 - Smart result ranking: exact → prefix → alias → substring
 - **Export to CSV** — download any loaded glossary back to a CSV file
 - Dark mode, font size controls, resizable popup
-- Auto-refresh from URL (per source toggle)
-- No tracking, no external requests (except explicit CSV URL fetches you initiate)
+- No tracking, no external requests
 
 ## Browser support
 
@@ -72,7 +71,6 @@ API,Application Programming Interface,A set of rules for software communication,
 
 The `samples/` folder contains ready-to-use CSV files you can load straight into TermBox.
 
-> **Note — "Add from URL" is not available at this time** due to security restrictions. Please download any of the files below and import from your local disk via **≡ → Add from file**.
 
 | File | Description | Download |
 |---|---|---|
@@ -137,7 +135,7 @@ Paste each entry below into the corresponding permission row in the CWS dashboar
 | Permission | Justification |
 |---|---|
 | `storage` | Persists glossary sources, term data, and user preferences (dark mode, font size, popup size) locally on the user's device via `chrome.storage.local`. No data ever leaves the device. |
-| `optional_host_permissions: <all_urls>` | Required only when the user explicitly types a URL and clicks **Load**. The extension requests permission for that specific origin at that moment — it is never granted at install time. Without this, the extension cannot fetch a user-supplied CSV URL. Users who only load local files are never prompted for this permission at all. |
+| `optional_host_permissions: <all_urls>` | Reserved for a future URL-loading feature. Not used at runtime in the current version — no permission is ever requested or granted. Declared so the capability can be enabled in a future update without a manifest change. |
 
 The manifest declares no other permissions (`activeTab`, `tabs`, `scripting`, `cookies`, `history`, etc. are all absent — they are not needed).
 
@@ -177,7 +175,7 @@ Perfect for:
 
 HOW IT WORKS
 1. Prepare a CSV with a "term" and "definition" column (plus optional full_form, aliases, domain)
-2. Load it into TermBox from a local file or a URL
+2. Load it into TermBox from a local file
 3. Search instantly — no internet connection needed
 
 KEY FEATURES
@@ -191,7 +189,7 @@ KEY FEATURES
 ✓ Export any glossary back to CSV — your data is always yours
 ✓ Fully offline after first load — no server, no account, no subscription
 ✓ Dark mode, adjustable font size, resizable popup
-✓ Auto-refresh from a URL source (useful for shared team glossaries)
+
 ✓ Open source — MIT licence, code on GitHub
 
 SAMPLE FILES INCLUDED
@@ -209,7 +207,7 @@ The GitHub repo ships with five ready-to-use glossaries:
 
 PRIVACY
 Stores data only on your device using Chrome's local storage.
-No analytics, no tracking, no external connections (except CSV URLs you load yourself).
+No analytics, no tracking, no external connections.
 ```
 
 ### Category

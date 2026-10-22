@@ -23,7 +23,7 @@ None of this data ever leaves your device.
 
 ## Network requests
 
-TermBox makes network requests **only when you explicitly ask it to** — specifically, when you use the "Add from URL" or "Refresh" feature to load a CSV file from a URL you provide. No other network requests are made.
+TermBox makes **no network requests** during normal use. All glossary data is loaded from local files on your device.
 
 TermBox does **not**:
 - Send analytics or telemetry
@@ -36,7 +36,7 @@ TermBox does **not**:
 | Permission | Reason |
 |---|---|
 | `storage` | Save glossary data and preferences locally on your device |
-| `optional_host_permissions: <all_urls>` | Allow fetching CSV files from any URL you explicitly provide in the "Add from URL" or "Refresh" field. Declared as **optional** — not granted at install time. The extension requests access for the specific origin at the moment you initiate a URL load. Users who only load local files are never prompted for this permission. |
+| `optional_host_permissions: <all_urls>` | Reserved for a future URL-loading feature. Not used at runtime in the current version — no permission is ever requested or granted at install time. |
 
 ## Changes
 

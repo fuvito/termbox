@@ -186,10 +186,19 @@ function AboutView({ onBack, theme, prefs }: {
           {infoRow('Source', 'github.com/fuvito/termbox', 'https://github.com/fuvito/termbox')}
         </div>
 
-        {/* Disclaimer */}
-        <p style={{ fontSize: fs - 2, color: theme.muted, textAlign: 'center', lineHeight: 1.55, maxWidth: 260, margin: '24px 0 0' }}>
-          <strong style={{ color: theme.secondary }}>Disclaimer:</strong> TermBox is designed for glossaries and terminology only. Do not use it to store passwords, credentials, or any confidential information. The user assumes full responsibility for the content they load into the extension.
-        </p>
+        {/* Legal links */}
+        <div style={{ display: 'flex', gap: 16, marginTop: 24 }}>
+          <button type="button"
+            onClick={() => openUrl('https://github.com/fuvito/termbox/blob/main/PRIVACY.md')}
+            style={{ background: 'none', border: 'none', color: theme.primary, fontSize: fs - 1, cursor: 'pointer', padding: 0, fontFamily: 'inherit', textDecoration: 'underline' }}>
+            Privacy Policy
+          </button>
+          <button type="button"
+            onClick={() => openUrl('https://github.com/fuvito/termbox/blob/main/TERMS.md')}
+            style={{ background: 'none', border: 'none', color: theme.primary, fontSize: fs - 1, cursor: 'pointer', padding: 0, fontFamily: 'inherit', textDecoration: 'underline' }}>
+            Terms &amp; Conditions
+          </button>
+        </div>
       </div>
     </div>
   )

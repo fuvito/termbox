@@ -211,9 +211,57 @@ function SourcesView({
   const [urlInput, setUrlInput] = useState('')
   const [loadingId, setLoadingId] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [newGlossaryMode, setNewGlossaryMode] = useState(false)
+  const [newGlossaryName, setNewGlossaryName] = useState('')
+  const [addTermSourceId, setAddTermSourceId] = useState<string | null>(null)
+  const [newTerm, setNewTerm] = useState({ term: '', fullForm: '', definition: '' })
   const fileInputRef = useRef<HTMLInputElement>(null)
   const fs = prefs.fontSize
   const isBusy = loadingId !== null
+
+  function resetFooter() {
+    setShowUrlInput(false)
+    setNewGlossaryMode(false)
+    setAddTermSourceId(null)
+    setNewTerm({ term: '', fullForm: '', definition: '' })
+    setError(null)
+  }
+
+  async function handleCreateGlossary() {
+    const name = newGlossaryName.trim() || 'My Glossary'
+    const id = crypto.randomUUID()
+    const source: GlossarySource = {
+      id, name, type: 'file', url: null,
+      termCount: 0, lastLoaded: new Date().toISOString(), autoRefresh: false,
+    }
+    await setSources([...sources, source])
+    await setTerms(id, [])
+    await setActiveSourceId(id)
+    resetFooter()
+    await onReload()
+  }
+
+  async function handleAddTerm() {
+    if (!addTermSourceId) return
+    const { term, fullForm, definition } = newTerm
+    if (!term.trim() || !definition.trim()) return
+    const existing = await getTerms(addTermSourceId)
+    const entry: TermEntry = {
+      id: `${addTermSourceId}_${existing.length}`,
+      term: term.trim(),
+      fullForm: fullForm.trim() || null,
+      definition: definition.trim(),
+      domain: null, sourceReference: null, aliases: [],
+      sourceId: addTermSourceId,
+    }
+    const updated = [...existing, entry]
+    await setTerms(addTermSourceId, updated)
+    await setSources(sources.map(s =>
+      s.id === addTermSourceId ? { ...s, termCount: updated.length, lastLoaded: new Date().toISOString() } : s
+    ))
+    setNewTerm({ term: '', fullForm: '', definition: '' })
+    await onReload()
+  }
 
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -418,6 +466,13 @@ function SourcesView({
                 </button>
               )}
               <button type="button"
+                onClick={() => { resetFooter(); setAddTermSourceId(source.id) }}
+                disabled={isBusy}
+                title="Add term"
+                style={{ ...iconBtn, fontSize: 16, opacity: isBusy ? 0.4 : 1 }}>
+                +
+              </button>
+              <button type="button"
                 onClick={() => { void handleDownload(source) }}
                 disabled={isBusy}
                 title="Download as CSV"
@@ -443,10 +498,77 @@ function SourcesView({
         )}
       </div>
 
-      {/* Add buttons */}
+      {/* Footer */}
       <div style={{ borderTop: `1px solid ${theme.border}`, padding: 14, background: theme.surface, flexShrink: 0 }}>
         <input ref={fileInputRef} type="file" accept=".csv" style={{ display: 'none' }} onChange={handleFile} />
-        {showUrlInput ? (
+
+        {addTermSourceId ? (
+          /* ── Add term form ── */
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <span style={{ fontSize: fs - 1, color: theme.muted }}>
+              Adding to: <strong style={{ color: theme.text }}>{sources.find(s => s.id === addTermSourceId)?.name}</strong>
+            </span>
+            <input
+              type="text" placeholder="Term *" value={newTerm.term} autoFocus
+              onChange={e => setNewTerm(t => ({ ...t, term: e.target.value }))}
+              onKeyDown={e => { if (e.key === 'Escape') resetFooter() }}
+              style={{ border: `1px solid ${theme.inputBorder}`, borderRadius: 6, padding: '7px 10px', fontSize: fs, outline: 'none', background: theme.bg, color: theme.text }}
+            />
+            <input
+              type="text" placeholder="Full form (optional)" value={newTerm.fullForm}
+              onChange={e => setNewTerm(t => ({ ...t, fullForm: e.target.value }))}
+              onKeyDown={e => { if (e.key === 'Escape') resetFooter() }}
+              style={{ border: `1px solid ${theme.inputBorder}`, borderRadius: 6, padding: '7px 10px', fontSize: fs, outline: 'none', background: theme.bg, color: theme.text }}
+            />
+            <input
+              type="text" placeholder="Definition *" value={newTerm.definition}
+              onChange={e => setNewTerm(t => ({ ...t, definition: e.target.value }))}
+              onKeyDown={e => { if (e.key === 'Enter' && newTerm.term.trim() && newTerm.definition.trim()) { void handleAddTerm() } else if (e.key === 'Escape') resetFooter() }}
+              style={{ border: `1px solid ${theme.inputBorder}`, borderRadius: 6, padding: '7px 10px', fontSize: fs, outline: 'none', background: theme.bg, color: theme.text }}
+            />
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button type="button"
+                onClick={() => { void handleAddTerm() }}
+                disabled={!newTerm.term.trim() || !newTerm.definition.trim()}
+                style={{
+                  flex: 1, background: BRAND, color: '#fff', border: 'none', borderRadius: 6,
+                  padding: '8px 0', fontSize: fs,
+                  cursor: newTerm.term.trim() && newTerm.definition.trim() ? 'pointer' : 'not-allowed',
+                  opacity: newTerm.term.trim() && newTerm.definition.trim() ? 1 : 0.5,
+                }}>
+                Add term
+              </button>
+              <button type="button" onClick={resetFooter}
+                style={{ background: 'none', border: `1px solid ${theme.border}`, borderRadius: 6, padding: '8px 12px', fontSize: fs, cursor: 'pointer', color: theme.secondary }}>
+                Done
+              </button>
+            </div>
+          </div>
+
+        ) : newGlossaryMode ? (
+          /* ── New glossary name input ── */
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <input
+              type="text" placeholder="Glossary name" value={newGlossaryName} autoFocus
+              onChange={e => setNewGlossaryName(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') { void handleCreateGlossary() } else if (e.key === 'Escape') resetFooter() }}
+              style={{ border: `1px solid ${theme.inputBorder}`, borderRadius: 6, padding: '7px 10px', fontSize: fs, outline: 'none', background: theme.bg, color: theme.text }}
+            />
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button type="button"
+                onClick={() => { void handleCreateGlossary() }}
+                style={{ flex: 1, background: BRAND, color: '#fff', border: 'none', borderRadius: 6, padding: '8px 0', fontSize: fs, cursor: 'pointer' }}>
+                Create
+              </button>
+              <button type="button" onClick={resetFooter}
+                style={{ background: 'none', border: `1px solid ${theme.border}`, borderRadius: 6, padding: '8px 12px', fontSize: fs, cursor: 'pointer', color: theme.secondary }}>
+                Cancel
+              </button>
+            </div>
+          </div>
+
+        ) : showUrlInput ? (
+          /* ── URL not available notice ── */
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             <div style={{ padding: '10px 12px', background: theme.bg, borderRadius: 6, border: `1px solid ${theme.border}` }}>
               <p style={{ fontSize: fs - 1, color: theme.text, margin: '0 0 4px', fontWeight: 600 }}>
@@ -456,36 +578,34 @@ function SourcesView({
                 Due to security restrictions, loading from a URL is currently disabled. Please download the file from the link you were trying and load it using the <strong>Add from file</strong> button.
               </p>
             </div>
-            <button type="button"
-              onClick={() => { setShowUrlInput(false); setError(null) }}
-              style={{
-                background: 'none', border: `1px solid ${theme.border}`, borderRadius: 6,
-                padding: '8px 12px', fontSize: fs, cursor: 'pointer', color: theme.secondary, alignSelf: 'flex-end',
-              }}>
+            <button type="button" onClick={resetFooter}
+              style={{ background: 'none', border: `1px solid ${theme.border}`, borderRadius: 6, padding: '8px 12px', fontSize: fs, cursor: 'pointer', color: theme.secondary, alignSelf: 'flex-end' }}>
               Dismiss
             </button>
           </div>
+
         ) : (
-          <div style={{ display: 'flex', gap: 8 }}>
+          /* ── Default buttons ── */
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isBusy}
+                style={{ flex: 1, background: 'none', border: `1px solid ${theme.border}`, borderRadius: 6, padding: '8px 0', fontSize: fs, cursor: isBusy ? 'not-allowed' : 'pointer', color: theme.text, opacity: isBusy ? 0.5 : 1 }}>
+                + Add from file
+              </button>
+              <button type="button"
+                onClick={() => { resetFooter(); setShowUrlInput(true) }}
+                disabled={isBusy}
+                style={{ flex: 1, background: 'none', border: `1px solid ${theme.border}`, borderRadius: 6, padding: '8px 0', fontSize: fs, cursor: isBusy ? 'not-allowed' : 'pointer', color: theme.text, opacity: isBusy ? 0.5 : 1 }}>
+                + Add from URL
+              </button>
+            </div>
             <button type="button"
-              onClick={() => fileInputRef.current?.click()}
+              onClick={() => { resetFooter(); setNewGlossaryMode(true) }}
               disabled={isBusy}
-              style={{
-                flex: 1, background: 'none', border: `1px solid ${theme.border}`, borderRadius: 6,
-                padding: '8px 0', fontSize: fs, cursor: isBusy ? 'not-allowed' : 'pointer',
-                color: theme.text, opacity: isBusy ? 0.5 : 1,
-              }}>
-              + Add from file
-            </button>
-            <button type="button"
-              onClick={() => { setShowUrlInput(true); setError(null) }}
-              disabled={isBusy}
-              style={{
-                flex: 1, background: 'none', border: `1px solid ${theme.border}`, borderRadius: 6,
-                padding: '8px 0', fontSize: fs, cursor: isBusy ? 'not-allowed' : 'pointer',
-                color: theme.text, opacity: isBusy ? 0.5 : 1,
-              }}>
-              + Add from URL
+              style={{ background: 'none', border: `1px solid ${theme.border}`, borderRadius: 6, padding: '8px 0', fontSize: fs, cursor: isBusy ? 'not-allowed' : 'pointer', color: theme.text, opacity: isBusy ? 0.5 : 1 }}>
+              + New glossary
             </button>
           </div>
         )}

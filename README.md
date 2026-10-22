@@ -21,12 +21,15 @@ No accounts. No backend. No subscription. Works fully offline.
 ## Features
 
 - **Build your own glossary** — bring any CSV and TermBox turns it into a searchable tool
+- **Create a glossary from scratch** — use the in-app editor to build a glossary without a CSV file
+- **Add terms manually** — add term, full form, and definition directly from the Sources panel
 - **Acronym lookup** — expand abbreviations instantly; supports `full_form` and `aliases` columns
-- Load from a **local CSV file** or a **remote URL**
+- Load from a **local CSV file**
 - **Multiple named sources** — switch between glossaries or search across all at once
 - **Fully offline** after first load — instant local search, no server round-trips
 - **Search by term** or **search by definition**
 - Smart result ranking: exact → prefix → alias → substring
+- **Export to CSV** — download any loaded glossary back to a CSV file
 - Dark mode, font size controls, resizable popup
 - Auto-refresh from URL (per source toggle)
 - No tracking, no external requests (except explicit CSV URL fetches you initiate)
@@ -179,11 +182,13 @@ HOW IT WORKS
 
 KEY FEATURES
 ✓ Build your own custom glossary — bring any CSV
+✓ Create a glossary from scratch — no CSV needed, add terms directly in the app
 ✓ Acronym expander — add a full_form column to expand abbreviations
 ✓ Aliases — one entry can match multiple names (e.g. "PCR", "qPCR", "rt-PCR")
 ✓ Multiple glossaries — load several sources and search across all of them
 ✓ Search by term name or search inside definitions
 ✓ Smart ranking: exact match → prefix → alias → substring
+✓ Export any glossary back to CSV — your data is always yours
 ✓ Fully offline after first load — no server, no account, no subscription
 ✓ Dark mode, adjustable font size, resizable popup
 ✓ Auto-refresh from a URL source (useful for shared team glossaries)

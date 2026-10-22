@@ -586,25 +586,17 @@ function SourcesView({
 
         ) : (
           /* ── Default buttons ── */
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <div style={{ display: 'flex', gap: 8 }}>
-              <button type="button"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={isBusy}
-                style={{ flex: 1, background: 'none', border: `1px solid ${theme.border}`, borderRadius: 6, padding: '8px 0', fontSize: fs, cursor: isBusy ? 'not-allowed' : 'pointer', color: theme.text, opacity: isBusy ? 0.5 : 1 }}>
-                + Add from file
-              </button>
-              <button type="button"
-                onClick={() => { resetFooter(); setShowUrlInput(true) }}
-                disabled={isBusy}
-                style={{ flex: 1, background: 'none', border: `1px solid ${theme.border}`, borderRadius: 6, padding: '8px 0', fontSize: fs, cursor: isBusy ? 'not-allowed' : 'pointer', color: theme.text, opacity: isBusy ? 0.5 : 1 }}>
-                + Add from URL
-              </button>
-            </div>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isBusy}
+              style={{ flex: 1, background: 'none', border: `1px solid ${theme.border}`, borderRadius: 6, padding: '8px 0', fontSize: fs, cursor: isBusy ? 'not-allowed' : 'pointer', color: theme.text, opacity: isBusy ? 0.5 : 1 }}>
+              + Add from file
+            </button>
             <button type="button"
               onClick={() => { resetFooter(); setNewGlossaryMode(true) }}
               disabled={isBusy}
-              style={{ background: 'none', border: `1px solid ${theme.border}`, borderRadius: 6, padding: '8px 0', fontSize: fs, cursor: isBusy ? 'not-allowed' : 'pointer', color: theme.text, opacity: isBusy ? 0.5 : 1 }}>
+              style={{ flex: 1, background: 'none', border: `1px solid ${theme.border}`, borderRadius: 6, padding: '8px 0', fontSize: fs, cursor: isBusy ? 'not-allowed' : 'pointer', color: theme.text, opacity: isBusy ? 0.5 : 1 }}>
               + New glossary
             </button>
           </div>

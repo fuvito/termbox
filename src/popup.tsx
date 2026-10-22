@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client'
 import type { TermEntry, GlossarySource } from './types'
 import type { SearchResult } from './search'
 import { rankTerms } from './search'
-import { parseCsv, csvToTermEntries } from './csv'
+import { parseCsv, csvToTermEntries, termEntriesToCsv } from './csv'
 import {
   getSources,
   setSources,
@@ -336,6 +336,18 @@ function SourcesView({
     await onReload()
   }
 
+  async function handleDownload(source: GlossarySource) {
+    const terms = await getTerms(source.id)
+    const csv = termEntriesToCsv(terms)
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `${source.name.toLowerCase().replace(/\s+/g, '-')}.csv`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
   const iconBtn: React.CSSProperties = {
     background: 'none', border: 'none', cursor: 'pointer',
     padding: '4px 6px', borderRadius: 4, color: theme.muted, fontSize: 14, lineHeight: 1,
@@ -405,6 +417,13 @@ function SourcesView({
                 </button>
               )}
               <button type="button"
+                onClick={() => { void handleDownload(source) }}
+                disabled={isBusy}
+                title="Download as CSV"
+                style={{ ...iconBtn, fontSize: 15, opacity: isBusy ? 0.4 : 1 }}>
+                ↓
+              </button>
+              <button type="button"
                 onClick={() => { void handleDelete(source.id) }}
                 disabled={isBusy}
                 title="Delete source"
@@ -427,42 +446,23 @@ function SourcesView({
       <div style={{ borderTop: `1px solid ${theme.border}`, padding: 14, background: theme.surface, flexShrink: 0 }}>
         <input ref={fileInputRef} type="file" accept=".csv" style={{ display: 'none' }} onChange={handleFile} />
         {showUrlInput ? (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <input
-              type="url"
-              placeholder="https://example.com/glossary.csv"
-              value={urlInput}
-              onChange={e => setUrlInput(e.target.value)}
-              onKeyDown={e => {
-                if (e.key === 'Enter') { void handleUrlLoad() }
-                else if (e.key === 'Escape') { setShowUrlInput(false); setUrlInput(''); setError(null) }
-              }}
-              style={{
-                border: `1px solid ${theme.inputBorder}`, borderRadius: 6, padding: '7px 10px',
-                fontSize: fs, outline: 'none', background: theme.bg, color: theme.text, width: '100%',
-              }}
-            />
-            <div style={{ display: 'flex', gap: 8 }}>
-              <button type="button"
-                onClick={() => { void handleUrlLoad() }}
-                disabled={!urlInput.trim() || isBusy}
-                style={{
-                  flex: 1, background: BRAND, color: '#fff', border: 'none', borderRadius: 6,
-                  padding: '8px 0', fontSize: fs,
-                  cursor: urlInput.trim() && !isBusy ? 'pointer' : 'not-allowed',
-                  opacity: urlInput.trim() && !isBusy ? 1 : 0.5,
-                }}>
-                {isBusy ? 'Loading…' : 'Load'}
-              </button>
-              <button type="button"
-                onClick={() => { setShowUrlInput(false); setUrlInput(''); setError(null) }}
-                style={{
-                  background: 'none', border: `1px solid ${theme.border}`, borderRadius: 6,
-                  padding: '8px 12px', fontSize: fs, cursor: 'pointer', color: theme.secondary,
-                }}>
-                Cancel
-              </button>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div style={{ padding: '10px 12px', background: theme.bg, borderRadius: 6, border: `1px solid ${theme.border}` }}>
+              <p style={{ fontSize: fs - 1, color: theme.text, margin: '0 0 4px', fontWeight: 600 }}>
+                Add from URL is not available at this time
+              </p>
+              <p style={{ fontSize: fs - 1, color: theme.secondary, margin: 0, lineHeight: 1.55 }}>
+                Due to security restrictions, loading from a URL is currently disabled. Please download the file from the link you were trying and load it using the <strong>Add from file</strong> button.
+              </p>
             </div>
+            <button type="button"
+              onClick={() => { setShowUrlInput(false); setError(null) }}
+              style={{
+                background: 'none', border: `1px solid ${theme.border}`, borderRadius: 6,
+                padding: '8px 12px', fontSize: fs, cursor: 'pointer', color: theme.secondary, alignSelf: 'flex-end',
+              }}>
+              Dismiss
+            </button>
           </div>
         ) : (
           <div style={{ display: 'flex', gap: 8 }}>
@@ -497,6 +497,7 @@ function SourcesView({
 
 function SearchView({
   sources,
+  activeSourceId,
   glossary,
   onOpenSources,
   onOpenAbout,
@@ -506,6 +507,7 @@ function SearchView({
   setSize,
 }: {
   sources: GlossarySource[]
+  activeSourceId: string | 'all' | null
   glossary: TermEntry[]
   onOpenSources: () => void
   onOpenAbout: () => void
@@ -562,6 +564,11 @@ function SearchView({
   const sourceMap = Object.fromEntries(sources.map(s => [s.id, s.name]))
   const showSourceBadge = sources.length > 1
 
+  const activeSourceLabel =
+    sources.length === 0 ? null
+    : activeSourceId === 'all' ? 'All sources'
+    : sources.find(s => s.id === activeSourceId)?.name ?? sources[0]?.name ?? null
+
   const hdrBtn: React.CSSProperties = {
     background: 'rgba(255,255,255,0.15)', border: 'none', borderRadius: 4,
     color: '#fff', cursor: 'pointer', padding: '2px 6px', fontSize: 11, lineHeight: 1.4,
@@ -601,7 +608,14 @@ function SearchView({
 
       {/* Header */}
       <header style={{ background: BRAND, padding: '10px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
-        <span style={{ fontWeight: 700, color: '#fff', fontSize: 20, letterSpacing: '-0.3px' }}>TermBox</span>
+        <div>
+          <span style={{ fontWeight: 700, color: '#fff', fontSize: 20, letterSpacing: '-0.3px' }}>TermBox</span>
+          {activeSourceLabel && (
+            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.65)', marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 160 }}>
+              {activeSourceLabel}
+            </div>
+          )}
+        </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <button type="button" style={hdrBtn} title="Decrease font size" onClick={() => prefs.setFontSize(Math.max(11, prefs.fontSize - 1))}>A−</button>
           <button type="button" style={hdrBtn} title="Increase font size" onClick={() => prefs.setFontSize(Math.min(17, prefs.fontSize + 1))}>A+</button>
@@ -831,6 +845,7 @@ function App() {
       {screen === 'search' && (
         <SearchView
           sources={appData.sources}
+          activeSourceId={appData.activeSourceId}
           glossary={appData.glossary}
           onOpenSources={() => setScreen('sources')}
           onOpenAbout={() => setScreen('about')}

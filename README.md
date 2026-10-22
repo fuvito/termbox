@@ -65,7 +65,17 @@ API,Application Programming Interface,A set of rules for software communication,
 
 The `samples/` folder contains ready-to-use CSV files you can load straight into TermBox.
 
-### `biotest-diagnostics.csv`
+> **Note — "Add from URL" is not available at this time** due to security restrictions. Please download any of the files below and import from your local disk via **≡ → Add from file**.
+
+| File | Description | Download |
+|---|---|---|
+| `biotest-diagnostics.csv` | 67-term IVD / medical device glossary | [Download](https://github.com/fuvito/termbox/blob/main/samples/biotest-diagnostics.csv) |
+| `biotest-diagnostics-expanded.csv` | Expanded IVD / medical device glossary with richer definitions | [Download](https://github.com/fuvito/termbox/blob/main/samples/biotest-diagnostics-expanded.csv) |
+| `biotest-diagnostics-acronyms-expanded.csv` | IVD / medical device acronyms with fully expanded forms | [Download](https://github.com/fuvito/termbox/blob/main/samples/biotest-diagnostics-acronyms-expanded.csv) |
+| `ai-ml.csv` | 82-term AI and machine learning glossary | [Download](https://github.com/fuvito/termbox/blob/main/samples/ai-ml.csv) |
+| `ai-ml-expanded.csv` | Expanded AI / ML glossary with richer definitions | [Download](https://github.com/fuvito/termbox/blob/main/samples/ai-ml-expanded.csv) |
+
+### [`biotest-diagnostics.csv`](https://github.com/fuvito/termbox/blob/main/samples/biotest-diagnostics.csv)
 
 A 67-term glossary for the in vitro diagnostics (IVD) and medical device industry, covering:
 
@@ -82,9 +92,7 @@ A 67-term glossary for the in vitro diagnostics (IVD) and medical device industr
 | Regulatory | IVD, IVDR, MDR, CE, FDA, EMA, IFU, UDI, GLP, ICH |
 | Quality | SOP, CAPA, GMP, QMS, DHF, NCR, OOS |
 
-To use it, open TermBox → **≡** → **Add from file** → select `samples/biotest-diagnostics.csv`.
-
-### `ai-ml.csv`
+### [`ai-ml.csv`](https://github.com/fuvito/termbox/blob/main/samples/ai-ml.csv)
 
 An 82-term glossary covering the AI and machine learning landscape:
 
@@ -101,7 +109,7 @@ An 82-term glossary covering the AI and machine learning landscape:
 | AI Agents | Agent, Tool Use, MCP, Agentic Loop, Semantic Search, Vector Database |
 | AI Safety | Alignment, Guardrails, Prompt Injection, Jailbreak |
 
-To use it, open TermBox → **≡** → **Add from file** → select `samples/ai-ml.csv`.
+To use any sample, open TermBox → **≡** → **Add from file** → select the downloaded CSV.
 
 ---
 
@@ -178,9 +186,17 @@ KEY FEATURES
 ✓ Open source — MIT licence, code on GitHub
 
 SAMPLE FILES INCLUDED
-The GitHub repo ships with two ready-to-use glossaries:
+The GitHub repo ships with five ready-to-use glossaries:
 • biotest-diagnostics.csv — 67 IVD/medical device terms
+  https://github.com/fuvito/termbox/blob/main/samples/biotest-diagnostics.csv
+• biotest-diagnostics-expanded.csv — expanded IVD/medical device glossary
+  https://github.com/fuvito/termbox/blob/main/samples/biotest-diagnostics-expanded.csv
+• biotest-diagnostics-acronyms-expanded.csv — IVD acronyms with expanded forms
+  https://github.com/fuvito/termbox/blob/main/samples/biotest-diagnostics-acronyms-expanded.csv
 • ai-ml.csv — 82 AI and machine learning terms
+  https://github.com/fuvito/termbox/blob/main/samples/ai-ml.csv
+• ai-ml-expanded.csv — expanded AI/ML glossary with richer definitions
+  https://github.com/fuvito/termbox/blob/main/samples/ai-ml-expanded.csv
 
 PRIVACY
 Stores data only on your device using Chrome's local storage.

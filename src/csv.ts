@@ -49,6 +49,17 @@ export function parseCsv(text: string): Record<string, string>[] {
   })
 }
 
+export function termEntriesToCsv(terms: TermEntry[]): string {
+  const headers = ['term', 'full_form', 'definition', 'domain', 'source_reference', 'aliases']
+  const escape = (v: string) =>
+    v.includes(',') || v.includes('"') || v.includes('\n') ? `"${v.replace(/"/g, '""')}"` : v
+  const rows = terms.map(t =>
+    [t.term, t.fullForm ?? '', t.definition, t.domain ?? '', t.sourceReference ?? '', t.aliases.join(';')]
+      .map(escape).join(',')
+  )
+  return [headers.join(','), ...rows].join('\n')
+}
+
 export function csvToTermEntries(rows: Record<string, string>[], sourceId: string): TermEntry[] {
   return rows
     .filter(row => row.term?.trim() && row.definition?.trim())

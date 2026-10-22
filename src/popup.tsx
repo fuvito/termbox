@@ -186,23 +186,19 @@ function AboutView({ onBack, theme, prefs }: {
           {infoRow('Source', 'github.com/fuvito/termbox', 'https://github.com/fuvito/termbox')}
         </div>
 
-        {/* Legal links */}
-        <div style={{ display: 'flex', gap: 16, marginTop: 24 }}>
-          <button type="button"
-            onClick={() => openUrl('https://github.com/fuvito/termbox/blob/main/CHANGELOG.md')}
-            style={{ background: 'none', border: 'none', color: theme.primary, fontSize: fs - 1, cursor: 'pointer', padding: 0, fontFamily: 'inherit', textDecoration: 'underline' }}>
-            What's New
-          </button>
-          <button type="button"
-            onClick={() => openUrl('https://github.com/fuvito/termbox/blob/main/PRIVACY.md')}
-            style={{ background: 'none', border: 'none', color: theme.primary, fontSize: fs - 1, cursor: 'pointer', padding: 0, fontFamily: 'inherit', textDecoration: 'underline' }}>
-            Privacy Policy
-          </button>
-          <button type="button"
-            onClick={() => openUrl('https://github.com/fuvito/termbox/blob/main/TERMS.md')}
-            style={{ background: 'none', border: 'none', color: theme.primary, fontSize: fs - 1, cursor: 'pointer', padding: 0, fontFamily: 'inherit', textDecoration: 'underline' }}>
-            Terms &amp; Conditions
-          </button>
+        {/* Links */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 16, marginTop: 24 }}>
+          {[
+            { label: 'User Guide',         url: 'https://github.com/fuvito/termbox/blob/main/USER-GUIDE.md' },
+            { label: "What's New",         url: 'https://github.com/fuvito/termbox/blob/main/CHANGELOG.md' },
+            { label: 'Privacy Policy',     url: 'https://github.com/fuvito/termbox/blob/main/PRIVACY.md' },
+            { label: 'Terms & Conditions', url: 'https://github.com/fuvito/termbox/blob/main/TERMS.md' },
+          ].map(({ label, url }) => (
+            <button key={label} type="button" onClick={() => openUrl(url)}
+              style={{ background: 'none', border: 'none', color: theme.primary, fontSize: fs - 1, cursor: 'pointer', padding: 0, fontFamily: 'inherit', textDecoration: 'underline' }}>
+              {label}
+            </button>
+          ))}
         </div>
       </div>
     </div>

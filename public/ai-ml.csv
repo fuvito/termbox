@@ -1,0 +1,83 @@
+term,full_form,definition,domain,source_reference,aliases
+AI,Artificial Intelligence,"The simulation of human intelligence processes by computer systems, including learning, reasoning, and self-correction.",AI,Russell & Norvig — AIMA,artificial intelligence
+ML,Machine Learning,"A subset of AI where systems learn from data to improve performance on a task without being explicitly programmed for it.",Machine Learning,Mitchell 1997,machine learning
+DL,Deep Learning,"A subfield of machine learning using neural networks with many layers (deep networks) to learn hierarchical representations from raw data.",Deep Learning,LeCun et al. 2015,deep learning
+LLM,Large Language Model,"A neural network trained on vast text corpora to understand and generate human language. Examples include GPT-4, Claude, Gemini, and LLaMA.",LLMs,Brown et al. 2020 (GPT-3),large language model
+GPT,Generative Pre-trained Transformer,"A class of LLM developed by OpenAI that uses the Transformer architecture, pre-trained on large text corpora and fine-tuned for various tasks.",LLMs,OpenAI,generative pre-trained transformer
+Transformer,"","A neural network architecture introduced in 'Attention is All You Need' (2017) that uses self-attention mechanisms instead of recurrence. Foundation of most modern LLMs.",Architecture,Vaswani et al. 2017,transformer architecture
+Attention Mechanism,"","A technique allowing a model to weigh the relevance of different parts of the input when producing each part of the output. Core component of the Transformer.",Architecture,Bahdanau et al. 2015,attention;self-attention
+RAG,Retrieval-Augmented Generation,"An architecture that combines a retrieval system (searching a knowledge base) with a generative LLM to produce grounded, up-to-date responses.",LLMs,Lewis et al. 2020,retrieval-augmented generation
+NN,Neural Network,"A computational model loosely inspired by biological neurons, composed of layers of interconnected nodes (neurons) that learn weight adjustments through training.",Machine Learning,,neural net;artificial neural network;ANN
+CNN,Convolutional Neural Network,"A deep learning architecture that applies learned convolutional filters to detect local patterns. Dominant in image classification and computer vision.",Deep Learning,LeCun et al. 1998,convolutional neural network;convnet
+RNN,Recurrent Neural Network,"A neural network with loops that allow information to persist across time steps. Used for sequential data like text and time series.",Deep Learning,,recurrent neural network
+LSTM,Long Short-Term Memory,"A type of RNN that uses gating mechanisms to selectively remember or forget information over long sequences, mitigating the vanishing gradient problem.",Deep Learning,Hochreiter & Schmidhuber 1997,long short-term memory
+GAN,Generative Adversarial Network,"A framework where a generator network and a discriminator network compete: the generator tries to produce realistic data; the discriminator tries to detect fakes.",Deep Learning,Goodfellow et al. 2014,generative adversarial network
+VAE,Variational Autoencoder,"A generative model that encodes inputs into a latent probability distribution and decodes samples from it, enabling smooth generation of new data.",Deep Learning,Kingma & Welling 2013,variational autoencoder
+Diffusion Model,"","A generative model that learns to reverse a gradual noising process to generate high-quality images or other data. Basis of Stable Diffusion and DALL·E 2.",Generative AI,Ho et al. 2020 (DDPM),
+RLHF,Reinforcement Learning from Human Feedback,"A training technique where human preference rankings are used to fine-tune a language model via a reward model, aligning model outputs with human values.",LLMs,Christiano et al. 2017,reinforcement learning from human feedback
+SFT,Supervised Fine-Tuning,"Fine-tuning a pre-trained model on a labelled dataset of (prompt, ideal response) pairs. Typically the first stage before RLHF alignment.",LLMs,,supervised fine-tuning
+PPO,Proximal Policy Optimization,"A policy-gradient reinforcement learning algorithm used in RLHF to update the LLM policy without taking excessively large update steps.",LLMs,Schulman et al. 2017,proximal policy optimization
+DPO,Direct Preference Optimization,"An alignment technique that fine-tunes LLMs directly on human preference pairs without a separate reward model, simpler than RLHF+PPO.",LLMs,Rafailov et al. 2023,direct preference optimization
+LoRA,Low-Rank Adaptation,"A parameter-efficient fine-tuning method that injects small trainable rank-decomposition matrices into frozen model weights, drastically reducing training cost.",Fine-Tuning,Hu et al. 2021,low-rank adaptation
+QLoRA,"","A variant of LoRA that fine-tunes a quantized (4-bit) base model, enabling LLM fine-tuning on consumer GPUs.",Fine-Tuning,Dettmers et al. 2023,quantized LoRA
+Prompt Engineering,"","The practice of crafting input prompts to elicit desired outputs from an LLM without modifying model weights.",LLMs,,
+Few-Shot Learning,"","A prompting strategy where a small number of labelled examples are included in the prompt to guide the model toward the desired format or task.",LLMs,Brown et al. 2020,few-shot prompting;in-context learning
+Zero-Shot Learning,"","Using an LLM for a task without any examples in the prompt, relying solely on the model's pre-trained knowledge.",LLMs,,zero-shot prompting
+Chain-of-Thought,CoT,"A prompting technique where the model is instructed to show step-by-step reasoning before giving a final answer, improving accuracy on complex tasks.",LLMs,Wei et al. 2022,CoT prompting;chain of thought
+Token,"","The basic unit of text processed by an LLM. A token is roughly 3–4 characters or 0.75 words in English. Context length is measured in tokens.",LLMs,,
+Context Window,"","The maximum number of tokens an LLM can process in a single forward pass (input + output combined). Limits how much text the model can 'see' at once.",LLMs,,context length
+Embedding,"","A dense numerical vector representation of text (or other data) in a high-dimensional space where semantic similarity corresponds to geometric proximity.",Machine Learning,,vector embedding
+Vector Database,"","A database optimised for storing and querying high-dimensional embedding vectors using approximate nearest-neighbour (ANN) search. Core component of RAG systems.",Infrastructure,,vector store;vector DB
+Hallucination,"","When an LLM generates plausible-sounding but factually incorrect or fabricated information. A key challenge in production LLM deployments.",LLMs,,confabulation
+Temperature,"","A sampling parameter that controls the randomness of an LLM's output. Higher values produce more varied responses; lower values produce more deterministic ones.",LLMs,,
+Top-p Sampling,Nucleus Sampling,"A decoding strategy where the model samples from the smallest set of tokens whose cumulative probability exceeds p. Balances diversity and coherence.",LLMs,Holtzman et al. 2020,nucleus sampling
+Fine-Tuning,"","The process of continuing to train a pre-trained model on a smaller, task-specific dataset to specialise its behaviour.",Machine Learning,,
+Transfer Learning,"","A technique where a model trained on one task is reused as the starting point for a model on a different but related task.",Machine Learning,,
+Pre-training,"","The initial large-scale training phase where a model learns general representations from a massive dataset before any task-specific fine-tuning.",Machine Learning,,
+Tokenizer,"","A component that splits raw text into tokens and maps them to integer IDs for input to an LLM. Vocabulary size and tokenization strategy affect model behaviour.",LLMs,,
+Vocabulary,"","The fixed set of tokens a model knows. Tokens outside the vocabulary are split into sub-word units by the tokenizer (e.g. BPE, WordPiece).",LLMs,,
+BPE,Byte-Pair Encoding,"A subword tokenization algorithm that iteratively merges the most frequent adjacent byte pairs. Used by GPT and many other LLMs.",LLMs,Sennrich et al. 2016,byte-pair encoding
+Perplexity,"","A metric measuring how well a language model predicts a sample of text. Lower perplexity indicates better predictive performance.",Evaluation,,PPL
+BLEU,Bilingual Evaluation Understudy,"An automatic metric for evaluating machine-generated text (especially translation) by comparing n-gram overlaps with human reference texts.",Evaluation,Papineni et al. 2002,
+ROUGE,Recall-Oriented Understudy for Gisting Evaluation,"A set of metrics for evaluating automatic summarisation by measuring n-gram and longest common subsequence overlaps with reference summaries.",Evaluation,Lin 2004,
+Benchmark,"","A standardised test or dataset used to evaluate and compare model performance on a defined task (e.g. MMLU, HellaSwag, HumanEval).",Evaluation,,
+MMLU,Massive Multitask Language Understanding,"A benchmark testing LLM knowledge across 57 academic subjects including STEM, humanities, and social sciences.",Evaluation,Hendrycks et al. 2021,
+HumanEval,"","A benchmark of 164 Python programming problems used to evaluate LLMs' code generation ability.",Evaluation,Chen et al. 2021 (OpenAI),
+Overfitting,"","When a model learns the training data too closely, including its noise, and fails to generalise to unseen data. Detected by a gap between training and validation loss.",Machine Learning,,
+Underfitting,"","When a model is too simple to capture the patterns in the data, resulting in poor performance on both training and validation sets.",Machine Learning,,
+Regularisation,"","Techniques (e.g. L1/L2, dropout) applied during training to reduce overfitting by penalising model complexity or randomly disabling neurons.",Machine Learning,,regularization
+Dropout,"","A regularisation technique that randomly sets a fraction of neuron activations to zero during training, preventing co-adaptation and reducing overfitting.",Deep Learning,Srivastava et al. 2014,
+Batch Normalisation,BN,"A technique that normalises layer inputs within a mini-batch during training, stabilising and accelerating deep network training.",Deep Learning,Ioffe & Szegedy 2015,batch normalization;batchnorm
+Learning Rate,"","A hyperparameter controlling the step size of gradient descent weight updates. Too high causes divergence; too low causes slow convergence.",Machine Learning,,LR
+Gradient Descent,"","An optimisation algorithm that iteratively adjusts model parameters in the direction of the negative gradient of the loss function.",Machine Learning,,SGD;stochastic gradient descent
+Adam Optimizer,Adaptive Moment Estimation,"A widely used gradient descent optimiser that adapts learning rates per parameter using estimates of first and second moments of the gradients.",Machine Learning,Kingma & Ba 2015,Adam;AdamW
+Loss Function,"","A function measuring the discrepancy between model predictions and ground truth labels. Minimised during training. Examples: cross-entropy, MSE.",Machine Learning,,objective function;cost function
+Cross-Entropy Loss,"","A loss function commonly used for classification tasks that measures the difference between predicted probability distributions and true labels.",Machine Learning,,log loss;categorical cross-entropy
+Softmax,"","An activation function applied to the final layer of a classifier that converts raw logits into a probability distribution over classes.",Deep Learning,,
+ReLU,Rectified Linear Unit,"An activation function defined as max(0, x). Widely used in deep networks for its simplicity and effectiveness in mitigating the vanishing gradient problem.",Deep Learning,,rectified linear unit
+Sigmoid,"","An activation function that maps any real number to (0, 1). Used in binary classification output layers and historically in hidden layers.",Deep Learning,,logistic function
+Hyperparameter,"","A parameter set before training begins (e.g. learning rate, batch size, number of layers) as opposed to model weights learned during training.",Machine Learning,,
+Epoch,"","One complete pass through the entire training dataset during training.",Machine Learning,,
+Batch Size,"","The number of training examples used in one forward/backward pass before updating model weights.",Machine Learning,,mini-batch size
+GPU,Graphics Processing Unit,"A processor with thousands of small cores optimised for the parallel matrix operations that dominate deep learning training and inference.",Infrastructure,,graphics processing unit
+TPU,Tensor Processing Unit,"Google's custom ASIC designed specifically for large-scale neural network training and inference, offering high throughput for matrix multiplications.",Infrastructure,Google,tensor processing unit
+Inference,"","The process of running a trained model on new inputs to produce predictions. Distinct from training, typically much faster and cheaper.",Machine Learning,,prediction;serving
+Quantisation,"","Reducing the numerical precision of model weights (e.g. from float32 to int8 or int4) to decrease memory usage and increase inference speed, with minimal accuracy loss.",Deployment,,quantization
+Pruning,"","Removing redundant or low-importance weights from a trained neural network to reduce model size and inference cost.",Deployment,,model pruning
+Distillation,Knowledge Distillation,"Training a smaller 'student' model to mimic the outputs of a larger 'teacher' model, transferring knowledge into a more efficient form.",Deployment,Hinton et al. 2015,knowledge distillation
+ONNX,Open Neural Network Exchange,"An open format for representing machine learning models, enabling interoperability between frameworks like PyTorch and TensorFlow.",Infrastructure,Microsoft & Facebook,open neural network exchange
+Agent,"","An LLM-based system that can perceive inputs, plan actions, use tools (e.g. web search, code execution), and iterate to complete multi-step tasks autonomously.",AI Agents,,AI agent;autonomous agent
+Tool Use,"","The capability of an LLM to call external functions or APIs (e.g. calculators, databases, web search) to augment its reasoning with real-world information.",AI Agents,,function calling
+MCP,Model Context Protocol,"An open protocol by Anthropic standardising how LLM applications connect to external tools, data sources, and context providers.",AI Agents,Anthropic 2024,model context protocol
+Agentic Loop,"","The iterative cycle in an AI agent where the model reasons, selects a tool action, receives the result, and reasons again until the task is complete.",AI Agents,,ReAct loop
+Multimodal,"","Describes AI models that process and generate multiple data types — typically text, images, audio, or video — within a single model.",AI,,multimodal AI;vision-language model;VLM
+Embeddings Model,"","A model trained specifically to produce dense vector representations of text (or other data) for use in semantic search, clustering, and RAG pipelines.",Machine Learning,,sentence transformer;embedding model
+Semantic Search,"","Search that retrieves results based on the meaning of a query rather than exact keyword matches, typically using embedding similarity.",Infrastructure,,
+ANN,Approximate Nearest Neighbour,"A family of algorithms (e.g. HNSW, IVF) that find vectors close to a query vector in high-dimensional space faster than exhaustive search, used in vector databases.",Infrastructure,,approximate nearest neighbor;HNSW
+SLM,Small Language Model,"A language model with far fewer parameters than frontier LLMs (typically <10B), designed to run efficiently on-device or at lower cost.",LLMs,,small language model;on-device LLM
+PEFT,Parameter-Efficient Fine-Tuning,"A category of fine-tuning techniques (including LoRA, prefix tuning, adapters) that update only a small fraction of model parameters, reducing compute and memory.",Fine-Tuning,,parameter-efficient fine-tuning
+Prompt Injection,"","An attack where malicious text in the model's input overrides the system prompt or intended instructions, causing unintended model behaviour.",AI Safety,,prompt hijacking
+Jailbreak,"","A prompting technique designed to bypass an LLM's safety guidelines and elicit responses the model was trained to refuse.",AI Safety,,
+Alignment,"","The field of research and engineering focused on ensuring AI systems pursue goals and exhibit behaviours intended by their designers and beneficial to humanity.",AI Safety,,AI alignment
+Guardrails,"","Mechanisms — input/output filters, classifiers, constitutional rules — applied around an LLM to prevent harmful, off-topic, or policy-violating outputs.",AI Safety,,
+System Prompt,"","Instructions provided to an LLM at the start of a conversation (often hidden from the end user) that set the model's persona, rules, and context.",LLMs,,system message;instruction prompt

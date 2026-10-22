@@ -7,21 +7,27 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
   const existing = await getSources()
   if (existing.length > 0) return
 
-  const url = chrome.runtime.getURL('biotest-diagnostics.csv')
-  const text = await (await fetch(url)).text()
-  const id = crypto.randomUUID()
-  const terms = csvToTermEntries(parseCsv(text), id)
+  const defaults = [
+    { file: 'biotest-diagnostics.csv', name: 'Biotest Diagnostics' },
+    { file: 'ai-ml.csv', name: 'AI / ML' },
+  ]
 
-  const source = {
-    id,
-    name: 'Biotest Diagnostics',
-    type: 'file' as const,
-    url: null,
-    termCount: terms.length,
-    lastLoaded: new Date().toISOString(),
-    autoRefresh: false,
+  const sources = []
+  for (const { file, name } of defaults) {
+    const text = await (await fetch(chrome.runtime.getURL(file))).text()
+    const id = crypto.randomUUID()
+    const terms = csvToTermEntries(parseCsv(text), id)
+    await setTerms(id, terms)
+    sources.push({
+      id,
+      name,
+      type: 'file' as const,
+      url: null,
+      termCount: terms.length,
+      lastLoaded: new Date().toISOString(),
+      autoRefresh: false,
+    })
   }
 
-  await setSources([source])
-  await setTerms(id, terms)
+  await setSources(sources)
 })

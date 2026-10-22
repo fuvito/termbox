@@ -316,6 +316,14 @@ Safari and Firefox are planned after Chrome v1 ships. Write code now so that por
 
 ---
 
+## Changelog Rules
+
+- Keep `CHANGELOG.md` (in the project root, next to `PRIVACY.md` and `TERMS.md`) up to date with every release.
+- Add a new `## [x.y.z] — YYYY-MM-DD` section at the top whenever the version is bumped.
+- Only include major or user-facing changes: new features, behaviour changes, removals, and bug fixes. Do not log internal refactors or documentation-only edits unless they affect users.
+
+---
+
 ## Git Commit Rules
 
 - Do not append "Co-Authored-By" or any other AI attribution trailers to git commit messages. Keep commit messages clean and strictly human-authored in format.

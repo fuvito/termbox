@@ -189,6 +189,11 @@ function AboutView({ onBack, theme, prefs }: {
         {/* Legal links */}
         <div style={{ display: 'flex', gap: 16, marginTop: 24 }}>
           <button type="button"
+            onClick={() => openUrl('https://github.com/fuvito/termbox/blob/main/CHANGELOG.md')}
+            style={{ background: 'none', border: 'none', color: theme.primary, fontSize: fs - 1, cursor: 'pointer', padding: 0, fontFamily: 'inherit', textDecoration: 'underline' }}>
+            What's New
+          </button>
+          <button type="button"
             onClick={() => openUrl('https://github.com/fuvito/termbox/blob/main/PRIVACY.md')}
             style={{ background: 'none', border: 'none', color: theme.primary, fontSize: fs - 1, cursor: 'pointer', padding: 0, fontFamily: 'inherit', textDecoration: 'underline' }}>
             Privacy Policy

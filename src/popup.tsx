@@ -844,9 +844,6 @@ function SearchView({
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { copyDefinition(r.id, r.definition); setExpanded(expanded === r.id ? null : r.id) } }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
                       <strong style={{ fontSize: fs, color: theme.text }}>{r.term}</strong>
-                      {copiedId === r.id && (
-                        <span style={{ fontSize: fs - 2, color: theme.primary, marginLeft: 'auto' }}>Copied!</span>
-                      )}
                       {r.fullForm && (
                         <span style={{ fontSize: fs - 1, color: theme.secondary }}>{r.fullForm}</span>
                       )}
@@ -861,9 +858,20 @@ function SearchView({
                         </span>
                       )}
                     </div>
-                    <p style={{ fontSize: fs - 1, color: theme.secondary, lineHeight: 1.5, margin: 0 }}>
+                    <p style={{
+                      fontSize: fs - 1, color: theme.secondary, lineHeight: 1.5, margin: 0,
+                      background: copiedId === r.id ? '#fef9c3' : 'transparent',
+                      borderRadius: copiedId === r.id ? 4 : 0,
+                      padding: copiedId === r.id ? '3px 5px' : '0',
+                      transition: 'background 0.25s',
+                    }}>
                       {r.definition}
                     </p>
+                    {copiedId === r.id && (
+                      <p style={{ fontSize: fs - 2, color: '#92400e', margin: '4px 0 0', textAlign: 'right' }}>
+                        ✓ Copied to clipboard
+                      </p>
+                    )}
                     {expanded === r.id && r.aliases.length > 0 && (
                       <p style={{ fontSize: fs - 2, color: theme.muted, margin: '6px 0 0' }}>
                         Also known as: {r.aliases.join(', ')}

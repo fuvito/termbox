@@ -316,6 +316,12 @@ Safari and Firefox are planned after Chrome v1 ships. Write code now so that por
 
 ---
 
+## Git Commit Rules
+
+- Do not append "Co-Authored-By" or any other AI attribution trailers to git commit messages. Keep commit messages clean and strictly human-authored in format.
+
+---
+
 ## Final notes
 
 - Project name is "TermBox" (working title). Ask the user if they want to change it before publishing.

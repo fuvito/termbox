@@ -637,7 +637,15 @@ function SearchView({
   const [hasMore, setHasMore] = useState(false)
   const [hasSearched, setHasSearched] = useState(false)
   const [expanded, setExpanded] = useState<string | null>(null)
+  const [copiedId, setCopiedId] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  function copyDefinition(id: string, definition: string) {
+    void navigator.clipboard.writeText(definition).then(() => {
+      setCopiedId(id)
+      setTimeout(() => setCopiedId(prev => prev === id ? null : prev), 1500)
+    })
+  }
   const fs = prefs.fontSize
 
   useEffect(() => { inputRef.current?.focus() }, [])
@@ -832,10 +840,13 @@ function SearchView({
                   <li
                     key={r.id}
                     style={{ padding: '10px 14px', borderBottom: `1px solid ${theme.border}`, cursor: 'pointer', background: expanded === r.id ? theme.bg : theme.surface }}
-                    onClick={() => setExpanded(expanded === r.id ? null : r.id)}
-                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setExpanded(expanded === r.id ? null : r.id) }}>
+                    onClick={() => { copyDefinition(r.id, r.definition); setExpanded(expanded === r.id ? null : r.id) }}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { copyDefinition(r.id, r.definition); setExpanded(expanded === r.id ? null : r.id) } }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
                       <strong style={{ fontSize: fs, color: theme.text }}>{r.term}</strong>
+                      {copiedId === r.id && (
+                        <span style={{ fontSize: fs - 2, color: theme.primary, marginLeft: 'auto' }}>Copied!</span>
+                      )}
                       {r.fullForm && (
                         <span style={{ fontSize: fs - 1, color: theme.secondary }}>{r.fullForm}</span>
                       )}

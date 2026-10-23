@@ -17,4 +17,14 @@ export interface GlossarySource {
   termCount: number
   lastLoaded: string    // ISO 8601
   autoRefresh: boolean
+  secured: boolean
+}
+
+export interface SecureSourceMeta {
+  sourceId: string
+  pinSalt: string
+  pinEncDek: { iv: string; ct: string }       // DEK encrypted with PIN-derived key
+  recoverySalt: string
+  recoveryEncDek: { iv: string; ct: string }  // DEK encrypted with recovery-key-derived key
+  recoveryKeyHash: string                      // SHA-256 of raw recovery key for verification
 }

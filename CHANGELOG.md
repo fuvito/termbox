@@ -4,6 +4,16 @@ All notable changes to this project are documented here.
 
 ---
 
+## [1.0.3] — 2026-10-22
+
+### Added
+- PIN protection for any glossary source — terms are encrypted with AES-256-GCM (Web Crypto API)
+- Recovery key shown once during PIN setup — use it to reset PIN if forgotten
+- Unlocked state persists for the browser session; re-entry required only after browser restart
+- Locked sources show a padlock screen in search; selecting, adding terms, downloading, or deleting requires the PIN
+
+---
+
 ## [1.0.2] — 2026-10-22
 
 ### Added
@@ -14,6 +24,10 @@ All notable changes to this project are documented here.
 - Active source name shown as subtitle in the popup header
 - Terms & Conditions document
 - Disclaimer in About view with links to Privacy Policy and Terms & Conditions
+- Edit and delete individual terms from search results via right-click context menu
+- Delete confirmation dialog (no browser-native confirm)
+- Restore last search query and mode when reopening the popup
+- Clear search button (✕) to reset results
 
 ### Changed
 - "Add from URL" button removed from Sources view (URL loading disabled for security)
@@ -55,7 +69,5 @@ Planned features and improvements for upcoming versions. No timeline committed.
 
 | Feature | Notes |
 |---|---|
-| PIN / password lock with client-side encryption | Encrypt stored glossary data using AES-256-GCM (Web Crypto API) so only the user can access it after entering a PIN. Protects against casual snooping; not a substitute for a dedicated password manager. |
 | Firefox support | Manifest and API adjustments for Firefox 109+ |
 | Safari support | Xcode wrapper via `safari-web-extension-converter` |
-| Edit / delete individual terms | Modify or remove a single term from a manually created glossary without deleting the whole source |

@@ -2,10 +2,14 @@ import './chrome-mock'
 import '@fontsource-variable/inter'
 import { StrictMode, useState, useEffect, useRef, useCallback } from 'react'
 import { createRoot } from 'react-dom/client'
-import type { TermEntry, GlossarySource } from './types'
+import type { TermEntry, GlossarySource, SecureSourceMeta } from './types'
 import type { SearchResult } from './search'
 import { rankTerms } from './search'
 import { parseCsv, csvToTermEntries, termEntriesToCsv } from './csv'
+import {
+  generateSaltHex, generateRecoveryKey, generateDekHex,
+  deriveKeyFromPin, deriveKeyFromRecoveryKey, encryptStr, decryptStr, hashStr,
+} from './crypto'
 import {
   getSources,
   setSources,
@@ -15,6 +19,15 @@ import {
   getActiveSourceId,
   setActiveSourceId,
   loadGlossary,
+  getSecureMeta,
+  setSecureMeta,
+  deleteSecureMeta,
+  getSecureTerms,
+  setSecureTerms,
+  deleteEncryptedBlob,
+  getSessionDek,
+  setSessionDek,
+  clearSessionDek,
 } from './storage'
 
 // ─── Theme ────────────────────────────────────────────────────────────────────
@@ -205,20 +218,264 @@ function AboutView({ onBack, theme, prefs }: {
   )
 }
 
+// ─── PinModal ─────────────────────────────────────────────────────────────────
+
+type PinModalMode = 'setup' | 'unlock'
+
+function PinModal({
+  mode, sourceId, sources, theme, prefs, onSuccess, onClose,
+}: {
+  mode: PinModalMode
+  sourceId: string
+  sources: GlossarySource[]
+  theme: Theme
+  prefs: Prefs
+  onSuccess: (sourceId: string, dekHex: string) => Promise<void>
+  onClose: () => void
+}) {
+  type Step = 'enter' | 'setup' | 'show-recovery' | 'forgot' | 'new-pin'
+  const [step, setStep] = useState<Step>(mode === 'setup' ? 'setup' : 'enter')
+  const [pin, setPin] = useState('')
+  const [pinConfirm, setPinConfirm] = useState('')
+  const [recoveryInput, setRecoveryInput] = useState('')
+  const [recoveryAck, setRecoveryAck] = useState(false)
+  const [generatedRecovery, setGeneratedRecovery] = useState('')
+  const [recoveryDekHex, setRecoveryDekHex] = useState('')
+  const [error, setError] = useState('')
+  const [busy, setBusy] = useState(false)
+  const fs = prefs.fontSize
+  const sourceName = sources.find(s => s.id === sourceId)?.name ?? 'this source'
+
+  async function handleUnlock() {
+    if (pin.length < 4) { setError('PIN must be at least 4 characters'); return }
+    setBusy(true); setError('')
+    try {
+      const meta = await getSecureMeta(sourceId)
+      if (!meta) { setError('Source security data not found'); setBusy(false); return }
+      const kek = await deriveKeyFromPin(pin, meta.pinSalt)
+      let dekHex: string
+      try { dekHex = await decryptStr(kek, meta.pinEncDek.iv, meta.pinEncDek.ct) }
+      catch { setError('Incorrect PIN'); setBusy(false); return }
+      await onSuccess(sourceId, dekHex)
+    } catch { setError('Unlock failed') }
+    setBusy(false)
+  }
+
+  function handleSetupNext() {
+    if (pin.length < 4) { setError('PIN must be at least 4 characters'); return }
+    if (pin !== pinConfirm) { setError('PINs do not match'); return }
+    setError('')
+    setGeneratedRecovery(generateRecoveryKey())
+    setStep('show-recovery')
+  }
+
+  async function handleSetupFinalize() {
+    setBusy(true); setError('')
+    try {
+      const dekHex = generateDekHex()
+      const pinSalt = generateSaltHex()
+      const kek = await deriveKeyFromPin(pin, pinSalt)
+      const pinEncDek = await encryptStr(kek, dekHex)
+      const recoverySalt = generateSaltHex()
+      const rkek = await deriveKeyFromRecoveryKey(generatedRecovery, recoverySalt)
+      const recoveryEncDek = await encryptStr(rkek, dekHex)
+      const recoveryKeyHash = await hashStr(generatedRecovery)
+      const meta: SecureSourceMeta = { sourceId, pinSalt, pinEncDek, recoverySalt, recoveryEncDek, recoveryKeyHash }
+      await setSecureMeta(meta)
+      // Encrypt existing plain terms
+      const plain = await getTerms(sourceId)
+      await setSecureTerms(sourceId, plain, dekHex)
+      await deleteTerms(sourceId)
+      // Mark source secured
+      const srcs = await getSources()
+      await setSources(srcs.map(s => s.id === sourceId ? { ...s, secured: true } : s))
+      await onSuccess(sourceId, dekHex)
+    } catch (e) { setError((e as Error).message || 'Setup failed') }
+    setBusy(false)
+  }
+
+  async function handleForgotVerify() {
+    if (!recoveryInput.trim()) { setError('Enter your recovery key'); return }
+    setBusy(true); setError('')
+    try {
+      const meta = await getSecureMeta(sourceId)
+      if (!meta) { setError('Source security data not found'); setBusy(false); return }
+      const hash = await hashStr(recoveryInput.trim())
+      if (hash !== meta.recoveryKeyHash) { setError('Invalid recovery key'); setBusy(false); return }
+      const rkek = await deriveKeyFromRecoveryKey(recoveryInput.trim(), meta.recoverySalt)
+      const dekHex = await decryptStr(rkek, meta.recoveryEncDek.iv, meta.recoveryEncDek.ct)
+      setRecoveryDekHex(dekHex)
+      setPin(''); setPinConfirm(''); setStep('new-pin')
+    } catch { setError('Invalid recovery key') }
+    setBusy(false)
+  }
+
+  async function handleNewPin() {
+    if (pin.length < 4) { setError('PIN must be at least 4 characters'); return }
+    if (pin !== pinConfirm) { setError('PINs do not match'); return }
+    setBusy(true); setError('')
+    try {
+      const meta = await getSecureMeta(sourceId)
+      if (!meta) { setError('Source security data not found'); setBusy(false); return }
+      const newSalt = generateSaltHex()
+      const kek = await deriveKeyFromPin(pin, newSalt)
+      const newPinEncDek = await encryptStr(kek, recoveryDekHex)
+      await setSecureMeta({ ...meta, pinSalt: newSalt, pinEncDek: newPinEncDek })
+      await onSuccess(sourceId, recoveryDekHex)
+    } catch { setError('Failed to set new PIN') }
+    setBusy(false)
+  }
+
+  const inp: React.CSSProperties = {
+    border: `1px solid ${theme.inputBorder}`, borderRadius: 6, padding: '8px 10px',
+    fontSize: fs, outline: 'none', background: theme.bg, color: theme.text, width: '100%', boxSizing: 'border-box',
+  }
+  const btnPrimary: React.CSSProperties = {
+    background: BRAND, color: '#fff', border: 'none', borderRadius: 6,
+    padding: '9px 0', fontSize: fs, cursor: 'pointer', width: '100%',
+  }
+  const btnGhost: React.CSSProperties = {
+    background: 'none', border: `1px solid ${theme.border}`, borderRadius: 6,
+    padding: '9px 0', fontSize: fs, cursor: 'pointer', color: theme.secondary, width: '100%',
+  }
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.48)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 500 }}
+      onClick={e => { if (e.target === e.currentTarget) onClose() }}>
+      <div style={{ background: theme.surface, borderRadius: 10, padding: 22, width: 272, boxShadow: '0 8px 32px rgba(0,0,0,0.28)', border: `1px solid ${theme.border}` }}>
+
+        {step === 'enter' && (
+          <>
+            <p style={{ fontWeight: 700, fontSize: fs + 1, color: theme.text, margin: '0 0 4px' }}>Unlock source</p>
+            <p style={{ fontSize: fs - 1, color: theme.muted, margin: '0 0 16px' }}>{sourceName}</p>
+            <input type="password" placeholder="PIN" autoFocus value={pin}
+              onChange={e => setPin(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') void handleUnlock() }}
+              style={{ ...inp, marginBottom: 12 }} />
+            {error && <p style={{ fontSize: fs - 2, color: theme.error, margin: '0 0 10px' }}>{error}</p>}
+            <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
+              <button type="button" style={{ ...btnPrimary, opacity: busy ? 0.6 : 1 }} onClick={() => void handleUnlock()} disabled={busy}>
+                {busy ? 'Unlocking…' : 'Unlock'}
+              </button>
+              <button type="button" style={btnGhost} onClick={onClose}>Cancel</button>
+            </div>
+            <button type="button"
+              onClick={() => { setStep('forgot'); setError(''); setPin('') }}
+              style={{ background: 'none', border: 'none', color: theme.primary, fontSize: fs - 2, cursor: 'pointer', padding: 0, fontFamily: 'inherit' }}>
+              Forgot PIN?
+            </button>
+          </>
+        )}
+
+        {step === 'setup' && (
+          <>
+            <p style={{ fontWeight: 700, fontSize: fs + 1, color: theme.text, margin: '0 0 4px' }}>Add PIN protection</p>
+            <p style={{ fontSize: fs - 1, color: theme.muted, margin: '0 0 16px' }}>{sourceName}</p>
+            <input type="password" placeholder="Choose a PIN (min 4 chars)" autoFocus value={pin}
+              onChange={e => setPin(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') handleSetupNext() }}
+              style={{ ...inp, marginBottom: 8 }} />
+            <input type="password" placeholder="Confirm PIN" value={pinConfirm}
+              onChange={e => setPinConfirm(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') handleSetupNext() }}
+              style={{ ...inp, marginBottom: 12 }} />
+            {error && <p style={{ fontSize: fs - 2, color: theme.error, margin: '0 0 10px' }}>{error}</p>}
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button type="button" style={btnPrimary} onClick={handleSetupNext}>Next</button>
+              <button type="button" style={btnGhost} onClick={onClose}>Cancel</button>
+            </div>
+          </>
+        )}
+
+        {step === 'show-recovery' && (
+          <>
+            <p style={{ fontWeight: 700, fontSize: fs + 1, color: theme.text, margin: '0 0 8px' }}>Save your recovery key</p>
+            <p style={{ fontSize: fs - 1, color: theme.secondary, margin: '0 0 12px', lineHeight: 1.55 }}>
+              This key is shown <strong>only once</strong>. If you forget your PIN, it's the only way to recover access.
+            </p>
+            <div style={{ background: theme.bg, border: `1px solid ${theme.border}`, borderRadius: 6, padding: '10px 12px', marginBottom: 12, fontFamily: 'monospace', fontSize: fs - 1, color: theme.text, wordBreak: 'break-all', letterSpacing: '0.5px' }}>
+              {generatedRecovery}
+            </div>
+            <label style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: fs - 1, color: theme.secondary, marginBottom: 14, cursor: 'pointer' }}>
+              <input type="checkbox" checked={recoveryAck} onChange={e => setRecoveryAck(e.target.checked)}
+                style={{ marginTop: 2, accentColor: BRAND, cursor: 'pointer', flexShrink: 0 }} />
+              I've saved this recovery key in a safe place
+            </label>
+            {error && <p style={{ fontSize: fs - 2, color: theme.error, margin: '0 0 10px' }}>{error}</p>}
+            <button type="button"
+              style={{ ...btnPrimary, opacity: recoveryAck && !busy ? 1 : 0.5, cursor: recoveryAck && !busy ? 'pointer' : 'not-allowed' }}
+              disabled={!recoveryAck || busy}
+              onClick={() => void handleSetupFinalize()}>
+              {busy ? 'Setting up…' : 'Set up PIN protection'}
+            </button>
+          </>
+        )}
+
+        {step === 'forgot' && (
+          <>
+            <p style={{ fontWeight: 700, fontSize: fs + 1, color: theme.text, margin: '0 0 8px' }}>Enter recovery key</p>
+            <p style={{ fontSize: fs - 1, color: theme.muted, margin: '0 0 12px' }}>{sourceName}</p>
+            <input type="text" placeholder="xxxx-xxxx-xxxx-…" autoFocus value={recoveryInput}
+              onChange={e => setRecoveryInput(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') void handleForgotVerify() }}
+              style={{ ...inp, fontFamily: 'monospace', marginBottom: 12 }} />
+            {error && <p style={{ fontSize: fs - 2, color: theme.error, margin: '0 0 10px' }}>{error}</p>}
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button type="button" style={{ ...btnPrimary, opacity: busy ? 0.6 : 1 }} onClick={() => void handleForgotVerify()} disabled={busy}>
+                {busy ? 'Verifying…' : 'Continue'}
+              </button>
+              <button type="button" style={btnGhost} onClick={() => { setStep('enter'); setError('') }}>Back</button>
+            </div>
+          </>
+        )}
+
+        {step === 'new-pin' && (
+          <>
+            <p style={{ fontWeight: 700, fontSize: fs + 1, color: theme.text, margin: '0 0 8px' }}>Set a new PIN</p>
+            <input type="password" placeholder="New PIN (min 4 chars)" autoFocus value={pin}
+              onChange={e => setPin(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') void handleNewPin() }}
+              style={{ ...inp, marginBottom: 8 }} />
+            <input type="password" placeholder="Confirm new PIN" value={pinConfirm}
+              onChange={e => setPinConfirm(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') void handleNewPin() }}
+              style={{ ...inp, marginBottom: 12 }} />
+            {error && <p style={{ fontSize: fs - 2, color: theme.error, margin: '0 0 10px' }}>{error}</p>}
+            <button type="button" style={{ ...btnPrimary, opacity: busy ? 0.6 : 1 }} onClick={() => void handleNewPin()} disabled={busy}>
+              {busy ? 'Saving…' : 'Set new PIN'}
+            </button>
+          </>
+        )}
+
+      </div>
+    </div>
+  )
+}
+
 // ─── SourcesView ──────────────────────────────────────────────────────────────
 
 function SourcesView({
   sources,
   activeSourceId,
+  unlockedSources,
   onBack,
   onReload,
+  onRequestUnlock,
+  onRequestSetupPin,
+  onLockSource,
+  onRemoveSecurity,
   theme,
   prefs,
 }: {
   sources: GlossarySource[]
   activeSourceId: string | 'all' | null
+  unlockedSources: Set<string>
   onBack: () => void
   onReload: () => Promise<void>
+  onRequestUnlock: (sourceId: string, then?: () => void) => void
+  onRequestSetupPin: (sourceId: string) => void
+  onLockSource: (sourceId: string) => void
+  onRemoveSecurity: (sourceId: string) => Promise<void>
   theme: Theme
   prefs: Prefs
 }) {
@@ -230,9 +487,14 @@ function SourcesView({
   const [newGlossaryName, setNewGlossaryName] = useState('')
   const [addTermSourceId, setAddTermSourceId] = useState<string | null>(null)
   const [newTerm, setNewTerm] = useState({ term: '', fullForm: '', definition: '' })
+  const [managingSourceId, setManagingSourceId] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const fs = prefs.fontSize
   const isBusy = loadingId !== null
+
+  function isLocked(sourceId: string) {
+    return sources.find(s => s.id === sourceId)?.secured && !unlockedSources.has(sourceId)
+  }
 
   function resetFooter() {
     setShowUrlInput(false)
@@ -247,7 +509,7 @@ function SourcesView({
     const id = crypto.randomUUID()
     const source: GlossarySource = {
       id, name, type: 'file', url: null,
-      termCount: 0, lastLoaded: new Date().toISOString(), autoRefresh: false,
+      termCount: 0, lastLoaded: new Date().toISOString(), autoRefresh: false, secured: false,
     }
     await setSources([...sources, source])
     await setTerms(id, [])
@@ -260,7 +522,18 @@ function SourcesView({
     if (!addTermSourceId) return
     const { term, fullForm, definition } = newTerm
     if (!term.trim() || !definition.trim()) return
-    const existing = await getTerms(addTermSourceId)
+    const src = sources.find(s => s.id === addTermSourceId)
+    let existing: TermEntry[]
+    let save: (terms: TermEntry[]) => Promise<void>
+    if (src?.secured) {
+      const dek = await getSessionDek(addTermSourceId)
+      if (!dek) return
+      existing = await getSecureTerms(addTermSourceId, dek)
+      save = terms => setSecureTerms(addTermSourceId, terms, dek)
+    } else {
+      existing = await getTerms(addTermSourceId)
+      save = terms => setTerms(addTermSourceId, terms)
+    }
     const entry: TermEntry = {
       id: `${addTermSourceId}_${existing.length}`,
       term: term.trim(),
@@ -270,7 +543,7 @@ function SourcesView({
       sourceId: addTermSourceId,
     }
     const updated = [...existing, entry]
-    await setTerms(addTermSourceId, updated)
+    await save(updated)
     await setSources(sources.map(s =>
       s.id === addTermSourceId ? { ...s, termCount: updated.length, lastLoaded: new Date().toISOString() } : s
     ))
@@ -297,6 +570,7 @@ function SourcesView({
         termCount: terms.length,
         lastLoaded: new Date().toISOString(),
         autoRefresh: false,
+        secured: false,
       }
       await setSources([...sources, source])
       await setTerms(id, terms)
@@ -338,6 +612,7 @@ function SourcesView({
         termCount: terms.length,
         lastLoaded: new Date().toISOString(),
         autoRefresh: false,
+        secured: false,
       }
       await setSources([...sources, source])
       await setTerms(id, terms)
@@ -384,9 +659,20 @@ function SourcesView({
   }
 
   async function handleDelete(sourceId: string) {
+    if (isLocked(sourceId)) {
+      onRequestUnlock(sourceId, () => { void handleDelete(sourceId) })
+      return
+    }
+    const src = sources.find(s => s.id === sourceId)
     const newSources = sources.filter(s => s.id !== sourceId)
     await setSources(newSources)
-    await deleteTerms(sourceId)
+    if (src?.secured) {
+      await deleteEncryptedBlob(sourceId)
+      await deleteSecureMeta(sourceId)
+      await clearSessionDek(sourceId)
+    } else {
+      await deleteTerms(sourceId)
+    }
     const newActiveId: string | 'all' | null =
       activeSourceId === sourceId
         ? (newSources.length > 0 ? newSources[0].id : null)
@@ -396,12 +682,27 @@ function SourcesView({
   }
 
   async function handleSetActive(id: string | 'all') {
+    if (id !== 'all' && isLocked(id)) {
+      onRequestUnlock(id, () => { void setActiveSourceId(id).then(onReload) })
+      return
+    }
     await setActiveSourceId(id)
     await onReload()
   }
 
   async function handleDownload(source: GlossarySource) {
-    const terms = await getTerms(source.id)
+    if (isLocked(source.id)) {
+      onRequestUnlock(source.id, () => { void handleDownload(source) })
+      return
+    }
+    let terms: TermEntry[]
+    if (source.secured) {
+      const dek = await getSessionDek(source.id)
+      if (!dek) return
+      terms = await getSecureTerms(source.id, dek)
+    } else {
+      terms = await getTerms(source.id)
+    }
     const csv = termEntriesToCsv(terms)
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
     const url = URL.createObjectURL(blob)
@@ -471,6 +772,26 @@ function SourcesView({
                   {source.termCount} term{source.termCount !== 1 ? 's' : ''} · loaded {timeAgo(source.lastLoaded)}
                 </div>
               </div>
+              {/* Lock icon */}
+              {(() => {
+                const secured = source.secured
+                const unlocked = unlockedSources.has(source.id)
+                const color = secured ? (unlocked ? '#16a34a' : '#f97316') : theme.muted
+                const label = secured
+                  ? (unlocked ? 'Secured & unlocked — click to manage' : 'Locked — click to unlock')
+                  : 'Add PIN protection'
+                return (
+                  <button type="button" title={label} disabled={isBusy}
+                    onClick={() => {
+                      if (!secured) { onRequestSetupPin(source.id); return }
+                      if (!unlocked) { onRequestUnlock(source.id); return }
+                      setManagingSourceId(managingSourceId === source.id ? null : source.id)
+                    }}
+                    style={{ ...iconBtn, color, fontSize: 15, opacity: isBusy ? 0.4 : 1 }}>
+                    {secured && unlocked ? '🔓' : '🔒'}
+                  </button>
+                )
+              })()}
               {source.type === 'url' && (
                 <button type="button"
                   onClick={() => { void handleRefresh(source) }}
@@ -481,7 +802,10 @@ function SourcesView({
                 </button>
               )}
               <button type="button"
-                onClick={() => { resetFooter(); setAddTermSourceId(source.id) }}
+                onClick={() => {
+                  if (isLocked(source.id)) { onRequestUnlock(source.id, () => { resetFooter(); setAddTermSourceId(source.id) }); return }
+                  resetFooter(); setAddTermSourceId(source.id)
+                }}
                 disabled={isBusy}
                 title="Add term"
                 style={{ ...iconBtn, fontSize: 16, opacity: isBusy ? 0.4 : 1 }}>
@@ -502,6 +826,25 @@ function SourcesView({
                 ✕
               </button>
             </div>
+            {/* Lock-manage dropdown for secured+unlocked sources */}
+            {managingSourceId === source.id && (
+              <div style={{ marginTop: 8, background: theme.bg, border: `1px solid ${theme.border}`, borderRadius: 6, overflow: 'hidden' }}>
+                <button type="button"
+                  onClick={() => { onLockSource(source.id); setManagingSourceId(null) }}
+                  style={{ display: 'block', width: '100%', textAlign: 'left', background: 'none', border: 'none', padding: '8px 12px', fontSize: fs - 1, cursor: 'pointer', color: theme.text, fontFamily: 'inherit' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = theme.surface)}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'none')}>
+                  🔒 Lock now
+                </button>
+                <button type="button"
+                  onClick={() => { void onRemoveSecurity(source.id); setManagingSourceId(null) }}
+                  style={{ display: 'block', width: '100%', textAlign: 'left', background: 'none', border: 'none', padding: '8px 12px', fontSize: fs - 1, cursor: 'pointer', color: theme.error, fontFamily: 'inherit', borderTop: `1px solid ${theme.border}` }}
+                  onMouseEnter={e => (e.currentTarget.style.background = theme.surface)}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'none')}>
+                  Remove PIN protection
+                </button>
+              </div>
+            )}
           </div>
         ))}
 
@@ -627,9 +970,11 @@ function SearchView({
   sources,
   activeSourceId,
   glossary,
+  unlockedSources,
   onOpenSources,
   onOpenAbout,
   onReload,
+  onRequestUnlock,
   theme,
   prefs,
   size,
@@ -638,9 +983,11 @@ function SearchView({
   sources: GlossarySource[]
   activeSourceId: string | 'all' | null
   glossary: TermEntry[]
+  unlockedSources: Set<string>
   onOpenSources: () => void
   onOpenAbout: () => void
   onReload: () => Promise<void>
+  onRequestUnlock: (sourceId: string) => void
   theme: Theme
   prefs: Prefs
   size: { w: number; h: number }
@@ -693,17 +1040,35 @@ function SearchView({
   async function handleEditSave(r: SearchResult) {
     if (!editForm.term.trim() || !editForm.definition.trim()) return
     const patch = { term: editForm.term.trim(), fullForm: editForm.fullForm.trim() || null, definition: editForm.definition.trim() }
-    const terms = await getTerms(r.sourceId)
-    await setTerms(r.sourceId, terms.map(t => t.id === r.id ? { ...t, ...patch } : t))
+    const src = sources.find(s => s.id === r.sourceId)
+    if (src?.secured) {
+      const dek = await getSessionDek(r.sourceId)
+      if (!dek) return
+      const terms = await getSecureTerms(r.sourceId, dek)
+      await setSecureTerms(r.sourceId, terms.map(t => t.id === r.id ? { ...t, ...patch } : t), dek)
+    } else {
+      const terms = await getTerms(r.sourceId)
+      await setTerms(r.sourceId, terms.map(t => t.id === r.id ? { ...t, ...patch } : t))
+    }
     setResults(prev => prev.map(x => x.id === r.id ? { ...x, ...patch } : x))
     setEditingId(null)
     await onReload()
   }
 
   async function handleTermDelete(r: SearchResult) {
-    const terms = await getTerms(r.sourceId)
-    const updated = terms.filter(t => t.id !== r.id)
-    await setTerms(r.sourceId, updated)
+    const src = sources.find(s => s.id === r.sourceId)
+    let updated: TermEntry[]
+    if (src?.secured) {
+      const dek = await getSessionDek(r.sourceId)
+      if (!dek) return
+      const terms = await getSecureTerms(r.sourceId, dek)
+      updated = terms.filter(t => t.id !== r.id)
+      await setSecureTerms(r.sourceId, updated, dek)
+    } else {
+      const terms = await getTerms(r.sourceId)
+      updated = terms.filter(t => t.id !== r.id)
+      await setTerms(r.sourceId, updated)
+    }
     await setSources((await getSources()).map(s => s.id === r.sourceId ? { ...s, termCount: updated.length } : s))
     setResults(prev => prev.filter(x => x.id !== r.id))
     setContextMenu(null)
@@ -758,7 +1123,11 @@ function SearchView({
   }
 
   const noSources = sources.length === 0
-  const canSearch = query.trim().length >= 2 && !noSources
+  const activeSrc = activeSourceId && activeSourceId !== 'all'
+    ? sources.find(s => s.id === activeSourceId) ?? sources[0]
+    : null
+  const activeIsLocked = activeSrc?.secured && !unlockedSources.has(activeSrc.id)
+  const canSearch = query.trim().length >= 2 && !noSources && !activeIsLocked
   const sourceMap = Object.fromEntries(sources.map(s => [s.id, s.name]))
   const showSourceBadge = sources.length > 1
 
@@ -846,6 +1215,21 @@ function SearchView({
             onClick={onOpenSources}
             style={{ background: BRAND, color: '#fff', border: 'none', borderRadius: 6, padding: '8px 20px', fontSize: fs, cursor: 'pointer' }}>
             Add a glossary
+          </button>
+        </div>
+      ) : activeIsLocked ? (
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '32px 20px', background: theme.bg }}>
+          <span style={{ fontSize: 40, marginBottom: 14 }}>🔒</span>
+          <p style={{ fontSize: fs, color: theme.text, fontWeight: 600, margin: '0 0 6px', textAlign: 'center' }}>
+            {activeSrc?.name} is locked
+          </p>
+          <p style={{ fontSize: fs - 1, color: theme.muted, margin: '0 0 20px', textAlign: 'center', lineHeight: 1.5 }}>
+            Enter the PIN to unlock and search this glossary.
+          </p>
+          <button type="button"
+            onClick={() => onRequestUnlock(activeSrc!.id)}
+            style={{ background: BRAND, color: '#fff', border: 'none', borderRadius: 6, padding: '9px 24px', fontSize: fs, cursor: 'pointer' }}>
+            Enter PIN
           </button>
         </div>
       ) : (
@@ -1106,6 +1490,8 @@ function App() {
 
   const [screen, setScreen] = useState<Screen>('search')
   const [appData, setAppData] = useState<AppData>({ sources: [], activeSourceId: null, glossary: [] })
+  const [unlockedSources, setUnlockedSources] = useState<Set<string>>(new Set())
+  const [pinModal, setPinModal] = useState<{ mode: PinModalMode; sourceId: string; then?: () => void } | null>(null)
 
   useEffect(() => { document.body.style.background = theme.bg }, [theme.bg])
 
@@ -1126,6 +1512,50 @@ function App() {
     const glossary = await loadGlossary(srcs, effectiveId)
     setAppData({ sources: srcs, activeSourceId: effectiveId, glossary })
   }, [])
+
+  // Restore unlocked sources from session storage on mount
+  useEffect(() => {
+    void (async () => {
+      const srcs = await getSources()
+      const ids = await Promise.all(
+        srcs.filter(s => s.secured).map(async s => {
+          const dek = await getSessionDek(s.id)
+          return dek ? s.id : null
+        })
+      )
+      const unlocked = new Set(ids.filter(Boolean) as string[])
+      if (unlocked.size > 0) setUnlockedSources(unlocked)
+    })()
+  }, [])
+
+  async function handlePinSuccess(sourceId: string, dekHex: string) {
+    await setSessionDek(sourceId, dekHex)
+    setUnlockedSources(prev => new Set([...prev, sourceId]))
+    await reload()
+    const cb = pinModal?.then
+    setPinModal(null)
+    cb?.()
+  }
+
+  async function handleLockSource(sourceId: string) {
+    await clearSessionDek(sourceId)
+    setUnlockedSources(prev => { const n = new Set(prev); n.delete(sourceId); return n })
+    await reload()
+  }
+
+  async function handleRemoveSecurity(sourceId: string) {
+    const dek = await getSessionDek(sourceId)
+    if (!dek) return
+    const terms = await getSecureTerms(sourceId, dek)
+    await setTerms(sourceId, terms)
+    await deleteEncryptedBlob(sourceId)
+    await deleteSecureMeta(sourceId)
+    await clearSessionDek(sourceId)
+    const srcs = await getSources()
+    await setSources(srcs.map(s => s.id === sourceId ? { ...s, secured: false } : s))
+    setUnlockedSources(prev => { const n = new Set(prev); n.delete(sourceId); return n })
+    await reload()
+  }
 
   useEffect(() => {
     void reload().then(async () => {
@@ -1164,9 +1594,11 @@ function App() {
           sources={appData.sources}
           activeSourceId={appData.activeSourceId}
           glossary={appData.glossary}
+          unlockedSources={unlockedSources}
           onOpenSources={() => setScreen('sources')}
           onOpenAbout={() => setScreen('about')}
           onReload={reload}
+          onRequestUnlock={sourceId => setPinModal({ mode: 'unlock', sourceId })}
           theme={theme}
           prefs={prefs}
           size={size}
@@ -1177,10 +1609,26 @@ function App() {
         <SourcesView
           sources={appData.sources}
           activeSourceId={appData.activeSourceId}
+          unlockedSources={unlockedSources}
           onBack={() => setScreen('search')}
           onReload={reload}
+          onRequestUnlock={(sourceId, then) => setPinModal({ mode: 'unlock', sourceId, then })}
+          onRequestSetupPin={sourceId => setPinModal({ mode: 'setup', sourceId })}
+          onLockSource={sourceId => { void handleLockSource(sourceId) }}
+          onRemoveSecurity={handleRemoveSecurity}
           theme={theme}
           prefs={prefs}
+        />
+      )}
+      {pinModal && (
+        <PinModal
+          mode={pinModal.mode}
+          sourceId={pinModal.sourceId}
+          sources={appData.sources}
+          theme={theme}
+          prefs={prefs}
+          onSuccess={handlePinSuccess}
+          onClose={() => setPinModal(null)}
         />
       )}
       {screen === 'about' && (

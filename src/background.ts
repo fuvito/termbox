@@ -26,6 +26,7 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
       termCount: terms.length,
       lastLoaded: new Date().toISOString(),
       autoRefresh: false,
+      secured: false,
     })
   }
 

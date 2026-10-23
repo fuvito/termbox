@@ -1,31 +1,54 @@
 // Activates only outside a real Chrome extension context (e.g. `npm run serve`).
-// Backs chrome.storage.local with localStorage so the popup works in a browser tab.
+// Backs chrome.storage.local with localStorage and chrome.storage.session with
+// an in-memory object so the popup works in a browser tab.
 // biome-ignore lint/suspicious/noExplicitAny: globalThis needs any to attach chrome mock
 const g = globalThis as any
 
 if (!g.chrome?.storage) {
   const PFX = '__termbox_'
+  const sessionStore: Record<string, unknown> = {}
+
+  function makeLocalArea() {
+    return {
+      get(key: string, cb: (r: Record<string, unknown>) => void) {
+        try {
+          const raw = localStorage.getItem(PFX + key)
+          cb({ [key]: raw !== null ? JSON.parse(raw) : undefined })
+        } catch { cb({}) }
+      },
+      set(items: Record<string, unknown>, cb: () => void) {
+        for (const [k, v] of Object.entries(items)) {
+          try { localStorage.setItem(PFX + k, JSON.stringify(v)) } catch {}
+        }
+        cb()
+      },
+      remove(key: string, cb: () => void) {
+        try { localStorage.removeItem(PFX + key) } catch {}
+        cb()
+      },
+    }
+  }
+
+  function makeSessionArea() {
+    return {
+      get(key: string, cb: (r: Record<string, unknown>) => void) {
+        cb({ [key]: sessionStore[key] })
+      },
+      set(items: Record<string, unknown>, cb: () => void) {
+        Object.assign(sessionStore, items)
+        cb()
+      },
+      remove(key: string, cb: () => void) {
+        delete sessionStore[key]
+        cb()
+      },
+    }
+  }
 
   g.chrome = {
     storage: {
-      local: {
-        get(key: string, cb: (r: Record<string, unknown>) => void) {
-          try {
-            const raw = localStorage.getItem(PFX + key)
-            cb({ [key]: raw !== null ? JSON.parse(raw) : undefined })
-          } catch { cb({}) }
-        },
-        set(items: Record<string, unknown>, cb: () => void) {
-          for (const [k, v] of Object.entries(items)) {
-            try { localStorage.setItem(PFX + k, JSON.stringify(v)) } catch {}
-          }
-          cb()
-        },
-        remove(key: string, cb: () => void) {
-          try { localStorage.removeItem(PFX + key) } catch {}
-          cb()
-        },
-      },
+      local: makeLocalArea(),
+      session: makeSessionArea(),
     },
     runtime: { onInstalled: { addListener() {} } },
     permissions: {

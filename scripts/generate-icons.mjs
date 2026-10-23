@@ -104,7 +104,7 @@ function createImage(size) {
 }
 
 // ── Icon design ───────────────────────────────────────────────────────────────
-// BRAND blue background, white bold "T" centered
+// BRAND blue background, white box outline, white "T" inside the box
 
 const BRAND = [59, 75, 200]   // #3B4BC8
 const WHITE = [255, 255, 255]
@@ -115,29 +115,43 @@ function drawIcon(size) {
   const s = size
 
   // Background — rounded square
-  const radius = Math.round(s * 0.20)
-  fillRoundRect(0, 0, s - 1, s - 1, radius, ...BRAND)
+  const bgRadius = Math.round(s * 0.20)
+  fillRoundRect(0, 0, s - 1, s - 1, bgRadius, ...BRAND)
 
-  // Subtle inner highlight along top edge (gives a slight 3-D feel at larger sizes)
+  // Subtle inner highlight along top edge
   if (s >= 48) {
-    fillRoundRect(0, 0, s - 1, Math.round(s * 0.45), radius, 90, 105, 220, 35)
+    fillRoundRect(0, 0, s - 1, Math.round(s * 0.45), bgRadius, 90, 105, 220, 35)
   }
 
-  // White "T"
-  //  • Horizontal bar spans ~72% of the width, ~15% tall, starting at ~26% from top
-  //  • Vertical stroke is ~22% of width, centred, from bar-bottom to ~82% of height
-  const barTop  = Math.round(s * 0.26)
-  const barH    = Math.max(2, Math.round(s * 0.15))
-  const barX    = Math.round(s * 0.14)
-  const barW    = Math.round(s * 0.72)
+  // White box outline — the "box" in T-in-a-box
+  const inset = Math.max(2, Math.round(s * 0.10))
+  const sw    = Math.max(1, Math.round(s * 0.05))   // stroke width
+  const bx = inset, by = inset
+  const bw = s - 1 - 2 * inset, bh = s - 1 - 2 * inset
+  // four sides
+  fillRect(bx,          by,          bw + 1, sw,     ...WHITE)  // top
+  fillRect(bx,          by + bh - sw + 1, bw + 1, sw,   ...WHITE)  // bottom
+  fillRect(bx,          by,          sw,     bh + 1, ...WHITE)  // left
+  fillRect(bx + bw - sw + 1, by,    sw,     bh + 1, ...WHITE)  // right
 
-  const strokeW = Math.max(2, Math.round(s * 0.22))
-  const strokeX = Math.round((s - strokeW) / 2)
-  const strokeTop = barTop + barH
-  const strokeBot = Math.round(s * 0.82)
+  // White "T" — proportioned within the interior of the box
+  const ix = bx + sw + 1           // interior left
+  const iy = by + sw + 1           // interior top
+  const iw = bw - 2 * sw - 2       // interior width
+  const ih = bh - 2 * sw - 2       // interior height
 
-  fillRect(barX, barTop, barW, barH,           ...WHITE)
-  fillRect(strokeX, strokeTop, strokeW, strokeBot - strokeTop, ...WHITE)
+  const barTop = iy + Math.round(ih * 0.18)
+  const barH   = Math.max(1, Math.round(ih * 0.18))
+  const barX   = ix + Math.round(iw * 0.10)
+  const barW   = Math.round(iw * 0.80)
+
+  const stemW  = Math.max(1, Math.round(iw * 0.24))
+  const stemX  = ix + Math.round((iw - stemW) / 2)
+  const stemTop = barTop + barH
+  const stemBot = iy + Math.round(ih * 0.86)
+
+  fillRect(barX,  barTop,  barW,            barH,            ...WHITE)
+  fillRect(stemX, stemTop, stemW,           stemBot - stemTop, ...WHITE)
 
   return buf
 }

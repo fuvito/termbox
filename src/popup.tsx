@@ -918,6 +918,167 @@ function SourcesView({
   )
 }
 
+// ─── BrowseView ──────────────────────────────────────────────────────────────
+
+function BrowseView({
+  glossary, sources, activeSourceId, unlockedSources, onBack, onRequestUnlock, theme, prefs,
+}: {
+  glossary: TermEntry[]
+  sources: GlossarySource[]
+  activeSourceId: string | 'all' | null
+  unlockedSources: Set<string>
+  onBack: () => void
+  onRequestUnlock: (sourceId: string) => void
+  theme: Theme
+  prefs: Prefs
+}) {
+  const fs = prefs.fontSize
+  const [expanded, setExpanded] = useState<string | null>(null)
+  const [copiedId, setCopiedId] = useState<string | null>(null)
+
+  const activeSrc = sources.find(s => s.id === activeSourceId)
+  const isLocked = activeSrc?.secured && !unlockedSources.has(activeSrc.id)
+  const showSourceBadge = activeSourceId === 'all'
+  const sourceMap = Object.fromEntries(sources.map(s => [s.id, s.name]))
+  const subtitle = activeSourceId === 'all' ? 'All sources' : (activeSrc?.name ?? '')
+
+  const sorted = [...glossary].sort((a, b) =>
+    a.term.localeCompare(b.term, undefined, { sensitivity: 'base' })
+  )
+  const groups: { letter: string; terms: TermEntry[] }[] = []
+  for (const t of sorted) {
+    const letter = /[a-zA-Z]/.test(t.term[0] ?? '') ? t.term[0]?.toUpperCase() ?? '#' : '#'
+    const last = groups[groups.length - 1]
+    if (last?.letter === letter) last.terms.push(t)
+    else groups.push({ letter, terms: [t] })
+  }
+
+  function copyDef(id: string, definition: string) {
+    void navigator.clipboard.writeText(definition).then(() => {
+      setCopiedId(id)
+      setTimeout(() => setCopiedId(prev => prev === id ? null : prev), 1500)
+    })
+  }
+
+  const hdrBtn: React.CSSProperties = {
+    background: 'none', border: 'none', color: '#fff', fontSize: fs,
+    cursor: 'pointer', padding: '2px 6px', borderRadius: 4, fontFamily: 'inherit',
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: theme.bg }}>
+      <header style={{ background: BRAND, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+        <button type="button" onClick={onBack} style={{ ...hdrBtn, fontSize: 18, padding: '0 4px' }}>←</button>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <span style={{ fontWeight: 700, color: '#fff', fontSize: 18 }}>Browse</span>
+          {subtitle && (
+            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.65)', marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {subtitle}
+            </div>
+          )}
+        </div>
+        {!isLocked && glossary.length > 0 && (
+          <span style={{ fontSize: fs - 2, color: 'rgba(255,255,255,0.65)', whiteSpace: 'nowrap' }}>
+            {glossary.length} terms
+          </span>
+        )}
+      </header>
+
+      {isLocked ? (
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '32px 20px' }}>
+          <span style={{ fontSize: 40, marginBottom: 14 }}>🔒</span>
+          <p style={{ fontSize: fs, color: theme.text, fontWeight: 600, margin: '0 0 6px', textAlign: 'center' }}>
+            {activeSrc?.name} is locked
+          </p>
+          <p style={{ fontSize: fs - 1, color: theme.muted, margin: '0 0 20px', textAlign: 'center', lineHeight: 1.5 }}>
+            Enter the PIN to browse this glossary.
+          </p>
+          <button type="button"
+            onClick={() => { if (activeSrc) onRequestUnlock(activeSrc.id) }}
+            style={{ background: BRAND, color: '#fff', border: 'none', borderRadius: 6, padding: '9px 24px', fontSize: fs, cursor: 'pointer' }}>
+            Enter PIN
+          </button>
+        </div>
+      ) : glossary.length === 0 ? (
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '32px 20px' }}>
+          <p style={{ fontSize: fs, color: theme.muted, textAlign: 'center' }}>No terms loaded.</p>
+        </div>
+      ) : (
+        <div style={{ flex: 1, overflowY: 'auto' }}>
+          {groups.map(({ letter, terms }) => (
+            <div key={letter}>
+              <div style={{
+                position: 'sticky', top: 0, zIndex: 1,
+                background: theme.border, color: theme.secondary,
+                fontSize: fs - 2, fontWeight: 700, letterSpacing: '0.5px',
+                padding: '3px 14px',
+              }}>
+                {letter}
+              </div>
+              {terms.map(t => {
+                const isExpanded = expanded === t.id
+                const isCopied = copiedId === t.id
+                return (
+                  <button key={t.id} type="button"
+                    onClick={() => { copyDef(t.id, t.definition); setExpanded(isExpanded ? null : t.id) }}
+                    style={{
+                      display: 'block', width: '100%', textAlign: 'left',
+                      padding: '9px 14px',
+                      border: 'none', borderBottom: `1px solid ${theme.border}`,
+                      cursor: 'pointer', background: theme.surface,
+                      fontFamily: 'inherit',
+                    }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3, flexWrap: 'wrap' }}>
+                      <strong style={{ fontSize: fs, color: theme.text }}>{t.term}</strong>
+                      {t.fullForm && (
+                        <span style={{ fontSize: fs - 1, color: theme.secondary }}>{t.fullForm}</span>
+                      )}
+                      {t.domain && (
+                        <span style={{ fontSize: fs - 2, color: theme.tagText, background: theme.tag, borderRadius: 4, padding: '1px 6px' }}>
+                          {t.domain}
+                        </span>
+                      )}
+                      {showSourceBadge && sourceMap[t.sourceId] && (
+                        <span style={{ fontSize: fs - 2, color: theme.muted, background: theme.border, borderRadius: 4, padding: '1px 6px', marginLeft: 'auto' }}>
+                          {sourceMap[t.sourceId]}
+                        </span>
+                      )}
+                    </div>
+                    <p style={{
+                      fontSize: fs - 1, color: theme.secondary, lineHeight: 1.5, margin: 0,
+                      background: isCopied ? '#fef9c3' : 'transparent',
+                      borderRadius: isCopied ? 4 : 0,
+                      padding: isCopied ? '3px 5px' : '0',
+                      transition: 'background 0.25s',
+                    }}>
+                      {t.definition}
+                    </p>
+                    {isCopied && (
+                      <p style={{ fontSize: fs - 2, color: '#92400e', margin: '4px 0 0', textAlign: 'right' }}>
+                        ✓ Copied to clipboard
+                      </p>
+                    )}
+                    {isExpanded && t.aliases.length > 0 && (
+                      <p style={{ fontSize: fs - 2, color: theme.muted, margin: '5px 0 0' }}>
+                        Also known as: {t.aliases.join(', ')}
+                      </p>
+                    )}
+                    {isExpanded && t.sourceReference && (
+                      <p style={{ fontSize: fs - 2, color: theme.muted, margin: '4px 0 0' }}>
+                        Source: {t.sourceReference}
+                      </p>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ─── SearchView ───────────────────────────────────────────────────────────────
 
 function SearchView({
@@ -926,6 +1087,7 @@ function SearchView({
   glossary,
   unlockedSources,
   onOpenSources,
+  onOpenBrowse,
   onOpenAbout,
   onReload,
   onRequestUnlock,
@@ -939,6 +1101,7 @@ function SearchView({
   glossary: TermEntry[]
   unlockedSources: Set<string>
   onOpenSources: () => void
+  onOpenBrowse: () => void
   onOpenAbout: () => void
   onReload: () => Promise<void>
   onRequestUnlock: (sourceId: string) => void
@@ -1142,6 +1305,9 @@ function SearchView({
           <button type="button" style={hdrBtn} title="Increase font size" onClick={() => prefs.setFontSize(Math.min(17, prefs.fontSize + 1))}>A+</button>
           <button type="button" style={hdrBtn} title={prefs.dark ? 'Light mode' : 'Dark mode'} onClick={() => prefs.setDark(!prefs.dark)}>
             {prefs.dark ? '☀' : '☾'}
+          </button>
+          <button type="button" onClick={onOpenBrowse} style={{ ...hdrBtn, fontSize: fs - 1, padding: '2px 5px', letterSpacing: '-0.3px' }} title="Browse all terms A–Z">
+            Az
           </button>
           <button type="button" onClick={onOpenSources} style={{ ...hdrBtn, fontSize: 17, padding: '1px 5px' }} title="Manage sources">
             ≡
@@ -1429,7 +1595,7 @@ function SearchView({
 
 // ─── App ──────────────────────────────────────────────────────────────────────
 
-type Screen = 'search' | 'sources' | 'about'
+type Screen = 'search' | 'sources' | 'about' | 'browse'
 
 interface AppData {
   sources: GlossarySource[]
@@ -1555,6 +1721,7 @@ function App() {
           glossary={appData.glossary}
           unlockedSources={unlockedSources}
           onOpenSources={() => setScreen('sources')}
+          onOpenBrowse={() => setScreen('browse')}
           onOpenAbout={() => setScreen('about')}
           onReload={reload}
           onRequestUnlock={sourceId => setPinModal({ mode: 'unlock', sourceId })}
@@ -1562,6 +1729,18 @@ function App() {
           prefs={prefs}
           size={size}
           setSize={setSize}
+        />
+      )}
+      {screen === 'browse' && (
+        <BrowseView
+          glossary={appData.glossary}
+          sources={appData.sources}
+          activeSourceId={appData.activeSourceId}
+          unlockedSources={unlockedSources}
+          onBack={() => setScreen('search')}
+          onRequestUnlock={sourceId => setPinModal({ mode: 'unlock', sourceId })}
+          theme={theme}
+          prefs={prefs}
         />
       )}
       {screen === 'sources' && (

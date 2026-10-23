@@ -185,6 +185,53 @@ test.describe('about view', () => {
   })
 })
 
+// ─── Browse view ─────────────────────────────────────────────────────────────
+
+test.describe('browse view', () => {
+  test.beforeEach(async ({ page }) => {
+    await seedGlossary(page)
+    await gotoPopup(page)
+    await page.getByTitle('Browse all terms A–Z').click()
+    await expect(page.getByText('Browse')).toBeVisible()
+  })
+
+  test('opens from header Az button', async ({ page }) => {
+    await expect(page.getByText('Browse')).toBeVisible()
+    await expect(page.getByText('Test Glossary')).toBeVisible()
+  })
+
+  test('shows term count in header', async ({ page }) => {
+    await expect(page.getByText('3 terms')).toBeVisible()
+  })
+
+  test('shows all terms sorted A–Z with letter headers', async ({ page }) => {
+    // Terms: API (A), DNA (D), PCR (P) — check via strong headings
+    await expect(page.locator('strong', { hasText: /^API$/ })).toBeVisible()
+    await expect(page.locator('strong', { hasText: /^DNA$/ })).toBeVisible()
+    await expect(page.locator('strong', { hasText: /^PCR$/ })).toBeVisible()
+  })
+
+  test('clicking a term shows its definition and copies it', async ({ page }) => {
+    await page.locator('strong', { hasText: /^API$/ }).click()
+    await expect(page.getByText('A set of rules for software communication')).toBeVisible()
+    await expect(page.getByText('✓ Copied to clipboard')).toBeVisible()
+  })
+
+  test('clicking a term again collapses aliases/source ref', async ({ page }) => {
+    // PCR has aliases — click to expand, click again to collapse
+    const pcrBtn = page.locator('button', { has: page.locator('strong', { hasText: /^PCR$/ }) })
+    await pcrBtn.click()
+    await expect(page.getByText(/Also known as/)).toBeVisible()
+    await pcrBtn.click()
+    await expect(page.getByText(/Also known as/)).not.toBeVisible()
+  })
+
+  test('← back returns to search view', async ({ page }) => {
+    await page.getByRole('button', { name: '←' }).click()
+    await expect(page.getByPlaceholder('Search terms…')).toBeVisible()
+  })
+})
+
 // ─── Dark mode ────────────────────────────────────────────────────────────────
 
 test.describe('dark mode', () => {

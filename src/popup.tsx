@@ -649,7 +649,9 @@ function SearchView({
   const [query, setQuery] = useState(() => {
     try { return localStorage.getItem('lastQuery') ?? '' } catch { return '' }
   })
-  const [searchMode, setSearchMode] = useState<'term' | 'definition'>('term')
+  const [searchMode, setSearchMode] = useState<'term' | 'definition'>(() => {
+    try { return (localStorage.getItem('lastSearchMode') as 'term' | 'definition') ?? 'term' } catch { return 'term' }
+  })
   const [results, setResults] = useState<SearchResult[]>([])
   const [hasMore, setHasMore] = useState(false)
   const [hasSearched, setHasSearched] = useState(false)
@@ -709,9 +711,21 @@ function SearchView({
     await onReload()
   }
 
+  const didAutoSearch = useRef(false)
   const fs = prefs.fontSize
 
   useEffect(() => { inputRef.current?.focus() }, [])
+
+  useEffect(() => {
+    if (didAutoSearch.current || glossary.length === 0) return
+    const q = query.trim()
+    if (q.length < 2) return
+    didAutoSearch.current = true
+    const { results: ranked, hasMore: more } = rankTerms(glossary, q, searchMode)
+    setResults(ranked)
+    setHasMore(more)
+    setHasSearched(true)
+  }, [glossary, query, searchMode])
 
   const handleSearch = useCallback(() => {
     const q = query.trim()
@@ -865,12 +879,27 @@ function SearchView({
                   <path d="m21 21-4.35-4.35" strokeLinecap="round" />
                 </svg>
               </button>
+              {hasSearched && (
+                <button type="button" title="Clear search"
+                  onClick={() => {
+                    setQuery(''); setResults([]); setHasSearched(false); setHasMore(false)
+                    didAutoSearch.current = false
+                    try { localStorage.removeItem('lastQuery') } catch {}
+                  }}
+                  style={{
+                    background: 'none', border: `1px solid ${theme.border}`, borderRadius: 6,
+                    padding: '0 10px', cursor: 'pointer', color: theme.muted, fontSize: 16,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                  }}>
+                  ✕
+                </button>
+              )}
             </div>
             <div style={{ display: 'flex', gap: 18, marginTop: 9 }}>
               {(['term', 'definition'] as const).map(mode => (
                 <label key={mode} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: fs - 1, cursor: 'pointer', color: theme.secondary }}>
                   <input type="radio" name="searchMode" checked={searchMode === mode}
-                    onChange={() => setSearchMode(mode)}
+                    onChange={() => { setSearchMode(mode); try { localStorage.setItem('lastSearchMode', mode) } catch {} }}
                     style={{ accentColor: BRAND, cursor: 'pointer', margin: 0 }}
                   />
                   {mode === 'term' ? 'Search by Term' : 'Search by Definition'}

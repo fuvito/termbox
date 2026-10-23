@@ -497,6 +497,8 @@ function SourcesView({
   const [addTermSourceId, setAddTermSourceId] = useState<string | null>(null)
   const [newTerm, setNewTerm] = useState({ term: '', fullForm: '', definition: '' })
   const [managingSourceId, setManagingSourceId] = useState<string | null>(null)
+  const [hoveredId, setHoveredId] = useState<string | null>(null)
+  const [confirmDeleteSourceId, setConfirmDeleteSourceId] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const fs = prefs.fontSize
   const isBusy = loadingId !== null
@@ -712,9 +714,16 @@ function SourcesView({
         {sources.length === 0 && (
           <p style={{ color: theme.muted, fontSize: fs, padding: '20px 14px' }}>No sources loaded yet.</p>
         )}
-        {sources.map(source => (
-          <div key={source.id}
-            style={{ padding: '10px 14px', borderBottom: `1px solid ${theme.border}`, background: theme.surface }}>
+        {sources.map(source => {
+          // biome-ignore lint/a11y/noStaticElementInteractions: hover highlight only, child elements are interactive
+          return <div key={source.id}
+            onMouseEnter={() => setHoveredId(source.id)}
+            onMouseLeave={() => setHoveredId(null)}
+            style={{
+              padding: '10px 14px', borderBottom: `1px solid ${theme.border}`,
+              background: hoveredId === source.id ? theme.bg : theme.surface,
+              transition: 'background-color 0.1s',
+            }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input
                 type="radio" name="activeSource"
@@ -777,7 +786,7 @@ function SourcesView({
                 ↓
               </button>
               <button type="button"
-                onClick={() => { void handleDelete(source.id) }}
+                onClick={() => setConfirmDeleteSourceId(source.id)}
                 disabled={isBusy}
                 title="Delete source"
                 style={{ ...iconBtn, color: theme.error, opacity: isBusy ? 0.4 : 1 }}>
@@ -803,8 +812,27 @@ function SourcesView({
                 </button>
               </div>
             )}
+            {confirmDeleteSourceId === source.id && (
+              <div style={{ marginTop: 8, background: theme.bg, border: `1px solid ${theme.error}55`, borderRadius: 6, padding: '10px 12px' }}>
+                <p style={{ fontSize: fs - 1, color: theme.text, margin: '0 0 8px', fontWeight: 600 }}>
+                  Delete &ldquo;{source.name}&rdquo;?
+                </p>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button type="button"
+                    onClick={() => { void handleDelete(source.id); setConfirmDeleteSourceId(null) }}
+                    style={{ flex: 1, background: theme.error, color: '#fff', border: 'none', borderRadius: 5, padding: '6px 0', fontSize: fs - 1, cursor: 'pointer', fontFamily: 'inherit' }}>
+                    Delete
+                  </button>
+                  <button type="button"
+                    onClick={() => setConfirmDeleteSourceId(null)}
+                    style={{ flex: 1, background: 'none', border: `1px solid ${theme.border}`, borderRadius: 5, padding: '6px 0', fontSize: fs - 1, cursor: 'pointer', color: theme.secondary, fontFamily: 'inherit' }}>
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
-        ))}
+        })}
 
         {/* Error */}
         {error && (

@@ -166,6 +166,7 @@ async function shot(browser, filename, { dark = false, seed, interact }) {
     ? '0 20px 80px rgba(59,75,200,0.45), 0 4px 20px rgba(0,0,0,0.5)'
     : '0 20px 80px rgba(59,75,200,0.22), 0 4px 16px rgba(0,0,0,0.12)'
 
+  // Step 1: centre the popup so we can measure its natural height
   await page.addStyleTag({ content: `
     html {
       min-height: 100vh !important;
@@ -178,11 +179,23 @@ async function shot(browser, filename, { dark = false, seed, interact }) {
       margin: 0 !important;
       border-radius: 12px !important;
       overflow: hidden !important;
-      box-shadow: ${shadow} !important;
       flex-shrink: 0 !important;
     }
   ` })
   await sleep(100)
+
+  // Step 2: scale so the popup fills 90 % of the canvas height
+  const popupH = await page.evaluate(() => document.body.getBoundingClientRect().height)
+  const scale  = (H * 0.9) / popupH
+
+  await page.addStyleTag({ content: `
+    body {
+      transform: scale(${scale.toFixed(4)}) !important;
+      transform-origin: center center !important;
+      box-shadow: ${shadow} !important;
+    }
+  ` })
+  await sleep(150)
 
   await page.screenshot({ path: path.join(OUT, filename) })
   process.stdout.write(`  ✓ ${filename}\n`)

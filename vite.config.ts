@@ -11,10 +11,28 @@ export default defineConfig({
     __APP_VERSION__: JSON.stringify(version),
   },
   server: {
-    open: '/popup.html',
+    open: process.env.PLAYWRIGHT_TEST ? false : '/popup.html',
   },
   test: {
     environment: 'node',
+    include: ['src/**/*.test.ts'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'html'],
+      include: ['src/**/*.ts'],
+      exclude: [
+        'src/**/*.test.ts',
+        'src/popup.tsx',
+        'src/chrome-mock.ts',
+        'src/background.ts',
+      ],
+      thresholds: {
+        statements: 90,
+        branches: 90,
+        functions: 90,
+        lines: 90,
+      },
+    },
   },
   build: {
     outDir: 'dist',

@@ -340,14 +340,17 @@ function PinModal({
   }
 
   return (
-    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.48)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 500 }}
-      onClick={e => { if (e.target === e.currentTarget) onClose() }}>
+    // biome-ignore lint/a11y/noStaticElementInteractions: modal backdrop closes on outside click
+    <div role="presentation" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.48)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 500 }}
+      onClick={e => { if (e.target === e.currentTarget) onClose() }}
+      onKeyDown={e => { if (e.key === 'Escape') onClose() }}>
       <div style={{ background: theme.surface, borderRadius: 10, padding: 22, width: 272, boxShadow: '0 8px 32px rgba(0,0,0,0.28)', border: `1px solid ${theme.border}` }}>
 
         {step === 'enter' && (
           <>
             <p style={{ fontWeight: 700, fontSize: fs + 1, color: theme.text, margin: '0 0 4px' }}>Unlock source</p>
             <p style={{ fontSize: fs - 1, color: theme.muted, margin: '0 0 16px' }}>{sourceName}</p>
+            {/* biome-ignore lint/a11y/noAutofocus: modal dialog should receive focus immediately */}
             <input type="password" placeholder="PIN" autoFocus value={pin}
               onChange={e => setPin(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') void handleUnlock() }}
@@ -371,6 +374,7 @@ function PinModal({
           <>
             <p style={{ fontWeight: 700, fontSize: fs + 1, color: theme.text, margin: '0 0 4px' }}>Add PIN protection</p>
             <p style={{ fontSize: fs - 1, color: theme.muted, margin: '0 0 16px' }}>{sourceName}</p>
+            {/* biome-ignore lint/a11y/noAutofocus: modal dialog should receive focus immediately */}
             <input type="password" placeholder="Choose a PIN (min 4 chars)" autoFocus value={pin}
               onChange={e => setPin(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') handleSetupNext() }}
@@ -415,6 +419,7 @@ function PinModal({
           <>
             <p style={{ fontWeight: 700, fontSize: fs + 1, color: theme.text, margin: '0 0 8px' }}>Enter recovery key</p>
             <p style={{ fontSize: fs - 1, color: theme.muted, margin: '0 0 12px' }}>{sourceName}</p>
+            {/* biome-ignore lint/a11y/noAutofocus: modal dialog should receive focus immediately */}
             <input type="text" placeholder="xxxx-xxxx-xxxx-…" autoFocus value={recoveryInput}
               onChange={e => setRecoveryInput(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') void handleForgotVerify() }}
@@ -432,6 +437,7 @@ function PinModal({
         {step === 'new-pin' && (
           <>
             <p style={{ fontWeight: 700, fontSize: fs + 1, color: theme.text, margin: '0 0 8px' }}>Set a new PIN</p>
+            {/* biome-ignore lint/a11y/noAutofocus: modal dialog should receive focus immediately */}
             <input type="password" placeholder="New PIN (min 4 chars)" autoFocus value={pin}
               onChange={e => setPin(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') void handleNewPin() }}
@@ -480,7 +486,6 @@ function SourcesView({
   prefs: Prefs
 }) {
   const [showUrlInput, setShowUrlInput] = useState(false)
-  const [urlInput, setUrlInput] = useState('')
   const [loadingId, setLoadingId] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [newGlossaryMode, setNewGlossaryMode] = useState(false)
@@ -578,57 +583,6 @@ function SourcesView({
       await onReload()
     } catch (err) {
       setError((err as Error).message || 'Failed to load file')
-    } finally {
-      setLoadingId(null)
-    }
-  }
-
-  async function handleUrlLoad() {
-    const url = urlInput.trim()
-    if (!url) return
-    setError(null)
-    const granted = await requestOriginPermission(url)
-    if (!granted) {
-      setError('Permission not granted — allow access to this site to load the CSV.')
-      return
-    }
-    const id = crypto.randomUUID()
-    setLoadingId(id)
-    try {
-      const text = await loadFromUrl(url)
-      const rows = parseCsv(text)
-      const terms = csvToTermEntries(rows, id)
-      let name = 'Glossary'
-      try {
-        const pathname = new URL(url).pathname
-        const filename = pathname.split('/').pop() ?? ''
-        if (filename) name = autoName(filename)
-      } catch {}
-      const source: GlossarySource = {
-        id,
-        name,
-        type: 'url',
-        url,
-        termCount: terms.length,
-        lastLoaded: new Date().toISOString(),
-        autoRefresh: false,
-        secured: false,
-      }
-      await setSources([...sources, source])
-      await setTerms(id, terms)
-      await setActiveSourceId(id)
-      setShowUrlInput(false)
-      setUrlInput('')
-      await onReload()
-    } catch (err) {
-      const msg = (err as Error).message || 'Failed to load URL'
-      if (msg.includes('Failed to fetch') || msg.includes('NetworkError') || msg.toLowerCase().includes('cors')) {
-        setError(
-          "The server at this URL doesn't allow cross-origin access. Try hosting the CSV on GitHub (raw.githubusercontent.com), Gist, or a CORS-enabled server.",
-        )
-      } else {
-        setError(msg)
-      }
     } finally {
       setLoadingId(null)
     }
@@ -867,7 +821,7 @@ function SourcesView({
               Adding to: <strong style={{ color: theme.text }}>{sources.find(s => s.id === addTermSourceId)?.name}</strong>
             </span>
             <input
-              type="text" placeholder="Term *" value={newTerm.term} autoFocus
+              type="text" placeholder="Term *" value={newTerm.term}
               onChange={e => setNewTerm(t => ({ ...t, term: e.target.value }))}
               onKeyDown={e => { if (e.key === 'Escape') resetFooter() }}
               style={{ border: `1px solid ${theme.inputBorder}`, borderRadius: 6, padding: '7px 10px', fontSize: fs, outline: 'none', background: theme.bg, color: theme.text }}
@@ -907,7 +861,7 @@ function SourcesView({
           /* ── New glossary name input ── */
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             <input
-              type="text" placeholder="Glossary name" value={newGlossaryName} autoFocus
+              type="text" placeholder="Glossary name" value={newGlossaryName}
               onChange={e => setNewGlossaryName(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') { void handleCreateGlossary() } else if (e.key === 'Escape') resetFooter() }}
               style={{ border: `1px solid ${theme.inputBorder}`, borderRadius: 6, padding: '7px 10px', fontSize: fs, outline: 'none', background: theme.bg, color: theme.text }}
@@ -1227,7 +1181,7 @@ function SearchView({
             Enter the PIN to unlock and search this glossary.
           </p>
           <button type="button"
-            onClick={() => onRequestUnlock(activeSrc!.id)}
+            onClick={() => { if (activeSrc) onRequestUnlock(activeSrc.id) }}
             style={{ background: BRAND, color: '#fff', border: 'none', borderRadius: 6, padding: '9px 24px', fontSize: fs, cursor: 'pointer' }}>
             Enter PIN
           </button>
@@ -1322,7 +1276,9 @@ function SearchView({
 
                     {editingId === r.id ? (
                       /* ── Inline edit form ── */
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }} onClick={e => e.stopPropagation()}>
+                      // biome-ignore lint/a11y/noStaticElementInteractions: stop propagation wrapper only
+                      <div role="presentation" style={{ display: 'flex', flexDirection: 'column', gap: 6 }} onClick={e => e.stopPropagation()} onKeyDown={e => e.stopPropagation()}>
+                        {/* biome-ignore lint/a11y/noAutofocus: focus moves to edit field when inline edit opens */}
                         <input autoFocus value={editForm.term}
                           onChange={e => setEditForm(f => ({ ...f, term: e.target.value }))}
                           onKeyDown={e => { if (e.key === 'Escape') setEditingId(null) }}
@@ -1420,8 +1376,11 @@ function SearchView({
               color: theme.text, fontFamily: 'inherit',
             }
             return (
+              // biome-ignore lint/a11y/noStaticElementInteractions: stop propagation wrapper only
               <div
+                role="presentation"
                 onClick={e => e.stopPropagation()}
+                onKeyDown={e => e.stopPropagation()}
                 style={{
                   position: 'fixed', top: y, left: x, width: menuW,
                   background: theme.surface, border: `1px solid ${theme.border}`,

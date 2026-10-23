@@ -276,15 +276,22 @@ Then open [http://localhost:5173/popup.html](http://localhost:5173/popup.html).
 
 ### Packaging for the Chrome Web Store
 
-After `npm run build`, zip the contents of the `dist/` folder (not the folder itself):
+Use the single command that runs all quality gates before building:
 
 ```bash
-# macOS / Linux
-cd dist && zip -r ../termbox.zip . && cd ..
-
-# Windows (PowerShell)
-Compress-Archive -Path dist\* -DestinationPath termbox.zip -Force
+npm run package
 ```
+
+This runs `prepackage` automatically before packaging. **All of the following must pass** or the build aborts:
+
+| Gate | Script | Requirement |
+|------|--------|-------------|
+| Linter | `npm run lint` | Zero errors |
+| Type check | `npm run typecheck` | Zero errors |
+| Unit tests + coverage | `npm run test:coverage` | All 99 tests pass; ≥ 90% statements, branches, functions, lines |
+| End-to-end tests | `npm run test:e2e` | All 28 Playwright tests pass |
+
+On success, `termbox.zip` is written to the project root (contains the `dist/` contents ready for upload).
 
 Upload `termbox.zip` at the [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole).
 

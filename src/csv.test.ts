@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { parseCsv, csvToTermEntries } from './csv'
+import { parseCsv, csvToTermEntries, termEntriesToCsv } from './csv'
+import type { TermEntry } from './types'
 
 // ─── parseCsv ─────────────────────────────────────────────────────────────────
 
@@ -128,5 +129,75 @@ describe('csvToTermEntries', () => {
     const entry = csvToTermEntries(rows, SID)[0]!
     expect(entry.term).toBe('DNA')
     expect(entry.definition).toBe('Genetic material')
+  })
+})
+
+// ─── termEntriesToCsv ─────────────────────────────────────────────────────────
+
+describe('termEntriesToCsv', () => {
+  const base: TermEntry = {
+    id: 'src_0', term: 'API', fullForm: 'Application Programming Interface',
+    definition: 'A set of rules for software communication', domain: 'Software',
+    sourceReference: 'RFC 1234', aliases: ['REST API', 'Web API'], sourceId: 'src',
+  }
+
+  it('produces a CSV with a header row', () => {
+    const csv = termEntriesToCsv([base])
+    const lines = csv.split('\n')
+    expect(lines[0]).toBe('term,full_form,definition,domain,source_reference,aliases')
+  })
+
+  it('produces one data row per entry', () => {
+    const csv = termEntriesToCsv([base, { ...base, id: 'src_1', term: 'PCR' }])
+    expect(csv.split('\n')).toHaveLength(3) // header + 2 rows
+  })
+
+  it('returns header-only for an empty array', () => {
+    const csv = termEntriesToCsv([])
+    expect(csv).toBe('term,full_form,definition,domain,source_reference,aliases')
+  })
+
+  it('quotes fields containing commas', () => {
+    const entry: TermEntry = { ...base, term: 'A, B', fullForm: null, domain: null, sourceReference: null, aliases: [] }
+    const csv = termEntriesToCsv([entry])
+    expect(csv.split('\n')[1]).toMatch(/^"A, B"/)
+  })
+
+  it('quotes fields containing double-quotes and doubles them', () => {
+    const entry: TermEntry = { ...base, definition: 'He said "hello"', fullForm: null, domain: null, sourceReference: null, aliases: [] }
+    const csv = termEntriesToCsv([entry])
+    expect(csv).toContain('"He said ""hello"""')
+  })
+
+  it('quotes fields containing newlines', () => {
+    const entry: TermEntry = { ...base, definition: 'line1\nline2', fullForm: null, domain: null, sourceReference: null, aliases: [] }
+    const csv = termEntriesToCsv([entry])
+    expect(csv).toContain('"line1\nline2"')
+  })
+
+  it('round-trips through parseCsv / csvToTermEntries', () => {
+    const csv = termEntriesToCsv([base])
+    const rows = parseCsv(csv)
+    const [result] = csvToTermEntries(rows, 'src')
+    expect(result!.term).toBe(base.term)
+    expect(result!.fullForm).toBe(base.fullForm)
+    expect(result!.definition).toBe(base.definition)
+    expect(result!.domain).toBe(base.domain)
+    expect(result!.sourceReference).toBe(base.sourceReference)
+    expect(result!.aliases).toEqual(base.aliases)
+  })
+
+  it('uses semicolons to join aliases', () => {
+    const csv = termEntriesToCsv([base])
+    expect(csv).toContain('REST API;Web API')
+  })
+
+  it('outputs empty string for null optional fields', () => {
+    const entry: TermEntry = { ...base, fullForm: null, domain: null, sourceReference: null, aliases: [] }
+    const [, row] = termEntriesToCsv([entry]).split('\n')
+    const fields = row!.split(',')
+    expect(fields[1]).toBe('') // full_form
+    expect(fields[3]).toBe('') // domain
+    expect(fields[4]).toBe('') // source_reference
   })
 })

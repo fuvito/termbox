@@ -1,12 +1,17 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import type { TermEntry } from './types'
+import type { TermEntry, GlossarySource, SecureSourceMeta } from './types'
 import {
+  getSources, setSources,
+  getTerms, setTerms, deleteTerms,
+  getActiveSourceId, setActiveSourceId,
+  getSecureMeta, setSecureMeta, deleteSecureMeta,
   getSecureTerms,
   setSecureTerms,
   deleteEncryptedBlob,
   getSessionDek,
   setSessionDek,
   clearSessionDek,
+  loadGlossary,
 } from './storage'
 import { generateDekHex } from './crypto'
 
@@ -159,5 +164,148 @@ describe('session DEK storage', () => {
     await clearSessionDek('src-a')
     expect(await getSessionDek('src-a')).toBeNull()
     expect(await getSessionDek('src-b')).toBe(dek2)
+  })
+})
+
+// ─── getSources / setSources ──────────────────────────────────────────────────
+
+describe('getSources / setSources', () => {
+  it('returns [] when nothing is stored', async () => {
+    expect(await getSources()).toEqual([])
+  })
+
+  it('round-trips an array of sources', async () => {
+    const sources: GlossarySource[] = [
+      { id: 'src1', name: 'Test', type: 'file', url: null, termCount: 5, lastLoaded: '2026-01-01', autoRefresh: false, secured: false },
+    ]
+    await setSources(sources)
+    expect(await getSources()).toEqual(sources)
+  })
+
+  it('overwrites on second call', async () => {
+    const a: GlossarySource[] = [{ id: 'a', name: 'A', type: 'file', url: null, termCount: 0, lastLoaded: '', autoRefresh: false, secured: false }]
+    const b: GlossarySource[] = [{ id: 'b', name: 'B', type: 'file', url: null, termCount: 0, lastLoaded: '', autoRefresh: false, secured: false }]
+    await setSources(a)
+    await setSources(b)
+    expect(await getSources()).toEqual(b)
+  })
+})
+
+// ─── getTerms / setTerms / deleteTerms ────────────────────────────────────────
+
+describe('getTerms / setTerms / deleteTerms', () => {
+  it('returns [] when no terms stored', async () => {
+    expect(await getTerms('nonexistent')).toEqual([])
+  })
+
+  it('round-trips terms', async () => {
+    const terms = makeTerms(3)
+    await setTerms('src', terms)
+    expect(await getTerms('src')).toEqual(terms)
+  })
+
+  it('deleteTerms causes getTerms to return []', async () => {
+    await setTerms('src', makeTerms(2))
+    await deleteTerms('src')
+    expect(await getTerms('src')).toEqual([])
+  })
+})
+
+// ─── getActiveSourceId / setActiveSourceId ────────────────────────────────────
+
+describe('getActiveSourceId / setActiveSourceId', () => {
+  it('returns null when nothing stored', async () => {
+    expect(await getActiveSourceId()).toBeNull()
+  })
+
+  it('stores and retrieves a source ID', async () => {
+    await setActiveSourceId('src1')
+    expect(await getActiveSourceId()).toBe('src1')
+  })
+
+  it('stores and retrieves the special "all" value', async () => {
+    await setActiveSourceId('all')
+    expect(await getActiveSourceId()).toBe('all')
+  })
+
+  it('stores null', async () => {
+    await setActiveSourceId('src1')
+    await setActiveSourceId(null)
+    expect(await getActiveSourceId()).toBeNull()
+  })
+})
+
+// ─── getSecureMeta / setSecureMeta / deleteSecureMeta ─────────────────────────
+
+describe('secure meta storage', () => {
+  const meta: SecureSourceMeta = {
+    sourceId: 'src',
+    pinSalt: 'aabbcc',
+    pinEncDek: { iv: '00', ct: 'ff' },
+    recoverySalt: 'ddeeff',
+    recoveryEncDek: { iv: '11', ct: 'ee' },
+    recoveryKeyHash: 'abcdef',
+  }
+
+  it('returns null when nothing stored', async () => {
+    expect(await getSecureMeta('src')).toBeNull()
+  })
+
+  it('round-trips meta', async () => {
+    await setSecureMeta(meta)
+    expect(await getSecureMeta('src')).toEqual(meta)
+  })
+
+  it('deleteSecureMeta causes getSecureMeta to return null', async () => {
+    await setSecureMeta(meta)
+    await deleteSecureMeta('src')
+    expect(await getSecureMeta('src')).toBeNull()
+  })
+})
+
+// ─── loadGlossary ─────────────────────────────────────────────────────────────
+
+describe('loadGlossary', () => {
+  const makeSource = (id: string, secured = false): GlossarySource => ({
+    id, name: id, type: 'file', url: null, termCount: 1, lastLoaded: '', autoRefresh: false, secured,
+  })
+
+  it('returns [] for empty sources array', async () => {
+    expect(await loadGlossary([], null)).toEqual([])
+  })
+
+  it('loads terms for the active source', async () => {
+    const terms = makeTerms(2)
+    await setTerms('src1', terms)
+    expect(await loadGlossary([makeSource('src1')], 'src1')).toEqual(terms)
+  })
+
+  it('falls back to first source when activeId is null', async () => {
+    const terms = makeTerms(1)
+    await setTerms('src1', terms)
+    expect(await loadGlossary([makeSource('src1')], null)).toEqual(terms)
+  })
+
+  it('merges all sources when activeId is "all"', async () => {
+    const a = makeTerms(1)
+    const b = makeTerms(2)
+    await setTerms('a', a)
+    await setTerms('b', b)
+    const result = await loadGlossary([makeSource('a'), makeSource('b')], 'all')
+    expect(result).toHaveLength(3)
+  })
+
+  it('returns [] for a secured source with no session DEK', async () => {
+    const terms = makeTerms(2)
+    await setTerms('sec', terms)
+    expect(await loadGlossary([makeSource('sec', true)], 'sec')).toEqual([])
+  })
+
+  it('returns decrypted terms for a secured source with a valid session DEK', async () => {
+    const dek = generateDekHex()
+    const terms = makeTerms(2)
+    await setSecureTerms('sec', terms, dek)
+    await setSessionDek('sec', dek)
+    expect(await loadGlossary([makeSource('sec', true)], 'sec')).toEqual(terms)
   })
 })

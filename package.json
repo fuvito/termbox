@@ -14,6 +14,7 @@
     "test:e2e": "playwright test",
     "lint": "biome lint src",
     "icons": "node scripts/generate-icons.mjs",
+    "screenshots": "node scripts/take-screenshots.mjs",
     "prepackage": "npm run lint && npm run typecheck && npm run test:coverage && npm run test:e2e",
     "package": "npm run build && node scripts/zip.mjs"
   },

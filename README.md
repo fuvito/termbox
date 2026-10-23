@@ -8,9 +8,9 @@ No accounts. No backend. No subscription. Works fully offline.
 
 > **Official source notice** — The only official, secure, and verified distribution of TermBox is the listing on the [Chrome Web Store](https://chrome.google.com/webstore). Installing this extension from any other source, store, or website is unauthorized, unverified, and entirely at your own risk.
 
-| Search | Sources | In Chrome |
+| Search | Sources | Browse A–Z |
 |---|---|---|
-| ![Search view](docs/screenshots/sample_search.png) | ![Sources view](docs/screenshots/glossary_sources.png) | ![In browser](docs/screenshots/full_screen_image.png) |
+| ![Search view](docs/screenshots/sample_search.png) | ![Sources view](docs/screenshots/glossary_sources.png) | ![Browse view](docs/screenshots/full_screen_image.png) |
 
 ## Demo
 

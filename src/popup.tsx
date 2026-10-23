@@ -733,20 +733,22 @@ function SourcesView({
               transition: 'background-color 0.1s',
             }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <input
-                type="radio" name="activeSource"
-                checked={activeSourceId === source.id || (sources.length === 1 && activeSourceId !== 'all')}
-                onChange={() => { void handleSetActive(source.id) }}
-                style={{ accentColor: BRAND, cursor: 'pointer', margin: 0, flexShrink: 0 }}
-              />
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontWeight: 600, fontSize: fs, color: theme.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {source.name}
+              <label style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', minWidth: 0 }}>
+                <input
+                  type="radio" name="activeSource"
+                  checked={activeSourceId === source.id || (sources.length === 1 && activeSourceId !== 'all')}
+                  onChange={() => { void handleSetActive(source.id) }}
+                  style={{ accentColor: BRAND, cursor: 'pointer', margin: 0, flexShrink: 0 }}
+                />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 600, fontSize: fs, color: theme.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {source.name}
+                  </div>
+                  <div style={{ fontSize: fs - 2, color: theme.muted, marginTop: 2 }}>
+                    {source.termCount} term{source.termCount !== 1 ? 's' : ''} · loaded {timeAgo(source.lastLoaded)}
+                  </div>
                 </div>
-                <div style={{ fontSize: fs - 2, color: theme.muted, marginTop: 2 }}>
-                  {source.termCount} term{source.termCount !== 1 ? 's' : ''} · loaded {timeAgo(source.lastLoaded)}
-                </div>
-              </div>
+              </label>
               {/* Lock icon */}
               {(() => {
                 const secured = source.secured

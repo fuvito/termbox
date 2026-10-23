@@ -656,13 +656,14 @@ function SearchView({
   const [expanded, setExpanded] = useState<string | null>(null)
   const [copiedId, setCopiedId] = useState<string | null>(null)
   const [contextMenu, setContextMenu] = useState<{ id: string; x: number; y: number } | null>(null)
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editForm, setEditForm] = useState({ term: '', fullForm: '', definition: '' })
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (!contextMenu) return
-    const close = () => setContextMenu(null)
+    const close = () => { setContextMenu(null); setConfirmDeleteId(null) }
     document.addEventListener('click', close)
     document.addEventListener('contextmenu', close)
     return () => { document.removeEventListener('click', close); document.removeEventListener('contextmenu', close) }
@@ -703,7 +704,9 @@ function SearchView({
     const updated = terms.filter(t => t.id !== r.id)
     await setTerms(r.sourceId, updated)
     await setSources((await getSources()).map(s => s.id === r.sourceId ? { ...s, termCount: updated.length } : s))
+    setResults(prev => prev.filter(x => x.id !== r.id))
     setContextMenu(null)
+    setConfirmDeleteId(null)
     await onReload()
   }
 
@@ -1012,18 +1015,38 @@ function SearchView({
                   background: theme.surface, border: `1px solid ${theme.border}`,
                   borderRadius: 7, boxShadow: '0 4px 14px rgba(0,0,0,0.18)', zIndex: 200, overflow: 'hidden',
                 }}>
-                <button type="button" style={menuBtn}
-                  onMouseEnter={e => (e.currentTarget.style.background = theme.bg)}
-                  onMouseLeave={e => (e.currentTarget.style.background = 'none')}
-                  onClick={() => startEdit(r)}>
-                  ✏ Edit
-                </button>
-                <button type="button" style={{ ...menuBtn, color: theme.error }}
-                  onMouseEnter={e => (e.currentTarget.style.background = theme.bg)}
-                  onMouseLeave={e => (e.currentTarget.style.background = 'none')}
-                  onClick={() => { void handleTermDelete(r) }}>
-                  ✕ Delete
-                </button>
+                {confirmDeleteId === r.id ? (
+                  <div style={{ padding: '10px 14px' }}>
+                    <p style={{ fontSize: fs - 2, color: theme.text, margin: '0 0 8px', fontWeight: 600 }}>Delete this term?</p>
+                    <div style={{ display: 'flex', gap: 6 }}>
+                      <button type="button"
+                        onClick={() => { void handleTermDelete(r) }}
+                        style={{ flex: 1, background: theme.error, color: '#fff', border: 'none', borderRadius: 5, padding: '5px 0', fontSize: fs - 2, cursor: 'pointer' }}>
+                        Delete
+                      </button>
+                      <button type="button"
+                        onClick={() => setConfirmDeleteId(null)}
+                        style={{ flex: 1, background: 'none', border: `1px solid ${theme.border}`, borderRadius: 5, padding: '5px 0', fontSize: fs - 2, cursor: 'pointer', color: theme.secondary }}>
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <button type="button" style={menuBtn}
+                      onMouseEnter={e => (e.currentTarget.style.background = theme.bg)}
+                      onMouseLeave={e => (e.currentTarget.style.background = 'none')}
+                      onClick={() => startEdit(r)}>
+                      ✏ Edit
+                    </button>
+                    <button type="button" style={{ ...menuBtn, color: theme.error }}
+                      onMouseEnter={e => (e.currentTarget.style.background = theme.bg)}
+                      onMouseLeave={e => (e.currentTarget.style.background = 'none')}
+                      onClick={() => setConfirmDeleteId(r.id)}>
+                      ✕ Delete
+                    </button>
+                  </>
+                )}
               </div>
             )
           })()}

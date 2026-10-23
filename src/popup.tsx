@@ -1713,6 +1713,7 @@ function App() {
       overflow: 'hidden',
       display: 'flex',
       flexDirection: 'column',
+      borderRadius: 12,
     }}>
       {screen === 'search' && (
         <SearchView

@@ -22,18 +22,21 @@ function storageRemove(key: string): Promise<void> {
 }
 
 // chrome.storage.session — persists across popup open/close, cleared on browser restart
-const session = (chrome.storage as unknown as { session: typeof chrome.storage.local }).session
+// Accessed lazily so tests can stub chrome after module load.
+function getSession() {
+  return (chrome.storage as unknown as { session: typeof chrome.storage.local }).session
+}
 
 function sessionGet<T>(key: string): Promise<T | undefined> {
-  return new Promise(resolve => session.get(key, result => resolve(result[key] as T | undefined)))
+  return new Promise(resolve => getSession().get(key, result => resolve(result[key] as T | undefined)))
 }
 
 function sessionSet(key: string, value: unknown): Promise<void> {
-  return new Promise(resolve => session.set({ [key]: value }, resolve))
+  return new Promise(resolve => getSession().set({ [key]: value }, resolve))
 }
 
 function sessionRemove(key: string): Promise<void> {
-  return new Promise(resolve => session.remove(key, resolve))
+  return new Promise(resolve => getSession().remove(key, resolve))
 }
 
 export async function getSources(): Promise<GlossarySource[]> {

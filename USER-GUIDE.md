@@ -12,11 +12,12 @@ TermBox is a browser extension that turns any CSV file into a fast, searchable g
 4. [Creating a glossary from scratch](#4-creating-a-glossary-from-scratch)
 5. [Adding terms manually](#5-adding-terms-manually)
 6. [Managing multiple sources](#6-managing-multiple-sources)
-7. [Exporting a glossary to CSV](#7-exporting-a-glossary-to-csv)
-8. [CSV file format](#8-csv-file-format)
-9. [Sample glossaries](#9-sample-glossaries)
-10. [Display settings](#10-display-settings)
-11. [Tips and shortcuts](#11-tips-and-shortcuts)
+7. [PIN protection](#7-pin-protection)
+8. [Exporting a glossary to CSV](#8-exporting-a-glossary-to-csv)
+9. [CSV file format](#9-csv-file-format)
+10. [Sample glossaries](#10-sample-glossaries)
+11. [Display settings](#11-display-settings)
+12. [Tips and shortcuts](#12-tips-and-shortcuts)
 
 ---
 
@@ -45,6 +46,8 @@ TermBox comes with two built-in glossaries pre-loaded: **Biotest Diagnostics** a
 - Substring match
 - Alias substring match
 
+**Right-click any result** to edit or delete that term.
+
 ---
 
 ## 3. Loading a glossary from a CSV file
@@ -54,7 +57,7 @@ TermBox comes with two built-in glossaries pre-loaded: **Biotest Diagnostics** a
 3. Select a `.csv` file from your computer
 4. The glossary is parsed and saved locally — it will be available offline from now on
 
-> **Tip:** See [section 8](#8-csv-file-format) for the expected column format, and [section 9](#9-sample-glossaries) for ready-made files you can download and load.
+> **Tip:** See [section 9](#9-csv-file-format) for the expected column format, and [section 10](#10-sample-glossaries) for ready-made files you can download and load.
 
 ---
 
@@ -94,17 +97,57 @@ When searching across multiple sources, each result shows a small badge with the
 
 ---
 
-## 7. Exporting a glossary to CSV
+## 7. PIN protection
+
+You can protect any glossary source with a PIN. When locked, the terms are encrypted with AES-256-GCM and cannot be read, searched, or exported without the correct PIN.
+
+### Setting up a PIN
 
 1. Open **≡ → Glossary Sources**
-2. Click the **↓** button on a source row
+2. Click the **🔒** icon on the source row you want to protect
+3. Enter a PIN (minimum 4 characters) and confirm it
+4. Click **Next** — a **recovery key** is displayed
+5. **Save the recovery key somewhere safe** — it is shown only once
+6. Check "I've saved this recovery key" and click **Set up PIN protection**
+
+The source is now locked. Its terms are encrypted and stored on your device.
+
+### Unlocking a source
+
+- Select the source in Glossary Sources (the radio button) — a PIN prompt appears
+- Or open the search view — a locked source shows a "Enter PIN" screen
+- Enter your PIN to unlock for the current browser session
+
+Once unlocked, the source stays accessible until the browser is closed. You do not need to re-enter the PIN every time you open the popup.
+
+### Locking and managing a protected source
+
+Click the **🔓** icon on an unlocked source row to see these options:
+
+| Action | Effect |
+|---|---|
+| **Lock now** | Immediately locks the source until the next PIN entry |
+| **Remove PIN protection** | Decrypts the source permanently and removes the PIN |
+
+### Forgotten PIN
+
+If you forget your PIN, click **Forgot PIN?** on the PIN entry screen, then enter the recovery key you saved during setup. You will be prompted to choose a new PIN — your data is not lost.
+
+> **Warning:** If you lose both your PIN and recovery key, the encrypted data cannot be recovered by anyone, including the author. Store the recovery key somewhere safe when it is shown.
+
+---
+
+## 8. Exporting a glossary to CSV
+
+1. Open **≡ → Glossary Sources**
+2. Click the **↓** button on a source row (a PIN prompt appears if the source is locked)
 3. A CSV file is downloaded to your computer
 
 The exported file uses the standard TermBox column format (`term, full_form, definition, domain, source_reference, aliases`) and can be re-imported or shared with others.
 
 ---
 
-## 8. CSV file format
+## 9. CSV file format
 
 TermBox reads CSV files with the following columns:
 
@@ -139,7 +182,7 @@ API,Application Programming Interface,A set of rules for software communication,
 
 ---
 
-## 9. Sample glossaries
+## 10. Sample glossaries
 
 The following ready-made CSV files are available to download and load into TermBox:
 
@@ -155,7 +198,7 @@ Download any file and load it via **≡ → Add from file**.
 
 ---
 
-## 10. Display settings
+## 11. Display settings
 
 All settings are in the popup header bar:
 
@@ -173,16 +216,19 @@ All display preferences are saved automatically and persist across sessions.
 
 ---
 
-## 11. Tips and shortcuts
+## 12. Tips and shortcuts
 
 - **Keyboard:** Press **Enter** in the search box to search; press **Escape** in any form to cancel
 - **Copy on click:** Click any search result to instantly copy its definition to the clipboard
+- **Edit / delete:** Right-click any search result to edit or delete that term
+- **Restore search:** If you close the popup mid-search, the last query and results are restored when you reopen it — use ✕ to clear
 - **Resize:** Drag the bottom, left, or right edge of the popup to resize it — the size is remembered
 - **Offline:** Once a glossary is loaded, TermBox works with no internet connection
 - **Font size:** If text feels too small or large, use **A−** / **A+** in the header
+- **PIN session:** An unlocked source stays unlocked until the browser closes — you don't need to re-enter the PIN every time you open the popup
 
 ---
 
 ## Disclaimer
 
-TermBox is not a secure storage solution. Do not use it to store passwords, credentials, or any sensitive information. See [Terms & Conditions](https://github.com/fuvito/termbox/blob/main/TERMS.md) for full details.
+TermBox is not a substitute for a dedicated password manager or security tool. Do not use it to store passwords, credentials, API keys, or authentication tokens. While PIN-protected sources encrypt your glossary data using AES-256-GCM, this feature is designed to protect terminology content from casual access — not to provide the security guarantees of a purpose-built security application. See [Terms & Conditions](https://github.com/fuvito/termbox/blob/main/TERMS.md) for full details.

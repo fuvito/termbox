@@ -23,6 +23,8 @@ No accounts. No backend. No subscription. Works fully offline.
 - **Build your own glossary** — bring any CSV and TermBox turns it into a searchable tool
 - **Create a glossary from scratch** — use the in-app editor to build a glossary without a CSV file
 - **Add terms manually** — add term, full form, and definition directly from the Sources panel
+- **Edit and delete terms** — right-click any search result to modify or remove it
+- **PIN protection** — encrypt any source with AES-256-GCM; unlock once per browser session
 - **Acronym lookup** — expand abbreviations instantly; supports `full_form` and `aliases` columns
 - Load from a **local CSV file**
 - **Multiple named sources** — switch between glossaries or search across all at once
@@ -30,6 +32,7 @@ No accounts. No backend. No subscription. Works fully offline.
 - **Search by term** or **search by definition**
 - Smart result ranking: exact → prefix → alias → substring
 - **Export to CSV** — download any loaded glossary back to a CSV file
+- Restore last search on reopen — your previous results are always one click away
 - Dark mode, font size controls, resizable popup
 - No tracking, no external requests
 
@@ -181,6 +184,8 @@ HOW IT WORKS
 KEY FEATURES
 ✓ Build your own custom glossary — bring any CSV
 ✓ Create a glossary from scratch — no CSV needed, add terms directly in the app
+✓ Edit and delete individual terms — right-click any result to modify or remove it
+✓ PIN protection — encrypt any source with AES-256-GCM; unlock once per session
 ✓ Acronym expander — add a full_form column to expand abbreviations
 ✓ Aliases — one entry can match multiple names (e.g. "PCR", "qPCR", "rt-PCR")
 ✓ Multiple glossaries — load several sources and search across all of them
@@ -292,13 +297,14 @@ termbox/
   public/
     manifest.json       Chrome MV3 manifest
   src/
-    popup.tsx           React UI — SearchView, SourcesView, App
+    popup.tsx           React UI — SearchView, SourcesView, PinModal, App
     background.ts       Minimal MV3 service worker
-    types.ts            TermEntry, GlossarySource interfaces
+    types.ts            TermEntry, GlossarySource, SecureSourceMeta interfaces
     search.ts           rankTerms() search algorithm
     csv.ts              RFC 4180 CSV parser
-    storage.ts          chrome.storage.local helpers
-    chrome-mock.ts      localStorage mock for dev server
+    crypto.ts           AES-256-GCM encryption helpers (Web Crypto API)
+    storage.ts          chrome.storage.local / session helpers
+    chrome-mock.ts      localStorage + in-memory session mock for dev server
   popup.html            Extension popup shell
   vite.config.ts        Dual entry (popup + background)
   tsconfig.json
@@ -320,7 +326,9 @@ termbox/
 
 ## Disclaimer
 
-TermBox is designed for glossaries, acronym lists, and terminology only. It is **not** a secure storage solution. Do not use it to store passwords, credentials, API keys, or any sensitive or confidential information. All data is stored in plain text via Chrome's local storage. The user assumes full responsibility for the content they load into the extension.
+TermBox is designed for glossaries, acronym lists, and terminology only. It is **not** a substitute for a password manager or dedicated security tool. Do not use it to store passwords, credentials, API keys, or authentication tokens.
+
+While PIN-protected sources encrypt glossary data using AES-256-GCM (Web Crypto API), this feature is designed to protect terminology content from casual access — not to provide the security guarantees of a purpose-built security application. The user assumes full responsibility for the content they load into the extension.
 
 ---
 

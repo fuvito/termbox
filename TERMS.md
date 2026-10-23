@@ -12,11 +12,13 @@ By installing or using TermBox you agree to these terms. If you do not agree, do
 
 TermBox is a glossary and terminology lookup tool. It is designed solely for storing and searching terms, acronyms, abbreviations, and their definitions.
 
-## Disclaimer — not for sensitive information
+## Disclaimer — not a substitute for a security tool
 
-**TermBox is not a secure storage solution.**
+**TermBox is not a password manager or dedicated security application.**
 
-Do not use TermBox to store passwords, credentials, API keys, authentication tokens, or any sensitive, confidential, or personally identifiable information. All data is stored in plain text via Chrome's local storage and is accessible to anyone with access to your browser profile.
+Do not use TermBox to store passwords, credentials, API keys, authentication tokens, or any sensitive, confidential, or personally identifiable information.
+
+While TermBox offers optional PIN protection that encrypts glossary content using AES-256-GCM (Web Crypto API), this feature is designed to protect terminology and glossary data from casual access — for example, when a device is shared or left unattended. It is not designed or audited to meet the security requirements of a password manager, secrets vault, or any other security-critical application.
 
 The user assumes full responsibility for the content they load into the extension. The author accepts no liability for any loss or damage arising from misuse of the extension for purposes it was not designed for.
 

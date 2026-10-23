@@ -1,6 +1,6 @@
 # TermBox — Privacy Policy
 
-_Last updated: 2026-10-19_
+_Last updated: 2026-10-22_
 
 ## Summary
 
@@ -12,12 +12,15 @@ TermBox does not collect, transmit, or share any personal data. Everything stays
 
 TermBox stores the following data **locally on your device only**, using `chrome.storage.local`:
 
-| Data | Where | Purpose |
+| Data | Where | How stored |
 |---|---|---|
-| Glossary terms parsed from your CSV files | Your device | Power the search feature |
-| Source metadata (name, URL, term count, last loaded) | Your device | Display and manage your glossary list |
-| Active source selection | Your device | Remember which glossary you last used |
-| UI preferences (dark mode, font size, popup size) | Your device (`localStorage`) | Persist your display settings |
+| Glossary terms (plain sources) | Your device — `chrome.storage.local` | Plain JSON |
+| Glossary terms (PIN-protected sources) | Your device — `chrome.storage.local` | AES-256-GCM encrypted blob; readable only with the correct PIN |
+| Source metadata (name, term count, last loaded) | Your device — `chrome.storage.local` | Plain JSON |
+| PIN security metadata (salt, encrypted DEK, recovery key hash) | Your device — `chrome.storage.local` | No plaintext PIN or key is ever stored |
+| Session unlock key (cleared on browser close) | Your device — `chrome.storage.session` | Held in memory for the browser session only |
+| Active source selection | Your device — `chrome.storage.local` | Plain JSON |
+| UI preferences (dark mode, font size, popup size) | Your device — `localStorage` | Plain JSON |
 
 None of this data ever leaves your device.
 

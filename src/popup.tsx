@@ -179,7 +179,11 @@ function AboutView({ onBack, theme, prefs }: {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           marginBottom: 14, boxShadow: '0 4px 20px rgba(59,75,200,0.28)',
         }}>
-          <span style={{ color: '#fff', fontWeight: 800, fontSize: 24, letterSpacing: '-0.5px' }}>TB</span>
+          <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true">
+            <rect x="7.5" y="7.5" width="49" height="49" fill="none" stroke="white" strokeWidth="3" />
+            <rect x="14" y="18" width="34" height="8" fill="white" />
+            <rect x="27" y="26" width="10" height="21" fill="white" />
+          </svg>
         </div>
 
         <h1 style={{ fontSize: fs + 7, fontWeight: 700, color: theme.text, margin: '0 0 4px', letterSpacing: '-0.3px' }}>
@@ -935,6 +939,7 @@ function BrowseView({
   const fs = prefs.fontSize
   const [expanded, setExpanded] = useState<string | null>(null)
   const [copiedId, setCopiedId] = useState<string | null>(null)
+  const [hoveredId, setHoveredId] = useState<string | null>(null)
 
   const activeSrc = sources.find(s => s.id === activeSourceId)
   const isLocked = activeSrc?.secured && !unlockedSources.has(activeSrc.id)
@@ -1020,12 +1025,16 @@ function BrowseView({
                 const isCopied = copiedId === t.id
                 return (
                   <button key={t.id} type="button"
+                    onMouseEnter={() => setHoveredId(t.id)}
+                    onMouseLeave={() => setHoveredId(null)}
                     onClick={() => { copyDef(t.id, t.definition); setExpanded(isExpanded ? null : t.id) }}
                     style={{
                       display: 'block', width: '100%', textAlign: 'left',
                       padding: '9px 14px',
                       border: 'none', borderBottom: `1px solid ${theme.border}`,
-                      cursor: 'pointer', background: theme.surface,
+                      cursor: 'pointer',
+                      background: isExpanded || hoveredId === t.id ? theme.bg : theme.surface,
+                      transition: 'background-color 0.1s',
                       fontFamily: 'inherit',
                     }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3, flexWrap: 'wrap' }}>
@@ -1125,6 +1134,7 @@ function SearchView({
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editForm, setEditForm] = useState({ term: '', fullForm: '', definition: '' })
+  const [hoveredId, setHoveredId] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -1255,7 +1265,8 @@ function SearchView({
 
   const hdrBtn: React.CSSProperties = {
     background: 'rgba(255,255,255,0.15)', border: 'none', borderRadius: 4,
-    color: '#fff', cursor: 'pointer', padding: '2px 6px', fontSize: 11, lineHeight: 1.4,
+    color: '#fff', cursor: 'pointer', padding: '3px 7px', fontSize: 11, lineHeight: 1.4,
+    fontFamily: 'inherit',
   }
   const edgeH:  React.CSSProperties = { position: 'absolute', bottom: 0, left: 14, right: 14, height: 5, cursor: 'ns-resize', zIndex: 10 }
   const edgeVR: React.CSSProperties = { position: 'absolute', top: 0, right: 0, width: 5, bottom: 14, cursor: 'ew-resize', zIndex: 10 }
@@ -1300,21 +1311,16 @@ function SearchView({
             </div>
           )}
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
           <button type="button" style={hdrBtn} title="Decrease font size" onClick={() => prefs.setFontSize(Math.max(11, prefs.fontSize - 1))}>A−</button>
           <button type="button" style={hdrBtn} title="Increase font size" onClick={() => prefs.setFontSize(Math.min(17, prefs.fontSize + 1))}>A+</button>
           <button type="button" style={hdrBtn} title={prefs.dark ? 'Light mode' : 'Dark mode'} onClick={() => prefs.setDark(!prefs.dark)}>
             {prefs.dark ? '☀' : '☾'}
           </button>
-          <button type="button" onClick={onOpenBrowse} style={{ ...hdrBtn, fontSize: fs - 1, padding: '2px 5px', letterSpacing: '-0.3px' }} title="Browse all terms A–Z">
-            Az
-          </button>
-          <button type="button" onClick={onOpenSources} style={{ ...hdrBtn, fontSize: 17, padding: '1px 5px' }} title="Manage sources">
-            ≡
-          </button>
-          <button type="button" onClick={onOpenAbout} style={{ ...hdrBtn, fontSize: 15, padding: '1px 5px' }} title="About TermBox">
-            ⓘ
-          </button>
+          <span style={{ width: 1, height: 14, background: 'rgba(255,255,255,0.3)', margin: '0 3px', flexShrink: 0 }} />
+          <button type="button" onClick={onOpenBrowse} style={hdrBtn} title="Browse all terms A–Z">Az</button>
+          <button type="button" onClick={onOpenSources} style={{ ...hdrBtn, fontSize: 17, padding: '1px 6px' }} title="Manage sources">≡</button>
+          <button type="button" onClick={onOpenAbout} style={{ ...hdrBtn, fontSize: 15, padding: '1px 6px' }} title="About TermBox">ⓘ</button>
         </div>
       </header>
 
@@ -1399,15 +1405,20 @@ function SearchView({
                 </button>
               )}
             </div>
-            <div style={{ display: 'flex', gap: 18, marginTop: 9 }}>
+            <div style={{ display: 'flex', marginTop: 9, background: theme.bg, borderRadius: 6, padding: 2, border: `1px solid ${theme.border}` }}>
               {(['term', 'definition'] as const).map(mode => (
-                <label key={mode} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: fs - 1, cursor: 'pointer', color: theme.secondary }}>
-                  <input type="radio" name="searchMode" checked={searchMode === mode}
-                    onChange={() => { setSearchMode(mode); try { localStorage.setItem('lastSearchMode', mode) } catch {} }}
-                    style={{ accentColor: BRAND, cursor: 'pointer', margin: 0 }}
-                  />
-                  {mode === 'term' ? 'Search by Term' : 'Search by Definition'}
-                </label>
+                <button key={mode} type="button"
+                  onClick={() => { setSearchMode(mode); try { localStorage.setItem('lastSearchMode', mode) } catch {} }}
+                  style={{
+                    flex: 1, padding: '4px 0', fontSize: fs - 1, border: 'none', borderRadius: 4,
+                    cursor: 'pointer', fontFamily: 'inherit',
+                    background: searchMode === mode ? BRAND : 'transparent',
+                    color: searchMode === mode ? '#fff' : theme.secondary,
+                    fontWeight: searchMode === mode ? 600 : 400,
+                    transition: 'background-color 0.15s, color 0.15s',
+                  }}>
+                  {mode === 'term' ? 'Term' : 'Definition'}
+                </button>
               ))}
             </div>
           </div>
@@ -1435,7 +1446,14 @@ function SearchView({
                 {results.map(r => (
                   <li
                     key={r.id}
-                    style={{ padding: '10px 14px', borderBottom: `1px solid ${theme.border}`, cursor: editingId === r.id ? 'default' : 'pointer', background: expanded === r.id ? theme.bg : theme.surface }}
+                    style={{
+                      padding: '10px 14px', borderBottom: `1px solid ${theme.border}`,
+                      cursor: editingId === r.id ? 'default' : 'pointer',
+                      background: expanded === r.id || hoveredId === r.id ? theme.bg : theme.surface,
+                      transition: 'background-color 0.1s',
+                    }}
+                    onMouseEnter={() => { if (editingId !== r.id) setHoveredId(r.id) }}
+                    onMouseLeave={() => setHoveredId(null)}
                     onClick={() => { if (editingId === r.id) return; copyDefinition(r.id, r.definition); setExpanded(expanded === r.id ? null : r.id) }}
                     onContextMenu={e => openContextMenu(e, r)}
                     onKeyDown={(e) => { if (editingId === r.id) return; if (e.key === 'Enter' || e.key === ' ') { copyDefinition(r.id, r.definition); setExpanded(expanded === r.id ? null : r.id) } }}>

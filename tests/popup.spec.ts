@@ -85,7 +85,7 @@ test.describe('search', () => {
   })
 
   test('searches by definition', async ({ page }) => {
-    await page.getByLabel('Search by Definition').check()
+    await page.getByRole('button', { name: 'Definition' }).click()
     await page.getByPlaceholder('Search terms…').fill('amplify')
     await page.keyboard.press('Enter')
     await expect(page.getByText('PCR')).toBeVisible()

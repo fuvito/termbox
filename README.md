@@ -291,7 +291,7 @@ This runs `prepackage` automatically before packaging. **All of the following mu
 | Linter | `npm run lint` | Zero errors |
 | Type check | `npm run typecheck` | Zero errors |
 | Unit tests + coverage | `npm run test:coverage` | All 99 tests pass; ≥ 90% statements, branches, functions, lines |
-| End-to-end tests | `npm run test:e2e` | All 28 Playwright tests pass |
+| End-to-end tests | `npm run test:e2e` | All 34 Playwright tests pass |
 
 On success, `termbox.zip` is written to the project root (contains the `dist/` contents ready for upload).
 

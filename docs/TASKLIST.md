@@ -78,7 +78,7 @@
 - [x] `USER-GUIDE.md` — full 13-section end-user guide
 - [x] Chrome Web Store assets (icon 128 px, promo tile 440×280, screenshots)
 - [x] `PRIVACY.md`, `TERMS.md`, `CHANGELOG.md`
-- [x] Quality gates passing: lint, typecheck, 99 unit tests (≥ 90% coverage), 28 E2E tests
+- [x] Quality gates passing: lint, typecheck, 99 unit tests (≥ 90% coverage), 34 E2E tests
 - [x] `termbox.zip` packaging script (`npm run package`)
 - [x] CWS submission prep: single purpose statement, permission justifications, remote code answer
 - [ ] CWS review approved and extension published

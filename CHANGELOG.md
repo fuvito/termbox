@@ -4,6 +4,24 @@ All notable changes to this project are documented here.
 
 ---
 
+## [1.0.4] — 2026-10-23
+
+### Added
+- **Browse view** — A–Z alphabetical term list accessible from the header; sticky letter headers, click any term to copy its definition and expand aliases / source reference
+- Inline delete confirmation for glossary sources — no accidental removals
+- Duplicate source names are auto-disambiguated: loading the same CSV twice yields "Name" and "Name - 2", then "Name - 3", and so on
+
+### Changed
+- Icon redesigned: T inside a white box outline on the BRAND blue background — all three sizes (16 px, 48 px, 128 px) and the promo tile updated to match
+- Popup root given 12 px rounded corners
+- Search mode selector replaced by a pill segment toggle (Term / Definition)
+- Header buttons reorganised with a visual separator between font/theme controls (A−, A+, ☾/☀) and navigation (Az, ≡, ⓘ)
+- Source rows highlight on hover; clicking anywhere on the source name or term count now selects the source (previously required clicking the radio button precisely)
+- Result rows in Search and Browse views animate background on hover
+- About screen logo updated from "TB" text to the T-in-a-box SVG
+
+---
+
 ## [1.0.3] — 2026-10-22
 
 ### Added

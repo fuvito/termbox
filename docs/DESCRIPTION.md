@@ -4,9 +4,9 @@
 
 A free, open-source browser extension that turns any CSV file into a searchable glossary, available instantly from the browser toolbar. No accounts, no backend, no subscription.
 
-Initial release targets Chrome. Safari and Firefox support are planned for later versions.
+Initial release targets Chrome and Edge. Safari and Firefox support are planned for later versions.
 
-Anyone — a system administrator, a documentation team, an onboarding manager — pastes a CSV file path or URL, and immediately gets a fast, offline-capable term lookup tool pinned to their browser.
+Anyone — a system administrator, a documentation team, an onboarding manager — loads a CSV file once, and immediately gets a fast, offline-capable term lookup tool pinned to their browser.
 
 ## Target users
 
@@ -22,18 +22,22 @@ Anyone — a system administrator, a documentation team, an onboarding manager �
 - Source code on GitHub under MIT license
 - Teams distribute their glossary as a CSV file (hosted on GitHub, a company intranet, SharePoint, Dropbox, etc.)
 - Users load the CSV once; the extension caches it locally and searches offline thereafter
-- CSV owner publishes updates; users refresh with one click
 
 ## Key features
 
-- Load glossary from a **local CSV file** or a **remote URL**
-- Multiple named sources (switch between glossaries)
+- Load glossary from a **local CSV file**
+- **Create a glossary from scratch** — no CSV required; add terms directly in the app
+- **Edit and delete individual terms** — right-click any search result to modify or remove it
+- **Browse all terms A–Z** — full alphabetical list with sticky letter headers
+- **PIN protection** — encrypt any source with AES-256-GCM; unlock once per browser session
+- **Multiple named sources** — switch between glossaries or search across all at once
 - **Fully offline** after first load — searches are instant, local
-- Auto-refresh from URL (manual or on popup open)
-- **Search by term** or **search by definition**
-- Exact → prefix → alias → substring ranking (same as TermUp)
+- **Search by term** or **search by definition** via a pill segment toggle
+- Smart result ranking: exact → prefix → alias → substring
+- **Export to CSV** — download any loaded glossary back to a file
+- Acronym expansion via `full_form` column; aliases via semicolon-separated `aliases` column
 - Dark mode, font size controls, resizable popup
-- No auth, no tracking, no external requests (except explicit CSV URL fetches)
+- No auth, no tracking, no external requests
 
 ## CSV format
 
@@ -56,4 +60,4 @@ Columns: `term` (required), `full_form`, `definition` (required), `domain`, `sou
 
 ## Project name
 
-Working title: **TermBox**. Final name to be decided before publishing to Chrome Web Store.
+**TermBox** — published to Chrome Web Store under this name.

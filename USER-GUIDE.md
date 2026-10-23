@@ -8,16 +8,17 @@ TermBox is a browser extension that turns any CSV file into a fast, searchable g
 
 1. [Opening TermBox](#1-opening-termbox)
 2. [Searching for a term](#2-searching-for-a-term)
-3. [Loading a glossary from a CSV file](#3-loading-a-glossary-from-a-csv-file)
-4. [Creating a glossary from scratch](#4-creating-a-glossary-from-scratch)
-5. [Adding terms manually](#5-adding-terms-manually)
-6. [Managing multiple sources](#6-managing-multiple-sources)
-7. [PIN protection](#7-pin-protection)
-8. [Exporting a glossary to CSV](#8-exporting-a-glossary-to-csv)
-9. [CSV file format](#9-csv-file-format)
-10. [Sample glossaries](#10-sample-glossaries)
-11. [Display settings](#11-display-settings)
-12. [Tips and shortcuts](#12-tips-and-shortcuts)
+3. [Browsing all terms A–Z](#3-browsing-all-terms-az)
+4. [Loading a glossary from a CSV file](#4-loading-a-glossary-from-a-csv-file)
+5. [Creating a glossary from scratch](#5-creating-a-glossary-from-scratch)
+6. [Adding terms manually](#6-adding-terms-manually)
+7. [Managing multiple sources](#7-managing-multiple-sources)
+8. [PIN protection](#8-pin-protection)
+9. [Exporting a glossary to CSV](#9-exporting-a-glossary-to-csv)
+10. [CSV file format](#10-csv-file-format)
+11. [Sample glossaries](#11-sample-glossaries)
+12. [Display settings](#12-display-settings)
+13. [Tips and shortcuts](#13-tips-and-shortcuts)
 
 ---
 
@@ -35,9 +36,9 @@ TermBox comes with two built-in glossaries pre-loaded: **Biotest Diagnostics** a
 2. Press **Enter** or click the blue search button
 3. Click any result to **copy the definition to your clipboard** — a yellow highlight confirms the copy
 
-**Search modes** — use the radio buttons below the search box:
-- **Search by Term** — matches the term name and its aliases
-- **Search by Definition** — searches inside definition text
+**Search modes** — use the **Term / Definition** toggle below the search box:
+- **Term** — matches the term name and its aliases
+- **Definition** — searches inside definition text
 
 **Result ranking** (best match first):
 - Exact match
@@ -50,18 +51,33 @@ TermBox comes with two built-in glossaries pre-loaded: **Biotest Diagnostics** a
 
 ---
 
-## 3. Loading a glossary from a CSV file
+## 3. Browsing all terms A–Z
+
+Click **Az** in the header to open the Browse view — a full alphabetical list of every term in the active glossary.
+
+- Terms are grouped by first letter with sticky section headers
+- Click any term to **copy its definition** and expand aliases and source reference
+- Click the term again to collapse it
+- Click **←** to return to the search view
+
+> **Tip:** Browse is useful when you can't remember exactly what a term is called — scan the list to find it, then search for more detail.
+
+---
+
+## 4. Loading a glossary from a CSV file
 
 1. Open TermBox and click **≡** (top-right) to open Glossary Sources
 2. Click **+ Add from file**
 3. Select a `.csv` file from your computer
 4. The glossary is parsed and saved locally — it will be available offline from now on
 
-> **Tip:** See [section 9](#9-csv-file-format) for the expected column format, and [section 10](#10-sample-glossaries) for ready-made files you can download and load.
+If a glossary with the same name is already loaded, TermBox automatically appends a number to keep names unique (e.g. "Medical Terms", "Medical Terms - 2").
+
+> **Tip:** See [section 10](#10-csv-file-format) for the expected column format, and [section 11](#11-sample-glossaries) for ready-made files you can download and load.
 
 ---
 
-## 4. Creating a glossary from scratch
+## 5. Creating a glossary from scratch
 
 You don't need a CSV file to get started — you can build a glossary directly inside TermBox.
 
@@ -69,11 +85,11 @@ You don't need a CSV file to get started — you can build a glossary directly i
 2. Click **+ New glossary**
 3. Type a name (e.g. "My Project Terms") and press **Enter** or click **Create**
 4. An empty glossary is created and set as the active source
-5. Use the **+** button on the source row to start adding terms (see section 5)
+5. Use the **+** button on the source row to start adding terms (see section 6)
 
 ---
 
-## 5. Adding terms manually
+## 6. Adding terms manually
 
 1. In Glossary Sources, click the **+** button on any source row
 2. Fill in the form at the bottom of the panel:
@@ -85,19 +101,19 @@ You don't need a CSV file to get started — you can build a glossary directly i
 
 ---
 
-## 6. Managing multiple sources
+## 7. Managing multiple sources
 
 You can load as many glossaries as you like and switch between them.
 
-- **Switch active source** — open **≡** and select a source using the radio buttons
+- **Select a source** — open **≡** and click anywhere on a source row (the name, term count, or radio button)
 - **Search all sources at once** — if you have more than one source, select **All sources** at the top of the list
-- **Delete a source** — click **✕** on the source row (this removes it and its terms from local storage)
+- **Delete a source** — click **✕** on the source row, then confirm in the inline panel that appears
 
 When searching across multiple sources, each result shows a small badge with the source name.
 
 ---
 
-## 7. PIN protection
+## 8. PIN protection
 
 You can protect any glossary source with a PIN. When locked, the terms are encrypted with AES-256-GCM and cannot be read, searched, or exported without the correct PIN.
 
@@ -114,8 +130,8 @@ The source is now locked. Its terms are encrypted and stored on your device.
 
 ### Unlocking a source
 
-- Select the source in Glossary Sources (the radio button) — a PIN prompt appears
-- Or open the search view — a locked source shows a "Enter PIN" screen
+- Select the source in Glossary Sources — a PIN prompt appears
+- Or open the search view — a locked source shows an "Enter PIN" screen
 - Enter your PIN to unlock for the current browser session
 
 Once unlocked, the source stays accessible until the browser is closed. You do not need to re-enter the PIN every time you open the popup.
@@ -137,7 +153,7 @@ If you forget your PIN, click **Forgot PIN?** on the PIN entry screen, then ente
 
 ---
 
-## 8. Exporting a glossary to CSV
+## 9. Exporting a glossary to CSV
 
 1. Open **≡ → Glossary Sources**
 2. Click the **↓** button on a source row (a PIN prompt appears if the source is locked)
@@ -147,7 +163,7 @@ The exported file uses the standard TermBox column format (`term, full_form, def
 
 ---
 
-## 9. CSV file format
+## 10. CSV file format
 
 TermBox reads CSV files with the following columns:
 
@@ -182,7 +198,7 @@ API,Application Programming Interface,A set of rules for software communication,
 
 ---
 
-## 10. Sample glossaries
+## 11. Sample glossaries
 
 The following ready-made CSV files are available to download and load into TermBox:
 
@@ -198,7 +214,7 @@ Download any file and load it via **≡ → Add from file**.
 
 ---
 
-## 11. Display settings
+## 12. Display settings
 
 All settings are in the popup header bar:
 
@@ -207,6 +223,7 @@ All settings are in the popup header bar:
 | **A−** | Decrease font size |
 | **A+** | Increase font size |
 | **☾ / ☀** | Toggle dark / light mode |
+| **Az** | Browse all terms A–Z |
 | **≡** | Open Glossary Sources |
 | **ⓘ** | Open About / legal links |
 
@@ -216,11 +233,12 @@ All display preferences are saved automatically and persist across sessions.
 
 ---
 
-## 12. Tips and shortcuts
+## 13. Tips and shortcuts
 
 - **Keyboard:** Press **Enter** in the search box to search; press **Escape** in any form to cancel
 - **Copy on click:** Click any search result to instantly copy its definition to the clipboard
 - **Edit / delete:** Right-click any search result to edit or delete that term
+- **Browse:** Use the **Az** button when you can't find a term by search — scroll the full list to spot it
 - **Restore search:** If you close the popup mid-search, the last query and results are restored when you reopen it — use ✕ to clear
 - **Resize:** Drag the bottom, left, or right edge of the popup to resize it — the size is remembered
 - **Offline:** Once a glossary is loaded, TermBox works with no internet connection

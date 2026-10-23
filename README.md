@@ -24,12 +24,13 @@ No accounts. No backend. No subscription. Works fully offline.
 - **Create a glossary from scratch** — use the in-app editor to build a glossary without a CSV file
 - **Add terms manually** — add term, full form, and definition directly from the Sources panel
 - **Edit and delete terms** — right-click any search result to modify or remove it
+- **Browse A–Z** — flip to a full alphabetical term list with sticky letter headers from the **Az** button
 - **PIN protection** — encrypt any source with AES-256-GCM; unlock once per browser session
 - **Acronym lookup** — expand abbreviations instantly; supports `full_form` and `aliases` columns
 - Load from a **local CSV file**
 - **Multiple named sources** — switch between glossaries or search across all at once
 - **Fully offline** after first load — instant local search, no server round-trips
-- **Search by term** or **search by definition**
+- **Search by term** or **search by definition** via a pill segment toggle
 - Smart result ranking: exact → prefix → alias → substring
 - **Export to CSV** — download any loaded glossary back to a CSV file
 - Restore last search on reopen — your previous results are always one click away
@@ -185,6 +186,7 @@ KEY FEATURES
 ✓ Build your own custom glossary — bring any CSV
 ✓ Create a glossary from scratch — no CSV needed, add terms directly in the app
 ✓ Edit and delete individual terms — right-click any result to modify or remove it
+✓ Browse all terms A–Z — flip to a full alphabetical list with one tap
 ✓ PIN protection — encrypt any source with AES-256-GCM; unlock once per session
 ✓ Acronym expander — add a full_form column to expand abbreviations
 ✓ Aliases — one entry can match multiple names (e.g. "PCR", "qPCR", "rt-PCR")

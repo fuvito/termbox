@@ -98,6 +98,14 @@ function autoName(raw: string): string {
     || 'Glossary'
 }
 
+function uniqueName(base: string, existing: GlossarySource[]): string {
+  const names = new Set(existing.map(s => s.name))
+  if (!names.has(base)) return base
+  let n = 2
+  while (names.has(`${base} - ${n}`)) n++
+  return `${base} - ${n}`
+}
+
 function loadFromFile(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
@@ -516,7 +524,7 @@ function SourcesView({
   }
 
   async function handleCreateGlossary() {
-    const name = newGlossaryName.trim() || 'My Glossary'
+    const name = uniqueName(newGlossaryName.trim() || 'My Glossary', sources)
     const id = crypto.randomUUID()
     const source: GlossarySource = {
       id, name, type: 'file', url: null,
@@ -575,7 +583,7 @@ function SourcesView({
       const terms = csvToTermEntries(rows, id)
       const source: GlossarySource = {
         id,
-        name: autoName(file.name),
+        name: uniqueName(autoName(file.name), sources),
         type: 'file',
         url: null,
         termCount: terms.length,

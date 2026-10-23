@@ -690,11 +690,10 @@ function SearchView({
 
   async function handleEditSave(r: SearchResult) {
     if (!editForm.term.trim() || !editForm.definition.trim()) return
+    const patch = { term: editForm.term.trim(), fullForm: editForm.fullForm.trim() || null, definition: editForm.definition.trim() }
     const terms = await getTerms(r.sourceId)
-    await setTerms(r.sourceId, terms.map(t => t.id === r.id
-      ? { ...t, term: editForm.term.trim(), fullForm: editForm.fullForm.trim() || null, definition: editForm.definition.trim() }
-      : t
-    ))
+    await setTerms(r.sourceId, terms.map(t => t.id === r.id ? { ...t, ...patch } : t))
+    setResults(prev => prev.map(x => x.id === r.id ? { ...x, ...patch } : x))
     setEditingId(null)
     await onReload()
   }

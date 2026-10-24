@@ -14,11 +14,14 @@ const GECKO = {
   browser_specific_settings: {
     gecko: {
       id: 'termbox@fuvito',
-      strict_min_version: '115.0',
+      strict_min_version: '140.0',
       data_collection_permissions: {
         required: ['none'],
         optional: [],
       },
+    },
+    gecko_android: {
+      strict_min_version: '142.0',
     },
   },
 }
@@ -116,4 +119,4 @@ const firefoxManifest = JSON.stringify({
 
 const files = walkDir(distDir)
 writeZip(files, outFile, { 'manifest.json': firefoxManifest })
-console.log(`Packaged ${files.length} files → termbox-firefox.zip  (gecko id: termbox@fuvito, min Firefox 115)`)
+console.log(`Packaged ${files.length} files → termbox-firefox.zip  (gecko id: termbox@fuvito, min Firefox 140 / Android 142)`)

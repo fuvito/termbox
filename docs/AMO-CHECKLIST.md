@@ -25,12 +25,16 @@ The injected block:
 "browser_specific_settings": {
   "gecko": {
     "id": "termbox@fuvito",
-    "strict_min_version": "115.0"
+    "strict_min_version": "140.0",
+    "data_collection_permissions": { "required": ["none"], "optional": [] }
+  },
+  "gecko_android": {
+    "strict_min_version": "142.0"
   }
 }
 ```
 
-Minimum 115 because `chrome.storage.session` (used for PIN session DEKs) landed in Firefox 115.
+Minimum 140 (desktop) / 142 (Android) because `data_collection_permissions` requires Firefox 140 / Android 142. `chrome.storage.session` requires Firefox 115, which is covered.
 
 ---
 
@@ -98,6 +102,11 @@ into manifest.json by scripts/zip-firefox.mjs at zip time. No source files are m
 
 All logic runs locally. No remote code. No eval(). No external requests at runtime.
 chrome.storage.session is used to hold PIN session DEKs in memory (not persisted to disk).
+
+The linter may flag "Unsafe assignment to innerHTML" in popup.js. These are false
+positives from React's internal DOM reconciler (react-dom), not from the extension
+code itself. The extension contains no dangerouslySetInnerHTML usage and no direct
+innerHTML assignments in its own code.
 ```
 
 ---

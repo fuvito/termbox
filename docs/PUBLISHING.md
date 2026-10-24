@@ -154,11 +154,15 @@ The resulting gecko block:
 "browser_specific_settings": {
   "gecko": {
     "id": "termbox@fuvito",
-    "strict_min_version": "115.0"
+    "strict_min_version": "140.0",
+    "data_collection_permissions": { "required": ["none"], "optional": [] }
+  },
+  "gecko_android": {
+    "strict_min_version": "142.0"
   }
 }
 ```
-Minimum 115 because `chrome.storage.session` (used for PIN session DEKs) landed in Firefox 115.
+Minimum 140 (desktop) / 142 (Android) because `data_collection_permissions` landed in Firefox 140 and Firefox for Android 142. `chrome.storage.session` (used for PIN session DEKs) requires Firefox 115, which is covered.
 
 ### Pre-submission checklist
 

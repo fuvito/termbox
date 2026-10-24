@@ -131,6 +131,7 @@ async function loadFromUrl(url: string): Promise<string> {
 function requestOriginPermission(url: string): Promise<boolean> {
   return new Promise(resolve => {
     try {
+      if (!chrome.permissions?.request) { resolve(false); return }
       const origin = new URL(url).origin
       chrome.permissions.request({ origins: [`${origin}/*`] }, resolve)
     } catch { resolve(false) }

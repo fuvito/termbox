@@ -16,6 +16,7 @@
     "icons": "node scripts/generate-icons.mjs",
     "screenshots": "node scripts/take-screenshots.mjs",
     "promo": "node scripts/generate-promo.mjs",
+    "promo:large": "node scripts/generate-large-promo.mjs",
     "marquee": "node scripts/generate-marquee.mjs",
     "prepackage": "npm run lint && npm run typecheck && npm run test:coverage && npm run test:e2e",
     "package": "npm run build && node scripts/zip.mjs"

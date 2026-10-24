@@ -225,6 +225,7 @@ function AboutView({ onBack, theme, prefs, sources }: {
         <div style={{ width: '100%', borderTop: `1px solid ${theme.border}` }}>
           {infoRow(t('about.author'), 'Fuat Yazar')}
           {infoRow(t('about.license'), 'MIT')}
+          {infoRow(t('about.website'), 'fuatyazar.com/termbox', 'https://fuatyazar.com/termbox')}
           {infoRow(t('about.source'), 'github.com/fuvito/termbox', 'https://github.com/fuvito/termbox')}
         </div>
 

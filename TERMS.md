@@ -46,4 +46,4 @@ These terms may be updated at any time. The date at the top of this file reflect
 
 ## Contact
 
-Questions or concerns? Open an issue at <https://github.com/fuvito/termbox/issues>.
+Visit the project homepage at <https://fuatyazar.com/termbox> or open an issue at <https://github.com/fuvito/termbox/issues>.

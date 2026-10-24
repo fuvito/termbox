@@ -69,6 +69,7 @@ Produces **`termbox.zip`** — upload this to the CWS dashboard.
 | **Short description** (132 chars) | `Build your own glossary or acronym finder from any CSV. Instant offline lookup from the toolbar. No account needed.` |
 | **Category** | Productivity |
 | **Language** | English |
+| **Homepage URL** _(optional)_ | `https://fuatyazar.com/termbox` |
 | **Privacy policy URL** | `https://github.com/fuvito/termbox/blob/main/PRIVACY.md` |
 
 ### Single purpose statement
@@ -169,6 +170,7 @@ Minimum 115 because `chrome.storage.session` (used for PIN session DEKs) landed 
 | **Summary** (250 chars) | `Build your own glossary or acronym finder from any CSV. Instant offline lookup from the toolbar. No account needed. Supports 12 languages, PIN protection, and JSON source packs.` |
 | **Category** | Productivity |
 | **License** | MIT License |
+| **Homepage URL** | `https://fuatyazar.com/termbox` |
 | **Privacy policy URL** | `https://github.com/fuvito/termbox/blob/main/PRIVACY.md` |
 
 **Description:** same plain-text block as the Chrome description above.

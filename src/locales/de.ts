@@ -10,6 +10,7 @@ const de: Record<string, string> = {
   'about.tagline': 'Erstelle dein eigenes Glossar oder Akronym-Nachschlagewerk aus einer CSV-Datei. Kostenlos, Open-Source und vollständig offline.',
   'about.author': 'Autor',
   'about.license': 'Lizenz',
+  'about.website': 'Website',
   'about.source': 'Quellcode',
   'about.userGuide': 'Benutzerhandbuch',
   'about.whatsNew': 'Was ist neu',

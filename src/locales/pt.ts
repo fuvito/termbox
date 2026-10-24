@@ -10,6 +10,7 @@ const pt: Record<string, string> = {
   'about.tagline': 'Crie seu próprio glossário ou buscador de siglas a partir de qualquer CSV. Gratuito, open-source e totalmente offline.',
   'about.author': 'Autor',
   'about.license': 'Licença',
+  'about.website': 'Website',
   'about.source': 'Fonte',
   'about.userGuide': 'Guia do usuário',
   'about.whatsNew': 'Novidades',

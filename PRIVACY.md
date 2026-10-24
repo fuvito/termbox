@@ -47,4 +47,4 @@ If this policy changes, the updated version will be committed to this repository
 
 ## Contact
 
-Questions? Open an issue at <https://github.com/fuvito/termbox/issues>.
+Visit the project homepage at <https://fuatyazar.com/termbox> or open an issue at <https://github.com/fuvito/termbox/issues>.

@@ -6,6 +6,8 @@ Load your terminology list once and search it instantly from the browser toolbar
 
 No accounts. No backend. No subscription. Works fully offline.
 
+**Homepage:** [fuatyazar.com/termbox](https://fuatyazar.com/termbox)
+
 > **Official source notice** — The only official, secure, and verified distribution of TermBox is the listing on the [Chrome Web Store](https://chrome.google.com/webstore). Installing this extension from any other source, store, or website is unauthorized, unverified, and entirely at your own risk.
 
 | Search | Sources | Browse A–Z |

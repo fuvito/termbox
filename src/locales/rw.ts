@@ -10,6 +10,7 @@ const rw: Record<string, string> = {
   'about.tagline': "Rema inkoranyamagambo yawe cyangwa ishakisha ry'imisengesere kuva muri CSV iyo ari yo yose. Ku buntu, source yifunguye, no mu buryo butatunganye na interineti.",
   'about.author': 'Umwanditsi',
   'about.license': 'Uruhushya',
+  'about.website': 'Urubuga',
   'about.source': 'Inkomoko',
   'about.userGuide': "Umuyoboro w'Umukoresha",
   'about.whatsNew': 'Ibintu Bishya',

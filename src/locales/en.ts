@@ -10,6 +10,7 @@ const en: Record<string, string> = {
   'about.tagline': 'Build your own glossary or acronym finder from any CSV. Free, open-source, and fully offline.',
   'about.author': 'Author',
   'about.license': 'License',
+  'about.website': 'Website',
   'about.source': 'Source',
   'about.userGuide': 'User Guide',
   'about.whatsNew': "What's New",

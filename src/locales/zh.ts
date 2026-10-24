@@ -10,6 +10,7 @@ const zh: Record<string, string> = {
   'about.tagline': '从任何CSV创建您自己的词汇表或缩写查找工具。免费、开源、完全离线。',
   'about.author': '作者',
   'about.license': '许可证',
+  'about.website': '网站',
   'about.source': '源码',
   'about.userGuide': '用户指南',
   'about.whatsNew': '最新动态',

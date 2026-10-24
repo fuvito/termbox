@@ -3,6 +3,7 @@
   "name": "TermBox",
   "version": "1.0.6",
   "description": "Build your own glossary or acronym finder from any CSV. Instant offline lookup from the toolbar. No account needed.",
+  "homepage_url": "https://fuatyazar.com/termbox",
   "permissions": ["storage"],
   "optional_host_permissions": ["<all_urls>"],
   "icons": {

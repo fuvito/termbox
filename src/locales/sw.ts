@@ -10,6 +10,7 @@ const sw: Record<string, string> = {
   'about.tagline': 'Unda faharasa yako au kitafuta vifupisho kutoka CSV yoyote. Bila malipo, chanzo wazi, na nje ya mtandao kabisa.',
   'about.author': 'Mwandishi',
   'about.license': 'Leseni',
+  'about.website': 'Tovuti',
   'about.source': 'Chanzo',
   'about.userGuide': 'Mwongozo wa Mtumiaji',
   'about.whatsNew': 'Mambo Mapya',

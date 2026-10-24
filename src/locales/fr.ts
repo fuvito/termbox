@@ -10,6 +10,7 @@ const fr: Record<string, string> = {
   'about.tagline': "Créez votre propre glossaire ou chercheur d'acronymes depuis n'importe quel CSV. Gratuit, open-source et entièrement hors ligne.",
   'about.author': 'Auteur',
   'about.license': 'Licence',
+  'about.website': 'Site web',
   'about.source': 'Source',
   'about.userGuide': 'Guide utilisateur',
   'about.whatsNew': 'Nouveautés',

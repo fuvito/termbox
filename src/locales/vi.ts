@@ -10,6 +10,7 @@ const vi: Record<string, string> = {
   'about.tagline': 'Tạo bảng thuật ngữ hoặc công cụ tra cứu từ viết tắt từ bất kỳ tệp CSV nào. Miễn phí, mã nguồn mở và hoàn toàn ngoại tuyến.',
   'about.author': 'Tác giả',
   'about.license': 'Giấy phép',
+  'about.website': 'Trang web',
   'about.source': 'Nguồn',
   'about.userGuide': 'Hướng dẫn sử dụng',
   'about.whatsNew': 'Có gì mới',

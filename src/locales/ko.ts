@@ -10,6 +10,7 @@ const ko: Record<string, string> = {
   'about.tagline': '모든 CSV에서 나만의 용어집 또는 약어 찾기를 만드세요. 무료, 오픈소스, 완전 오프라인.',
   'about.author': '작성자',
   'about.license': '라이선스',
+  'about.website': '웹사이트',
   'about.source': '소스',
   'about.userGuide': '사용자 가이드',
   'about.whatsNew': '새로운 기능',

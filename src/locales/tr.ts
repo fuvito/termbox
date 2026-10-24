@@ -10,6 +10,7 @@ const tr: Record<string, string> = {
   'about.tagline': 'Herhangi bir CSV\'den sözlük veya kısaltma aracı oluşturun. Ücretsiz, açık kaynak ve tamamen çevrimdışı.',
   'about.author': 'Yazar',
   'about.license': 'Lisans',
+  'about.website': 'Web Sitesi',
   'about.source': 'Kaynak Kod',
   'about.userGuide': 'Kullanım Kılavuzu',
   'about.whatsNew': 'Yenilikler',

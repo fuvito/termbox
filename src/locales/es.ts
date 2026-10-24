@@ -10,6 +10,7 @@ const es: Record<string, string> = {
   'about.tagline': 'Crea tu propio glosario o buscador de acrónimos desde cualquier CSV. Gratis, de código abierto y completamente sin conexión.',
   'about.author': 'Autor',
   'about.license': 'Licencia',
+  'about.website': 'Sitio web',
   'about.source': 'Código fuente',
   'about.userGuide': 'Guía de usuario',
   'about.whatsNew': 'Novedades',

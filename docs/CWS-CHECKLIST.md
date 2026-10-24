@@ -136,6 +136,11 @@ TermBox lets users load CSV files as searchable glossaries and look up terms, ac
 
 All JavaScript is bundled at build time by Vite. Nothing is fetched and executed at runtime. CSV and JSON content is parsed as plain text data — never evaluated as code. No `eval()`, `new Function()`, or dynamically injected `<script>` tags.
 
+### Homepage URL _(optional)_
+```
+https://fuatyazar.com/termbox
+```
+
 ### Privacy policy URL
 ```
 https://github.com/fuvito/termbox/blob/main/PRIVACY.md

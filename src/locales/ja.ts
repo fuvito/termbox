@@ -10,6 +10,7 @@ const ja: Record<string, string> = {
   'about.tagline': 'CSVから独自の用語集や略語検索ツールを作成。無料、オープンソース、完全オフライン。',
   'about.author': '作者',
   'about.license': 'ライセンス',
+  'about.website': 'ウェブサイト',
   'about.source': 'ソース',
   'about.userGuide': 'ユーザーガイド',
   'about.whatsNew': '新着情報',

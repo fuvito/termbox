@@ -42,6 +42,7 @@ export default defineConfig({
         'src/popup.tsx',
         'src/chrome-mock.ts',
         'src/background.ts',
+        'src/importer.ts',
         'src/locales/**',
       ],
       thresholds: {

@@ -1,16 +1,22 @@
-#!/usr/bin/env node
-// Replaces the "TB" badge in promo-tile-440x280.png with the T-in-a-box icon.
-// Uses only Node.js built-ins — no extra dependencies.
+// Generates docs/screenshots/promo-tile-440x280.png from HTML via Playwright.
+// 24-bit RGB PNG (no alpha), Chrome Web Store Small Promo Tile format.
+// Usage: npm run promo   (starts dev server automatically if needed)
 
-import { inflateSync, deflateSync } from 'zlib'
-import { readFileSync, writeFileSync } from 'fs'
-import { resolve, dirname } from 'path'
+import { chromium } from '@playwright/test'
+import { deflateSync, inflateSync } from 'zlib'
+import { writeFileSync } from 'fs'
+import { spawn } from 'child_process'
+import { setTimeout as sleep } from 'timers/promises'
+import path from 'path'
 import { fileURLToPath } from 'url'
+import net from 'net'
 
-const dir = dirname(fileURLToPath(import.meta.url))
-const tileFile = resolve(dir, '../docs/screenshots/promo-tile-440x280.png')
+const __dir = path.dirname(fileURLToPath(import.meta.url))
+const ROOT  = path.join(__dir, '..')
+const OUT   = path.join(ROOT, 'docs', 'screenshots', 'promo-tile-440x280.png')
+const W = 440, H = 280
 
-// ── CRC32 ─────────────────────────────────────────────────────────────────────
+// ─── PNG utils ────────────────────────────────────────────────────────────────
 
 const CRC_TABLE = new Uint32Array(256)
 for (let i = 0; i < 256; i++) {
@@ -20,13 +26,10 @@ for (let i = 0; i < 256; i++) {
 }
 function crc32(buf) {
   let c = 0xFFFFFFFF
-  for (let i = 0; i < buf.length; i++) c = (CRC_TABLE[(c ^ buf[i]) & 0xFF] ^ (c >>> 8)) >>> 0
+  for (const b of buf) c = (CRC_TABLE[(c ^ b) & 0xFF] ^ (c >>> 8)) >>> 0
   return (c ^ 0xFFFFFFFF) >>> 0
 }
-
-// ── PNG chunk builder ─────────────────────────────────────────────────────────
-
-function pngChunk(type, data) {
+function chunk(type, data) {
   const t = Buffer.from(type, 'ascii')
   const d = Buffer.isBuffer(data) ? data : Buffer.from(data)
   const len = Buffer.allocUnsafe(4); len.writeUInt32BE(d.length, 0)
@@ -34,176 +37,208 @@ function pngChunk(type, data) {
   return Buffer.concat([len, t, d, crc])
 }
 
-// ── PNG encoder ───────────────────────────────────────────────────────────────
+function decodePng(buf) {
+  let pos = 8
+  let w = 0, h = 0, colorType = 6
+  const idats = []
+  while (pos < buf.length - 12) {
+    const len  = buf.readUInt32BE(pos)
+    const type = buf.slice(pos + 4, pos + 8).toString('ascii')
+    const data = buf.slice(pos + 8, pos + 8 + len)
+    if (type === 'IHDR') { w = data.readUInt32BE(0); h = data.readUInt32BE(4); colorType = data[9] }
+    else if (type === 'IDAT') idats.push(data)
+    else if (type === 'IEND') break
+    pos += 12 + len
+  }
+  const bpp = colorType === 6 ? 4 : 3
+  const stride = w * bpp
+  const raw = inflateSync(Buffer.concat(idats))
+  const pixels = Buffer.alloc(h * stride)
+  for (let y = 0; y < h; y++) {
+    const ft  = raw[y * (1 + stride)]
+    const row = raw.slice(y * (1 + stride) + 1, y * (1 + stride) + 1 + stride)
+    const prv = y > 0 ? pixels.slice((y - 1) * stride, y * stride) : Buffer.alloc(stride)
+    const out = pixels.slice(y * stride, (y + 1) * stride)
+    for (let x = 0; x < stride; x++) {
+      const a = x >= bpp ? out[x - bpp] : 0
+      const b = prv[x], c = x >= bpp ? prv[x - bpp] : 0
+      const v = row[x]
+      switch (ft) {
+        case 0: out[x] = v; break
+        case 1: out[x] = (v + a) & 0xFF; break
+        case 2: out[x] = (v + b) & 0xFF; break
+        case 3: out[x] = (v + Math.floor((a + b) / 2)) & 0xFF; break
+        case 4: { const pa = Math.abs(b-c), pb = Math.abs(a-c), pc = Math.abs(a+b-2*c); out[x] = (v + (pa<=pb&&pa<=pc?a:pb<=pc?b:c)) & 0xFF; break }
+      }
+    }
+  }
+  return { w, h, bpp, pixels }
+}
 
-function encodePng(width, height, rgba) {
+function encode24(w, h, rgb) {
   const ihdr = Buffer.allocUnsafe(13)
-  ihdr.writeUInt32BE(width, 0); ihdr.writeUInt32BE(height, 4)
-  ihdr[8] = 8; ihdr[9] = 6; ihdr[10] = ihdr[11] = ihdr[12] = 0
-  const stride = width * 4
-  const raw = Buffer.allocUnsafe(height * (1 + stride))
-  for (let y = 0; y < height; y++) {
+  ihdr.writeUInt32BE(w, 0); ihdr.writeUInt32BE(h, 4)
+  ihdr[8] = 8; ihdr[9] = 2; ihdr[10] = ihdr[11] = ihdr[12] = 0
+  const stride = w * 3
+  const raw = Buffer.allocUnsafe(h * (1 + stride))
+  for (let y = 0; y < h; y++) {
     raw[y * (1 + stride)] = 0
-    rgba.copy(raw, y * (1 + stride) + 1, y * stride, (y + 1) * stride)
+    rgb.copy(raw, y * (1 + stride) + 1, y * stride, (y + 1) * stride)
   }
   return Buffer.concat([
     Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]),
-    pngChunk('IHDR', ihdr),
-    pngChunk('IDAT', deflateSync(raw, { level: 9 })),
-    pngChunk('IEND', Buffer.alloc(0)),
+    chunk('IHDR', ihdr),
+    chunk('IDAT', deflateSync(raw, { level: 9 })),
+    chunk('IEND', Buffer.alloc(0)),
   ])
 }
 
-// ── PNG decoder ───────────────────────────────────────────────────────────────
-
-function paeth(a, b, c) {
-  const p = a + b - c
-  const pa = Math.abs(p - a), pb = Math.abs(p - b), pc = Math.abs(p - c)
-  return (pa <= pb && pa <= pc) ? a : (pb <= pc) ? b : c
+function toRgb(pixels, w, h) {
+  const rgb = Buffer.alloc(w * h * 3)
+  for (let i = 0; i < w * h; i++) {
+    rgb[i * 3] = pixels[i * 4]; rgb[i * 3 + 1] = pixels[i * 4 + 1]; rgb[i * 3 + 2] = pixels[i * 4 + 2]
+  }
+  return rgb
 }
 
-function decodePng(buf) {
-  if (buf.readUInt32BE(0) !== 0x89504E47) throw new Error('Not a PNG')
-  let offset = 8
-  const chunks = []
-  while (offset + 12 <= buf.length) {
-    const length = buf.readUInt32BE(offset)
-    const type = buf.toString('ascii', offset + 4, offset + 8)
-    const data = buf.slice(offset + 8, offset + 8 + length)
-    chunks.push({ type, data })
-    offset += 12 + length
+// ─── Promo tile HTML ──────────────────────────────────────────────────────────
+
+const HTML = /* html */`<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 440px; height: 280px;
+    background: #3B4BC8;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 44px;
+    overflow: hidden;
+    position: relative;
+    font-family: 'Segoe UI Variable Display','Segoe UI',system-ui,-apple-system,sans-serif;
   }
 
-  const ih = chunks.find(c => c.type === 'IHDR').data
-  const width = ih.readUInt32BE(0), height = ih.readUInt32BE(4)
-  const colorType = ih[9]
-  const ch = colorType === 6 ? 4 : colorType === 2 ? 3 : (() => { throw new Error(`Color type ${colorType}`) })()
-  if (ih[8] !== 8) throw new Error('Only 8-bit PNGs supported')
-
-  const compressed = Buffer.concat(chunks.filter(c => c.type === 'IDAT').map(c => c.data))
-  const filtered = inflateSync(compressed)
-
-  const rgba = Buffer.alloc(width * height * 4, 255)
-  const stride = width * ch
-  let fOff = 0
-  const prev = Buffer.alloc(stride, 0)
-
-  for (let y = 0; y < height; y++) {
-    const ft = filtered[fOff++]
-    const row = Buffer.alloc(stride)
-    for (let x = 0; x < stride; x++) {
-      const raw = filtered[fOff++]
-      const a = x >= ch ? row[x - ch] : 0
-      const b = prev[x]
-      const c = x >= ch ? prev[x - ch] : 0
-      switch (ft) {
-        case 0: row[x] = raw; break
-        case 1: row[x] = (raw + a) & 0xFF; break
-        case 2: row[x] = (raw + b) & 0xFF; break
-        case 3: row[x] = (raw + Math.floor((a + b) / 2)) & 0xFF; break
-        case 4: row[x] = (raw + paeth(a, b, c)) & 0xFF; break
-      }
-    }
-    row.copy(prev)
-    for (let x = 0; x < width; x++) {
-      const si = x * ch, di = (y * width + x) * 4
-      rgba[di] = row[si]; rgba[di + 1] = row[si + 1]; rgba[di + 2] = row[si + 2]
-      rgba[di + 3] = ch === 4 ? row[si + 3] : 255
-    }
+  /* Decorative circles */
+  .c1 {
+    position: absolute; right: -60px; top: -120px;
+    width: 320px; height: 320px; border-radius: 50%;
+    background: rgba(255,255,255,0.055); pointer-events: none;
   }
-  return { width, height, rgba }
+  .c2 {
+    position: absolute; right: 80px; bottom: -140px;
+    width: 260px; height: 260px; border-radius: 50%;
+    background: rgba(255,255,255,0.035); pointer-events: none;
+  }
+  .c3 {
+    position: absolute; left: -60px; bottom: -80px;
+    width: 200px; height: 200px; border-radius: 50%;
+    background: rgba(255,255,255,0.03); pointer-events: none;
+  }
+
+  .logo { width: 52px; height: 52px; margin-bottom: 16px; display: block; }
+
+  h1 {
+    font-size: 48px; font-weight: 800;
+    color: #fff; letter-spacing: -2px; line-height: 1;
+    margin-bottom: 7px;
+  }
+
+  .tagline {
+    font-size: 17px; font-weight: 400;
+    color: rgba(255,255,255,0.82);
+    margin-bottom: 18px; letter-spacing: -0.1px;
+  }
+
+  .feats {
+    display: flex; flex-wrap: wrap; gap: 0;
+    font-size: 12px; color: rgba(255,255,255,0.58);
+    align-items: center; line-height: 1.8;
+  }
+  .dot { margin: 0 7px; color: rgba(255,255,255,0.28); }
+</style>
+</head>
+<body>
+  <div class="c1"></div>
+  <div class="c2"></div>
+  <div class="c3"></div>
+
+  <svg class="logo" viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0" y="0" width="88" height="88" rx="16" fill="#3B4BC8"/>
+    <rect x="0" y="0" width="88" height="44" rx="16" fill="rgba(100,120,235,0.22)"/>
+    <rect x="0" y="28" width="88" height="16" fill="rgba(100,120,235,0.22)"/>
+    <rect x="12" y="12" width="64" height="64" fill="none" stroke="white" stroke-width="4.5"/>
+    <rect x="20" y="29" width="48" height="11" fill="white"/>
+    <rect x="37" y="40" width="14" height="29" fill="white"/>
+  </svg>
+
+  <h1>TermBox</h1>
+  <p class="tagline">Glossary &amp; Acronym Lookup</p>
+
+  <div class="feats">
+    <span>CSV &amp; JSON glossaries</span><span class="dot">·</span>
+    <span>Browse A–Z</span><span class="dot">·</span>
+    <span>PIN&nbsp;protection</span>
+    <span class="dot">·</span>
+    <span>12&nbsp;languages</span><span class="dot">·</span>
+    <span>Fully offline</span><span class="dot">·</span>
+    <span>Free</span>
+  </div>
+</body>
+</html>`
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function portOpen(port) {
+  return new Promise(r => {
+    const s = net.createConnection(port, '127.0.0.1')
+    s.once('connect', () => { s.destroy(); r(true) })
+    s.once('error', () => r(false))
+  })
 }
 
-// ── T-in-a-box badge ──────────────────────────────────────────────────────────
+// ─── Main ─────────────────────────────────────────────────────────────────────
 
-const BRAND = [59, 75, 200]
-const WHITE = [255, 255, 255]
-
-function drawBadge(rgba, imgW, imgH, destX, destY, size) {
-  function setPixel(lx, ly, r, g, b, a = 255) {
-    const xi = lx + destX, yi = ly + destY
-    if (xi < 0 || xi >= imgW || yi < 0 || yi >= imgH) return
-    const sA = a / 255
-    const idx = (yi * imgW + xi) * 4
-    const dA = rgba[idx + 3] / 255
-    const oA = sA + dA * (1 - sA)
-    if (oA < 0.001) return
-    rgba[idx]     = Math.round((r * sA + rgba[idx]     * dA * (1 - sA)) / oA)
-    rgba[idx + 1] = Math.round((g * sA + rgba[idx + 1] * dA * (1 - sA)) / oA)
-    rgba[idx + 2] = Math.round((b * sA + rgba[idx + 2] * dA * (1 - sA)) / oA)
-    rgba[idx + 3] = Math.round(oA * 255)
-  }
-
-  function fillRoundRect(x, y, w, h, radius, r, g, b, a = 255) {
-    for (let py = y; py <= y + h; py++) {
-      for (let px = x; px <= x + w; px++) {
-        const lx = px - x, ly = py - y
-        let dx = 0, dy = 0, corner = false
-        if      (lx < radius && ly < radius)         { dx = radius - lx; dy = radius - ly; corner = true }
-        else if (lx > w - radius && ly < radius)     { dx = lx - (w - radius); dy = radius - ly; corner = true }
-        else if (lx < radius && ly > h - radius)     { dx = radius - lx; dy = ly - (h - radius); corner = true }
-        else if (lx > w - radius && ly > h - radius) { dx = lx - (w - radius); dy = ly - (h - radius); corner = true }
-        let alpha = a
-        if (corner) {
-          const d = Math.hypot(dx, dy)
-          if (d > radius + 0.5) continue
-          if (d > radius - 0.5) alpha = Math.round(a * (radius + 0.5 - d))
-        }
-        setPixel(px, py, r, g, b, alpha)
-      }
+async function main() {
+  let server = null
+  if (!(await portOpen(5173))) {
+    process.stdout.write('Starting dev server')
+    server = spawn('npm', ['run', 'serve'], { cwd: ROOT, shell: true, stdio: 'pipe' })
+    for (let i = 0; i < 40; i++) {
+      await sleep(500)
+      if (await portOpen(5173)) break
+      if (i % 4 === 0) process.stdout.write('.')
     }
+    await sleep(800)
+    process.stdout.write(' ready.\n')
+  } else {
+    console.log('Dev server already running on :5173.')
   }
 
-  function fillRect(x, y, w, h, r, g, b, a = 255) {
-    for (let py = y; py < y + h; py++)
-      for (let px = x; px < x + w; px++)
-        setPixel(px, py, r, g, b, a)
-  }
+  const browser = await chromium.launch()
+  const ctx     = await browser.newContext({ viewport: { width: W, height: H } })
+  const page    = await ctx.newPage()
 
-  const s = size
+  await page.route('http://localhost:5173/promo-gen.html', route =>
+    route.fulfill({ contentType: 'text/html; charset=utf-8', body: HTML })
+  )
+  await page.goto('http://localhost:5173/promo-gen.html', { waitUntil: 'networkidle' })
+  await sleep(200)
 
-  // Rounded background
-  const bgR = Math.round(s * 0.20)
-  fillRoundRect(0, 0, s - 1, s - 1, bgR, ...BRAND)
+  const pngBuf = await page.screenshot({ clip: { x: 0, y: 0, width: W, height: H } })
 
-  // Subtle inner highlight along top edge
-  fillRoundRect(0, 0, s - 1, Math.round(s * 0.45), bgR, 90, 105, 220, 35)
+  await ctx.close()
+  await browser.close()
+  if (server) server.kill()
 
-  // White box outline
-  const inset = Math.max(2, Math.round(s * 0.10))
-  const sw    = Math.max(1, Math.round(s * 0.05))
-  const bx = inset, by = inset
-  const bw = s - 1 - 2 * inset, bh = s - 1 - 2 * inset
-  fillRect(bx,              by,                bw + 1, sw,     ...WHITE)
-  fillRect(bx,              by + bh - sw + 1,  bw + 1, sw,     ...WHITE)
-  fillRect(bx,              by,                sw,     bh + 1, ...WHITE)
-  fillRect(bx + bw - sw + 1, by,              sw,     bh + 1, ...WHITE)
+  const { w, h, bpp, pixels } = decodePng(pngBuf)
+  const rgb = bpp === 4 ? toRgb(pixels, w, h) : pixels
+  const out = encode24(w, h, rgb)
+  writeFileSync(OUT, out)
 
-  // White T inside the box interior
-  const ix = bx + sw + 1, iy = by + sw + 1
-  const iw = bw - 2 * sw - 2, ih = bh - 2 * sw - 2
-  const barTop  = iy + Math.round(ih * 0.18)
-  const barH    = Math.max(1, Math.round(ih * 0.18))
-  const barX    = ix + Math.round(iw * 0.10)
-  const barW    = Math.round(iw * 0.80)
-  const stemW   = Math.max(1, Math.round(iw * 0.24))
-  const stemX   = ix + Math.round((iw - stemW) / 2)
-  const stemTop = barTop + barH
-  const stemBot = iy + Math.round(ih * 0.86)
-  fillRect(barX,  barTop,  barW,            barH,            ...WHITE)
-  fillRect(stemX, stemTop, stemW,           stemBot - stemTop, ...WHITE)
+  console.log(`✓  promo-tile-440x280.png  (${(out.length / 1024).toFixed(0)} kB, 24-bit RGB, no alpha)`)
 }
 
-// ── Main ──────────────────────────────────────────────────────────────────────
-
-const { width, height, rgba } = decodePng(readFileSync(tileFile))
-console.log(`Decoded: ${width}×${height}`)
-
-// Badge bounds measured from original PNG pixel data:
-// background color rgb(101,114,212) spans x=32–84, y=28–80 → 53×53 px
-const BADGE_X = 32, BADGE_Y = 28, BADGE_SIZE = 53
-drawBadge(rgba, width, height, BADGE_X, BADGE_Y, BADGE_SIZE)
-
-const png = encodePng(width, height, rgba)
-writeFileSync(tileFile, png)
-console.log(`✓  promo-tile-440x280.png  (${png.length} B)`)
+main().catch(err => { console.error(err); process.exit(1) })

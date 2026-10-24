@@ -38,7 +38,7 @@ npm run test:coverage  # all thresholds ≥ 90%
 
 Open `public/manifest.json` and verify:
 
-- [ ] `"version"` matches the intended release (e.g. `"1.0.5"`)
+- [ ] `"version"` matches the intended release (e.g. `"1.0.6"`)
 - [ ] `"description"` is ≤ 132 characters
 - [ ] Icons listed: `"16"`, `"48"`, `"128"` — all files present in `dist/`
 - [ ] Permissions: only `"storage"` declared as required
@@ -57,8 +57,8 @@ Load the **built** extension (not dev server) and walk through each flow:
 1. chrome://extensions → enable Developer mode → Load unpacked → select dist/
 ```
 
-- [ ] Popup opens, empty state shown on first run
-- [ ] Bundled glossaries (Biotest Diagnostics, AI/ML) loaded automatically
+- [ ] Popup opens on first run with all 5 bundled glossaries loaded (AI / ML, Biotest Diagnostics, Cybersecurity, Software Engineering & DevOps, Finance & Business Intelligence)
+- [ ] AI / ML is the active source by default
 - [ ] Search returns correct results in both Term and Definition modes
 - [ ] Browse A–Z opens and shows all terms with letter headers
 - [ ] Add a term manually — appears immediately in search

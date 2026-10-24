@@ -20,6 +20,7 @@ No accounts. No backend. No subscription. Works fully offline.
 
 ## Features
 
+- **5 glossaries included** — AI/ML, Biotest Diagnostics, Cybersecurity, Software Engineering & DevOps, and Finance & Business Intelligence loaded automatically on first install
 - **Build your own glossary** — bring any CSV or JSON and TermBox turns it into a searchable tool
 - **Create a glossary from scratch** — use the in-app editor to build a glossary without a file
 - **Add terms manually** — add term, full form, and definition directly from the Sources panel

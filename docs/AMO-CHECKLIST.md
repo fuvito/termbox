@@ -41,7 +41,7 @@ Load the **built** extension temporarily:
 
 Walk through these flows:
 
-- [ ] Popup opens, bundled glossaries loaded on first run
+- [ ] Popup opens on first run with all 5 bundled glossaries loaded; AI / ML is the active source by default
 - [ ] Search returns correct results (Term and Definition modes)
 - [ ] Browse A–Z opens and shows all terms
 - [ ] Add a term manually — appears in search immediately

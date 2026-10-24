@@ -9,10 +9,17 @@ All notable changes to this project are documented here.
 ### Added
 - **Firefox support** — publish to Firefox Add-ons (AMO) via `npm run package:firefox`; produces `termbox-firefox.zip` with Firefox-compatible manifest (background scripts, gecko block injected at zip time without modifying `dist/`)
 - **Firefox: file import workaround** — Firefox closes the extension popup when a file dialog opens; "Add from file" now opens a small `importer.html` window that survives focus loss, saves the file to `chrome.storage`, and hands it back to the popup on reopen
-- **New sample glossaries** — three ready-to-use CSV files added to `samples/`:
+- **5 bundled sample glossaries** — all five CSV files are included in the Chrome and Firefox packages and auto-loaded on first install; AI / ML is set as the default active source:
+  - `artificial-intelligence-and-machine-learning.csv` — expanded AI / ML glossary
+  - `biotest-diagnostics.csv` — IVD / medical device acronyms with expanded forms
   - `cybersecurity.csv` — 674 terms across application security, cryptography, network security, cloud security, GRC, identity, and incident response
   - `software-engineering-cloud-devops.csv` — 528 terms covering software engineering, cloud infrastructure, DevOps, observability, and architecture
   - `finance-business-intelligence.csv` — 715 terms spanning accounting, banking, tax, financial risk, BI analytics, and regulation
+- **Dev server mirrors production** — `npm run serve` now auto-loads all five default glossaries on first open, exactly as the installed extension does; visit `http://localhost:5173/popup.html?reset` to wipe stored data and re-run the first-install flow
+
+### Changed
+- Sample CSV files renamed to cleaner, descriptive filenames (e.g. `cybersecurity-acronyms.csv` → `cybersecurity.csv`, `ai-ml-expanded.csv` → `artificial-intelligence-and-machine-learning.csv`)
+- Default active source on first install changed from "first source" to **AI / ML**
 
 ### Fixed
 - Firefox "appears to be corrupt" install error — manifest is now transformed for Firefox: `background.service_worker` replaced with `background.scripts`, `optional_host_permissions` removed (both unsupported before Firefox 128)

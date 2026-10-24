@@ -7,6 +7,13 @@ import type { SearchResult } from './search'
 import { rankTerms } from './search'
 import { parseCsv, csvToTermEntries, termEntriesToCsv } from './csv'
 import {
+  LocaleCtx, makeT, useLocale,
+  BUILTIN_LOCALES, BUILTIN_NAMES,
+  normalizeLangCode, getCustomLangCodes, getCustomStrings,
+  saveCustomPack, removeCustomPack,
+} from './locale'
+import type { Locale, TFunc } from './locale'
+import {
   generateSaltHex, generateRecoveryKey, generateDekHex,
   deriveKeyFromPin, deriveKeyFromRecoveryKey, encryptStr, decryptStr, hashStr,
 } from './crypto'
@@ -80,22 +87,22 @@ function useStoredPref<T>(key: string, defaultValue: T): [T, (v: T) => void] {
 
 // ─── Utilities ────────────────────────────────────────────────────────────────
 
-function timeAgo(isoDate: string): string {
+function timeAgo(t: TFunc, isoDate: string): string {
   const diff = Date.now() - new Date(isoDate).getTime()
   const minutes = Math.floor(diff / 60000)
-  if (minutes < 1) return 'just now'
-  if (minutes < 60) return `${minutes}m ago`
+  if (minutes < 1) return t('timeAgo.justNow')
+  if (minutes < 60) return t('timeAgo.minutesAgo', { m: minutes })
   const hours = Math.floor(minutes / 60)
-  if (hours < 24) return `${hours}h ago`
-  return `${Math.floor(hours / 24)}d ago`
+  if (hours < 24) return t('timeAgo.hoursAgo', { h: hours })
+  return t('timeAgo.daysAgo', { d: Math.floor(hours / 24) })
 }
 
-function autoName(raw: string): string {
+function autoName(raw: string, t: TFunc): string {
   return raw
     .replace(/\.csv$/i, '')
     .replace(/[-_]/g, ' ')
     .replace(/\b\w/g, c => c.toUpperCase())
-    || 'Glossary'
+    || t('autoName.default')
 }
 
 function uniqueName(base: string, existing: GlossarySource[]): string {
@@ -149,6 +156,7 @@ function AboutView({ onBack, theme, prefs }: {
   prefs: Prefs
 }) {
   const fs = prefs.fontSize
+  const { t } = useLocale()
 
   function openUrl(url: string) {
     window.open(url, '_blank', 'noopener,noreferrer')
@@ -176,7 +184,7 @@ function AboutView({ onBack, theme, prefs }: {
           style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: 20, padding: '0 4px 0 0', lineHeight: 1, opacity: 0.85 }}>
           ←
         </button>
-        <span style={{ fontWeight: 700, color: '#fff', fontSize: 18 }}>About</span>
+        <span style={{ fontWeight: 700, color: '#fff', fontSize: 18 }}>{t('about.title')}</span>
       </header>
 
       <div style={{ flex: 1, padding: '32px 20px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -198,26 +206,26 @@ function AboutView({ onBack, theme, prefs }: {
           TermBox
         </h1>
         <p style={{ fontSize: fs - 1, color: theme.muted, margin: '0 0 10px' }}>
-          Version {__APP_VERSION__}
+          {t('about.version', { v: __APP_VERSION__ })}
         </p>
         <p style={{ fontSize: fs - 1, color: theme.secondary, textAlign: 'center', lineHeight: 1.65, maxWidth: 240, margin: '0 0 28px' }}>
-          Build your own glossary or acronym finder from any CSV. Free, open-source, and fully offline.
+          {t('about.tagline')}
         </p>
 
         {/* Info rows */}
         <div style={{ width: '100%', borderTop: `1px solid ${theme.border}` }}>
-          {infoRow('Author', 'Fuat Yazar')}
-          {infoRow('License', 'MIT')}
-          {infoRow('Source', 'github.com/fuvito/termbox', 'https://github.com/fuvito/termbox')}
+          {infoRow(t('about.author'), 'Fuat Yazar')}
+          {infoRow(t('about.license'), 'MIT')}
+          {infoRow(t('about.source'), 'github.com/fuvito/termbox', 'https://github.com/fuvito/termbox')}
         </div>
 
         {/* Links */}
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 16, marginTop: 24 }}>
           {[
-            { label: 'User Guide',         url: 'https://github.com/fuvito/termbox/blob/main/USER-GUIDE.md' },
-            { label: "What's New",         url: 'https://github.com/fuvito/termbox/blob/main/CHANGELOG.md' },
-            { label: 'Privacy Policy',     url: 'https://github.com/fuvito/termbox/blob/main/PRIVACY.md' },
-            { label: 'Terms & Conditions', url: 'https://github.com/fuvito/termbox/blob/main/TERMS.md' },
+            { label: t('about.userGuide'),       url: 'https://github.com/fuvito/termbox/blob/main/USER-GUIDE.md' },
+            { label: t('about.whatsNew'),         url: 'https://github.com/fuvito/termbox/blob/main/CHANGELOG.md' },
+            { label: t('about.privacyPolicy'),    url: 'https://github.com/fuvito/termbox/blob/main/PRIVACY.md' },
+            { label: t('about.termsConditions'),  url: 'https://github.com/fuvito/termbox/blob/main/TERMS.md' },
           ].map(({ label, url }) => (
             <button key={label} type="button" onClick={() => openUrl(url)}
               style={{ background: 'none', border: 'none', color: theme.primary, fontSize: fs - 1, cursor: 'pointer', padding: 0, fontFamily: 'inherit', textDecoration: 'underline' }}>
@@ -225,6 +233,206 @@ function AboutView({ onBack, theme, prefs }: {
             </button>
           ))}
         </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── LanguageModal ────────────────────────────────────────────────────────────
+
+function LanguageModal({ theme, prefs, onClose }: {
+  theme: Theme
+  prefs: Prefs
+  onClose: () => void
+}) {
+  const { locale, setLocale, t } = useLocale()
+  const fs = prefs.fontSize
+  const [customCodes, setCustomCodes] = useState(() => getCustomLangCodes())
+  const [step, setStep] = useState<'list' | 'naming' | 'overwrite'>('list')
+  const [pendingStrings, setPendingStrings] = useState<Record<string, string> | null>(null)
+  const [nameInput, setNameInput] = useState('')
+  const [error, setError] = useState('')
+  const [confirmRemoveCode, setConfirmRemoveCode] = useState<string | null>(null)
+  const fileRef = useRef<HTMLInputElement>(null)
+
+  const allLocales = [...BUILTIN_LOCALES, ...customCodes].sort((a, b) =>
+    a.toUpperCase().localeCompare(b.toUpperCase())
+  )
+  const derivedCode = nameInput.trim() ? normalizeLangCode(nameInput) : ''
+
+  async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    e.target.value = ''
+    setError('')
+    try {
+      const text = await loadFromFile(file)
+      const parsed = JSON.parse(text) as unknown
+      if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error()
+      const strings = parsed as Record<string, string>
+      setPendingStrings(strings)
+      setNameInput(strings['_name'] ? normalizeLangCode(strings['_name']) : '')
+      setStep('naming')
+    } catch {
+      setError(t('lang.error.invalidJson'))
+    }
+  }
+
+  function tryInstall() {
+    if (!pendingStrings || !derivedCode || derivedCode === '???') return
+    if (customCodes.includes(derivedCode)) {
+      setStep('overwrite')
+    } else {
+      doInstall()
+    }
+  }
+
+  function doInstall() {
+    if (!pendingStrings || !derivedCode) return
+    saveCustomPack(derivedCode, pendingStrings)
+    setCustomCodes(getCustomLangCodes())
+    setLocale(derivedCode)
+    onClose()
+  }
+
+  function handleRemove(code: string) {
+    if (locale === code) setLocale('en')
+    removeCustomPack(code)
+    setCustomCodes(getCustomLangCodes())
+    setConfirmRemoveCode(null)
+  }
+
+  function localeDisplayName(l: string) {
+    if (BUILTIN_NAMES[l]) return BUILTIN_NAMES[l]
+    const raw = getCustomStrings(l)?.['_name']
+    return raw ? normalizeLangCode(raw) : ''
+  }
+
+  const chip = (label: string, active: boolean): React.CSSProperties => ({
+    fontSize: 10, fontWeight: 700, letterSpacing: '0.5px', fontFamily: 'monospace',
+    color: active ? '#fff' : theme.text,
+    background: active ? BRAND : theme.border,
+    borderRadius: 4, padding: '2px 6px', minWidth: 34, textAlign: 'center',
+  })
+
+  return (
+    // biome-ignore lint/a11y/noStaticElementInteractions: modal backdrop closes on outside click
+    <div role="presentation"
+      style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.48)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 500 }}
+      onClick={e => { if (e.target === e.currentTarget) onClose() }}
+      onKeyDown={e => { if (e.key === 'Escape') onClose() }}>
+      <div style={{ background: theme.surface, borderRadius: 10, width: 272, maxHeight: 400, display: 'flex', flexDirection: 'column', boxShadow: '0 8px 32px rgba(0,0,0,0.28)', border: `1px solid ${theme.border}`, overflow: 'hidden' }}>
+
+        {/* Header */}
+        <div style={{ background: BRAND, padding: '10px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+          <span style={{ fontWeight: 700, color: '#fff', fontSize: fs + 1 }}>{t('lang.title')}</span>
+          <button type="button" onClick={onClose}
+            style={{ background: 'none', border: 'none', color: '#fff', fontSize: 16, cursor: 'pointer', lineHeight: 1, padding: '0 2px', opacity: 0.8 }}>
+            ✕
+          </button>
+        </div>
+
+        {step === 'list' && (<>
+          {/* Locale list */}
+          <div style={{ flex: 1, overflowY: 'auto' }}>
+            {allLocales.map(l => {
+              const isActive = l === locale
+              const isCustom = !BUILTIN_LOCALES.includes(l)
+              const name = localeDisplayName(l)
+              return (
+                <div key={l} style={{ display: 'flex', alignItems: 'center', padding: '8px 14px', borderBottom: `1px solid ${theme.border}`, background: isActive ? `${BRAND}12` : 'transparent' }}>
+                  <button type="button"
+                    onClick={() => { setLocale(l); onClose() }}
+                    style={{ flex: 1, background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: 0, fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <span style={chip(l.toUpperCase(), isActive)}>{l.toUpperCase()}</span>
+                    {name && <span style={{ fontSize: fs - 1, color: isActive ? theme.text : theme.secondary }}>{name}</span>}
+                    {isActive && <span style={{ fontSize: fs - 2, color: BRAND, marginLeft: 'auto', fontWeight: 700 }}>✓</span>}
+                  </button>
+                  {isCustom && confirmRemoveCode !== l && (
+                    <button type="button" onClick={() => setConfirmRemoveCode(l)} title={t('lang.remove.title')}
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: theme.muted, fontSize: 13, padding: '2px 4px', lineHeight: 1, flexShrink: 0 }}>
+                      ✕
+                    </button>
+                  )}
+                  {confirmRemoveCode === l && (
+                    <div style={{ display: 'flex', gap: 4, flexShrink: 0 }}>
+                      <button type="button" onClick={() => handleRemove(l)}
+                        style={{ background: theme.error, color: '#fff', border: 'none', borderRadius: 4, padding: '2px 8px', fontSize: fs - 2, cursor: 'pointer', fontFamily: 'inherit' }}>
+                        {t('lang.remove.confirm')}
+                      </button>
+                      <button type="button" onClick={() => setConfirmRemoveCode(null)}
+                        style={{ background: 'none', border: `1px solid ${theme.border}`, borderRadius: 4, padding: '2px 6px', fontSize: fs - 2, cursor: 'pointer', color: theme.secondary, fontFamily: 'inherit' }}>
+                        {t('lang.remove.cancel')}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+
+          {/* Footer */}
+          <div style={{ padding: '10px 14px', borderTop: `1px solid ${theme.border}`, display: 'flex', flexDirection: 'column', gap: 8, flexShrink: 0 }}>
+            {error && <p style={{ fontSize: fs - 2, color: theme.error, margin: 0 }}>{error}</p>}
+            <button type="button" onClick={() => fileRef.current?.click()}
+              style={{ background: 'none', border: `1px solid ${theme.border}`, borderRadius: 6, padding: '8px 0', fontSize: fs - 1, cursor: 'pointer', color: theme.text, fontFamily: 'inherit', width: '100%' }}>
+              {t('lang.installFromFile')}
+            </button>
+          </div>
+        </>)}
+
+        {step === 'naming' && (
+          <div style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <p style={{ fontSize: fs - 1, color: theme.secondary, margin: 0, lineHeight: 1.5 }}>
+              {t('lang.naming.hint')}
+            </p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              {/* biome-ignore lint/a11y/noAutofocus: focus moves to code input when naming step opens */}
+              <input autoFocus type="text" placeholder={t('lang.naming.placeholder')} value={nameInput}
+                onChange={e => setNameInput(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter' && derivedCode && derivedCode !== '???') tryInstall(); if (e.key === 'Escape') setStep('list') }}
+                style={{ flex: 1, border: `1px solid ${theme.inputBorder}`, borderRadius: 6, padding: '7px 10px', fontSize: fs, outline: 'none', background: theme.bg, color: theme.text }} />
+              {derivedCode && derivedCode !== '???' && (
+                <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.5px', color: '#fff', background: BRAND, borderRadius: 4, padding: '3px 7px', fontFamily: 'monospace', flexShrink: 0 }}>
+                  {derivedCode}
+                </span>
+              )}
+            </div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button type="button" onClick={tryInstall} disabled={!derivedCode || derivedCode === '???'}
+                style={{ flex: 1, background: BRAND, color: '#fff', border: 'none', borderRadius: 6, padding: '8px 0', fontSize: fs, cursor: derivedCode && derivedCode !== '???' ? 'pointer' : 'not-allowed', opacity: derivedCode && derivedCode !== '???' ? 1 : 0.4, fontFamily: 'inherit' }}>
+                {t('lang.naming.install')}
+              </button>
+              <button type="button" onClick={() => { setStep('list'); setError('') }}
+                style={{ background: 'none', border: `1px solid ${theme.border}`, borderRadius: 6, padding: '8px 12px', fontSize: fs, cursor: 'pointer', color: theme.secondary, fontFamily: 'inherit' }}>
+                {t('lang.naming.cancel')}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {step === 'overwrite' && (
+          <div style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <p style={{ fontSize: fs, color: theme.text, fontWeight: 600, margin: 0 }}>
+              {t('lang.overwrite.title', { code: derivedCode })}
+            </p>
+            <p style={{ fontSize: fs - 1, color: theme.secondary, margin: 0, lineHeight: 1.5 }}>
+              {t('lang.overwrite.body')}
+            </p>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button type="button" onClick={doInstall}
+                style={{ flex: 1, background: BRAND, color: '#fff', border: 'none', borderRadius: 6, padding: '8px 0', fontSize: fs, cursor: 'pointer', fontFamily: 'inherit' }}>
+                {t('lang.overwrite.confirm')}
+              </button>
+              <button type="button" onClick={() => setStep('naming')}
+                style={{ background: 'none', border: `1px solid ${theme.border}`, borderRadius: 6, padding: '8px 12px', fontSize: fs, cursor: 'pointer', color: theme.secondary, fontFamily: 'inherit' }}>
+                {t('lang.overwrite.back')}
+              </button>
+            </div>
+          </div>
+        )}
+
+        <input ref={fileRef} type="file" accept=".json" style={{ display: 'none' }} onChange={e => { void handleFile(e) }} />
       </div>
     </div>
   )
@@ -256,26 +464,27 @@ function PinModal({
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
   const fs = prefs.fontSize
-  const sourceName = sources.find(s => s.id === sourceId)?.name ?? 'this source'
+  const { t } = useLocale()
+  const sourceName = sources.find(s => s.id === sourceId)?.name ?? t('pin.thisSource')
 
   async function handleUnlock() {
-    if (pin.length < 4) { setError('PIN must be at least 4 characters'); return }
+    if (pin.length < 4) { setError(t('pin.error.tooShort')); return }
     setBusy(true); setError('')
     try {
       const meta = await getSecureMeta(sourceId)
-      if (!meta) { setError('Source security data not found'); setBusy(false); return }
+      if (!meta) { setError(t('pin.error.noSecurityData')); setBusy(false); return }
       const kek = await deriveKeyFromPin(pin, meta.pinSalt)
       let dekHex: string
       try { dekHex = await decryptStr(kek, meta.pinEncDek.iv, meta.pinEncDek.ct) }
-      catch { setError('Incorrect PIN'); setBusy(false); return }
+      catch { setError(t('pin.error.incorrect')); setBusy(false); return }
       await onSuccess(sourceId, dekHex)
-    } catch { setError('Unlock failed') }
+    } catch { setError(t('pin.error.unlockFailed')) }
     setBusy(false)
   }
 
   function handleSetupNext() {
-    if (pin.length < 4) { setError('PIN must be at least 4 characters'); return }
-    if (pin !== pinConfirm) { setError('PINs do not match'); return }
+    if (pin.length < 4) { setError(t('pin.error.tooShort')); return }
+    if (pin !== pinConfirm) { setError(t('pin.error.noMatch')); return }
     setError('')
     setGeneratedRecovery(generateRecoveryKey())
     setStep('show-recovery')
@@ -302,39 +511,39 @@ function PinModal({
       const srcs = await getSources()
       await setSources(srcs.map(s => s.id === sourceId ? { ...s, secured: true } : s))
       await onSuccess(sourceId, dekHex)
-    } catch (e) { setError((e as Error).message || 'Setup failed') }
+    } catch (e) { setError((e as Error).message || t('pin.error.unlockFailed')) }
     setBusy(false)
   }
 
   async function handleForgotVerify() {
-    if (!recoveryInput.trim()) { setError('Enter your recovery key'); return }
+    if (!recoveryInput.trim()) { setError(t('pin.error.enterRecovery')); return }
     setBusy(true); setError('')
     try {
       const meta = await getSecureMeta(sourceId)
-      if (!meta) { setError('Source security data not found'); setBusy(false); return }
+      if (!meta) { setError(t('pin.error.noSecurityData')); setBusy(false); return }
       const hash = await hashStr(recoveryInput.trim())
-      if (hash !== meta.recoveryKeyHash) { setError('Invalid recovery key'); setBusy(false); return }
+      if (hash !== meta.recoveryKeyHash) { setError(t('pin.error.invalidRecovery')); setBusy(false); return }
       const rkek = await deriveKeyFromRecoveryKey(recoveryInput.trim(), meta.recoverySalt)
       const dekHex = await decryptStr(rkek, meta.recoveryEncDek.iv, meta.recoveryEncDek.ct)
       setRecoveryDekHex(dekHex)
       setPin(''); setPinConfirm(''); setStep('new-pin')
-    } catch { setError('Invalid recovery key') }
+    } catch { setError(t('pin.error.invalidRecovery')) }
     setBusy(false)
   }
 
   async function handleNewPin() {
-    if (pin.length < 4) { setError('PIN must be at least 4 characters'); return }
-    if (pin !== pinConfirm) { setError('PINs do not match'); return }
+    if (pin.length < 4) { setError(t('pin.error.tooShort')); return }
+    if (pin !== pinConfirm) { setError(t('pin.error.noMatch')); return }
     setBusy(true); setError('')
     try {
       const meta = await getSecureMeta(sourceId)
-      if (!meta) { setError('Source security data not found'); setBusy(false); return }
+      if (!meta) { setError(t('pin.error.noSecurityData')); setBusy(false); return }
       const newSalt = generateSaltHex()
       const kek = await deriveKeyFromPin(pin, newSalt)
       const newPinEncDek = await encryptStr(kek, recoveryDekHex)
       await setSecureMeta({ ...meta, pinSalt: newSalt, pinEncDek: newPinEncDek })
       await onSuccess(sourceId, recoveryDekHex)
-    } catch { setError('Failed to set new PIN') }
+    } catch { setError(t('pin.error.failedSetNewPin')) }
     setBusy(false)
   }
 
@@ -360,54 +569,54 @@ function PinModal({
 
         {step === 'enter' && (
           <>
-            <p style={{ fontWeight: 700, fontSize: fs + 1, color: theme.text, margin: '0 0 4px' }}>Unlock source</p>
+            <p style={{ fontWeight: 700, fontSize: fs + 1, color: theme.text, margin: '0 0 4px' }}>{t('pin.unlock.title')}</p>
             <p style={{ fontSize: fs - 1, color: theme.muted, margin: '0 0 16px' }}>{sourceName}</p>
             {/* biome-ignore lint/a11y/noAutofocus: modal dialog should receive focus immediately */}
-            <input type="password" placeholder="PIN" autoFocus value={pin}
+            <input type="password" placeholder={t('pin.unlock.pinPlaceholder')} autoFocus value={pin}
               onChange={e => setPin(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') void handleUnlock() }}
               style={{ ...inp, marginBottom: 12 }} />
             {error && <p style={{ fontSize: fs - 2, color: theme.error, margin: '0 0 10px' }}>{error}</p>}
             <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
               <button type="button" style={{ ...btnPrimary, opacity: busy ? 0.6 : 1 }} onClick={() => void handleUnlock()} disabled={busy}>
-                {busy ? 'Unlocking…' : 'Unlock'}
+                {busy ? t('pin.unlock.submitting') : t('pin.unlock.submit')}
               </button>
-              <button type="button" style={btnGhost} onClick={onClose}>Cancel</button>
+              <button type="button" style={btnGhost} onClick={onClose}>{t('pin.cancel')}</button>
             </div>
             <button type="button"
               onClick={() => { setStep('forgot'); setError(''); setPin('') }}
               style={{ background: 'none', border: 'none', color: theme.primary, fontSize: fs - 2, cursor: 'pointer', padding: 0, fontFamily: 'inherit' }}>
-              Forgot PIN?
+              {t('pin.unlock.forgotPin')}
             </button>
           </>
         )}
 
         {step === 'setup' && (
           <>
-            <p style={{ fontWeight: 700, fontSize: fs + 1, color: theme.text, margin: '0 0 4px' }}>Add PIN protection</p>
+            <p style={{ fontWeight: 700, fontSize: fs + 1, color: theme.text, margin: '0 0 4px' }}>{t('pin.setup.title')}</p>
             <p style={{ fontSize: fs - 1, color: theme.muted, margin: '0 0 16px' }}>{sourceName}</p>
             {/* biome-ignore lint/a11y/noAutofocus: modal dialog should receive focus immediately */}
-            <input type="password" placeholder="Choose a PIN (min 4 chars)" autoFocus value={pin}
+            <input type="password" placeholder={t('pin.setup.pinPlaceholder')} autoFocus value={pin}
               onChange={e => setPin(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') handleSetupNext() }}
               style={{ ...inp, marginBottom: 8 }} />
-            <input type="password" placeholder="Confirm PIN" value={pinConfirm}
+            <input type="password" placeholder={t('pin.setup.confirmPlaceholder')} value={pinConfirm}
               onChange={e => setPinConfirm(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') handleSetupNext() }}
               style={{ ...inp, marginBottom: 12 }} />
             {error && <p style={{ fontSize: fs - 2, color: theme.error, margin: '0 0 10px' }}>{error}</p>}
             <div style={{ display: 'flex', gap: 8 }}>
-              <button type="button" style={btnPrimary} onClick={handleSetupNext}>Next</button>
-              <button type="button" style={btnGhost} onClick={onClose}>Cancel</button>
+              <button type="button" style={btnPrimary} onClick={handleSetupNext}>{t('pin.setup.next')}</button>
+              <button type="button" style={btnGhost} onClick={onClose}>{t('pin.cancel')}</button>
             </div>
           </>
         )}
 
         {step === 'show-recovery' && (
           <>
-            <p style={{ fontWeight: 700, fontSize: fs + 1, color: theme.text, margin: '0 0 8px' }}>Save your recovery key</p>
+            <p style={{ fontWeight: 700, fontSize: fs + 1, color: theme.text, margin: '0 0 8px' }}>{t('pin.setup.showRecovery.title')}</p>
             <p style={{ fontSize: fs - 1, color: theme.secondary, margin: '0 0 12px', lineHeight: 1.55 }}>
-              This key is shown <strong>only once</strong>. If you forget your PIN, it's the only way to recover access.
+              {t('pin.setup.showRecovery.body')}
             </p>
             <div style={{ background: theme.bg, border: `1px solid ${theme.border}`, borderRadius: 6, padding: '10px 12px', marginBottom: 12, fontFamily: 'monospace', fontSize: fs - 1, color: theme.text, wordBreak: 'break-all', letterSpacing: '0.5px' }}>
               {generatedRecovery}
@@ -415,52 +624,52 @@ function PinModal({
             <label style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: fs - 1, color: theme.secondary, marginBottom: 14, cursor: 'pointer' }}>
               <input type="checkbox" checked={recoveryAck} onChange={e => setRecoveryAck(e.target.checked)}
                 style={{ marginTop: 2, accentColor: BRAND, cursor: 'pointer', flexShrink: 0 }} />
-              I've saved this recovery key in a safe place
+              {t('pin.setup.showRecovery.confirm')}
             </label>
             {error && <p style={{ fontSize: fs - 2, color: theme.error, margin: '0 0 10px' }}>{error}</p>}
             <button type="button"
               style={{ ...btnPrimary, opacity: recoveryAck && !busy ? 1 : 0.5, cursor: recoveryAck && !busy ? 'pointer' : 'not-allowed' }}
               disabled={!recoveryAck || busy}
               onClick={() => void handleSetupFinalize()}>
-              {busy ? 'Setting up…' : 'Set up PIN protection'}
+              {busy ? t('pin.setup.finishing') : t('pin.setup.finish')}
             </button>
           </>
         )}
 
         {step === 'forgot' && (
           <>
-            <p style={{ fontWeight: 700, fontSize: fs + 1, color: theme.text, margin: '0 0 8px' }}>Enter recovery key</p>
+            <p style={{ fontWeight: 700, fontSize: fs + 1, color: theme.text, margin: '0 0 8px' }}>{t('pin.forgot.title')}</p>
             <p style={{ fontSize: fs - 1, color: theme.muted, margin: '0 0 12px' }}>{sourceName}</p>
             {/* biome-ignore lint/a11y/noAutofocus: modal dialog should receive focus immediately */}
-            <input type="text" placeholder="xxxx-xxxx-xxxx-…" autoFocus value={recoveryInput}
+            <input type="text" placeholder={t('pin.forgot.placeholder')} autoFocus value={recoveryInput}
               onChange={e => setRecoveryInput(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') void handleForgotVerify() }}
               style={{ ...inp, fontFamily: 'monospace', marginBottom: 12 }} />
             {error && <p style={{ fontSize: fs - 2, color: theme.error, margin: '0 0 10px' }}>{error}</p>}
             <div style={{ display: 'flex', gap: 8 }}>
               <button type="button" style={{ ...btnPrimary, opacity: busy ? 0.6 : 1 }} onClick={() => void handleForgotVerify()} disabled={busy}>
-                {busy ? 'Verifying…' : 'Continue'}
+                {busy ? t('pin.forgot.submitting') : t('pin.forgot.submit')}
               </button>
-              <button type="button" style={btnGhost} onClick={() => { setStep('enter'); setError('') }}>Back</button>
+              <button type="button" style={btnGhost} onClick={() => { setStep('enter'); setError('') }}>{t('pin.back')}</button>
             </div>
           </>
         )}
 
         {step === 'new-pin' && (
           <>
-            <p style={{ fontWeight: 700, fontSize: fs + 1, color: theme.text, margin: '0 0 8px' }}>Set a new PIN</p>
+            <p style={{ fontWeight: 700, fontSize: fs + 1, color: theme.text, margin: '0 0 8px' }}>{t('pin.newPin.title')}</p>
             {/* biome-ignore lint/a11y/noAutofocus: modal dialog should receive focus immediately */}
-            <input type="password" placeholder="New PIN (min 4 chars)" autoFocus value={pin}
+            <input type="password" placeholder={t('pin.newPin.pinPlaceholder')} autoFocus value={pin}
               onChange={e => setPin(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') void handleNewPin() }}
               style={{ ...inp, marginBottom: 8 }} />
-            <input type="password" placeholder="Confirm new PIN" value={pinConfirm}
+            <input type="password" placeholder={t('pin.newPin.confirmPlaceholder')} value={pinConfirm}
               onChange={e => setPinConfirm(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') void handleNewPin() }}
               style={{ ...inp, marginBottom: 12 }} />
             {error && <p style={{ fontSize: fs - 2, color: theme.error, margin: '0 0 10px' }}>{error}</p>}
             <button type="button" style={{ ...btnPrimary, opacity: busy ? 0.6 : 1 }} onClick={() => void handleNewPin()} disabled={busy}>
-              {busy ? 'Saving…' : 'Set new PIN'}
+              {busy ? t('pin.newPin.submitting') : t('pin.newPin.submit')}
             </button>
           </>
         )}
@@ -509,6 +718,7 @@ function SourcesView({
   const [confirmDeleteSourceId, setConfirmDeleteSourceId] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const fs = prefs.fontSize
+  const { t } = useLocale()
   const isBusy = loadingId !== null
 
   function isLocked(sourceId: string) {
@@ -524,7 +734,7 @@ function SourcesView({
   }
 
   async function handleCreateGlossary() {
-    const name = uniqueName(newGlossaryName.trim() || 'My Glossary', sources)
+    const name = uniqueName(newGlossaryName.trim() || t('sources.newGlossary.defaultName'), sources)
     const id = crypto.randomUUID()
     const source: GlossarySource = {
       id, name, type: 'file', url: null,
@@ -583,7 +793,7 @@ function SourcesView({
       const terms = csvToTermEntries(rows, id)
       const source: GlossarySource = {
         id,
-        name: uniqueName(autoName(file.name), sources),
+        name: uniqueName(autoName(file.name, t), sources),
         type: 'file',
         url: null,
         termCount: terms.length,
@@ -607,7 +817,7 @@ function SourcesView({
     setError(null)
     const granted = await requestOriginPermission(source.url)
     if (!granted) {
-      setError('Permission not granted — allow access to refresh this source.')
+      setError(t('sources.error.permissionNotGranted'))
       return
     }
     setLoadingId(source.id)
@@ -620,7 +830,7 @@ function SourcesView({
       await setTerms(source.id, terms)
       await onReload()
     } catch (err) {
-      setError((err as Error).message || 'Failed to refresh')
+      setError((err as Error).message || t('sources.error.failedToRefresh'))
     } finally {
       setLoadingId(null)
     }
@@ -695,7 +905,7 @@ function SourcesView({
           style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: 20, padding: '0 4px 0 0', lineHeight: 1, opacity: 0.85 }}>
           ←
         </button>
-        <span style={{ fontWeight: 700, color: '#fff', fontSize: 18 }}>Glossary Sources</span>
+        <span style={{ fontWeight: 700, color: '#fff', fontSize: 18 }}>{t('sources.title')}</span>
       </header>
 
       <div style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
@@ -710,9 +920,9 @@ function SourcesView({
                 onChange={() => { void handleSetActive('all') }}
                 style={{ accentColor: BRAND, cursor: 'pointer', margin: 0 }}
               />
-              <span style={{ color: theme.text, fontWeight: 500 }}>All sources</span>
+              <span style={{ color: theme.text, fontWeight: 500 }}>{t('sources.allSources')}</span>
               <span style={{ color: theme.muted, fontSize: fs - 1 }}>
-                ({sources.reduce((n, s) => n + s.termCount, 0)} terms)
+                {t('sources.allSourcesCount', { count: sources.reduce((n, s) => n + s.termCount, 0) })}
               </span>
             </label>
           </div>
@@ -720,7 +930,7 @@ function SourcesView({
 
         {/* Source list */}
         {sources.length === 0 && (
-          <p style={{ color: theme.muted, fontSize: fs, padding: '20px 14px' }}>No sources loaded yet.</p>
+          <p style={{ color: theme.muted, fontSize: fs, padding: '20px 14px' }}>{t('sources.noSources')}</p>
         )}
         {sources.map(source => {
           // biome-ignore lint/a11y/noStaticElementInteractions: hover highlight only, child elements are interactive
@@ -745,7 +955,7 @@ function SourcesView({
                     {source.name}
                   </div>
                   <div style={{ fontSize: fs - 2, color: theme.muted, marginTop: 2 }}>
-                    {source.termCount} term{source.termCount !== 1 ? 's' : ''} · loaded {timeAgo(source.lastLoaded)}
+                    {source.termCount !== 1 ? t('sources.termCountPlural', { count: source.termCount }) : t('sources.termCount', { count: source.termCount })} · {t('sources.loadedAgo', { ago: timeAgo(t, source.lastLoaded) })}
                   </div>
                 </div>
               </label>
@@ -755,8 +965,8 @@ function SourcesView({
                 const unlocked = unlockedSources.has(source.id)
                 const color = secured ? (unlocked ? '#16a34a' : '#f97316') : theme.muted
                 const label = secured
-                  ? (unlocked ? 'Secured & unlocked — click to manage' : 'Locked — click to unlock')
-                  : 'Add PIN protection'
+                  ? (unlocked ? t('sources.lock.securedUnlocked') : t('sources.lock.locked'))
+                  : t('sources.lock.addPin')
                 return (
                   <button type="button" title={label} disabled={isBusy}
                     onClick={() => {
@@ -773,7 +983,7 @@ function SourcesView({
                 <button type="button"
                   onClick={() => { void handleRefresh(source) }}
                   disabled={isBusy}
-                  title="Refresh from URL"
+                  title={t('sources.refresh.title')}
                   style={{ ...iconBtn, fontSize: 18, opacity: isBusy ? 0.4 : 1 }}>
                   {loadingId === source.id ? '⌛' : '↻'}
                 </button>
@@ -784,21 +994,21 @@ function SourcesView({
                   resetFooter(); setAddTermSourceId(source.id)
                 }}
                 disabled={isBusy}
-                title="Add term"
+                title={t('sources.addTerm.title')}
                 style={{ ...iconBtn, fontSize: 16, opacity: isBusy ? 0.4 : 1 }}>
                 +
               </button>
               <button type="button"
                 onClick={() => { void handleDownload(source) }}
                 disabled={isBusy}
-                title="Download as CSV"
+                title={t('sources.download.title')}
                 style={{ ...iconBtn, fontSize: 15, opacity: isBusy ? 0.4 : 1 }}>
                 ↓
               </button>
               <button type="button"
                 onClick={() => setConfirmDeleteSourceId(source.id)}
                 disabled={isBusy}
-                title="Delete source"
+                title={t('sources.delete.title')}
                 style={{ ...iconBtn, color: theme.error, opacity: isBusy ? 0.4 : 1 }}>
                 ✕
               </button>
@@ -811,32 +1021,32 @@ function SourcesView({
                   style={{ display: 'block', width: '100%', textAlign: 'left', background: 'none', border: 'none', padding: '8px 12px', fontSize: fs - 1, cursor: 'pointer', color: theme.text, fontFamily: 'inherit' }}
                   onMouseEnter={e => (e.currentTarget.style.background = theme.surface)}
                   onMouseLeave={e => (e.currentTarget.style.background = 'none')}>
-                  🔒 Lock now
+                  {t('sources.lock.lockNow')}
                 </button>
                 <button type="button"
                   onClick={() => { void onRemoveSecurity(source.id); setManagingSourceId(null) }}
                   style={{ display: 'block', width: '100%', textAlign: 'left', background: 'none', border: 'none', padding: '8px 12px', fontSize: fs - 1, cursor: 'pointer', color: theme.error, fontFamily: 'inherit', borderTop: `1px solid ${theme.border}` }}
                   onMouseEnter={e => (e.currentTarget.style.background = theme.surface)}
                   onMouseLeave={e => (e.currentTarget.style.background = 'none')}>
-                  Remove PIN protection
+                  {t('sources.lock.removePin')}
                 </button>
               </div>
             )}
             {confirmDeleteSourceId === source.id && (
               <div style={{ marginTop: 8, background: theme.bg, border: `1px solid ${theme.error}55`, borderRadius: 6, padding: '10px 12px' }}>
                 <p style={{ fontSize: fs - 1, color: theme.text, margin: '0 0 8px', fontWeight: 600 }}>
-                  Delete &ldquo;{source.name}&rdquo;?
+                  {t('sources.delete.confirm', { name: source.name })}
                 </p>
                 <div style={{ display: 'flex', gap: 8 }}>
                   <button type="button"
                     onClick={() => { void handleDelete(source.id); setConfirmDeleteSourceId(null) }}
                     style={{ flex: 1, background: theme.error, color: '#fff', border: 'none', borderRadius: 5, padding: '6px 0', fontSize: fs - 1, cursor: 'pointer', fontFamily: 'inherit' }}>
-                    Delete
+                    {t('sources.delete.delete')}
                   </button>
                   <button type="button"
                     onClick={() => setConfirmDeleteSourceId(null)}
                     style={{ flex: 1, background: 'none', border: `1px solid ${theme.border}`, borderRadius: 5, padding: '6px 0', fontSize: fs - 1, cursor: 'pointer', color: theme.secondary, fontFamily: 'inherit' }}>
-                    Cancel
+                    {t('sources.delete.cancel')}
                   </button>
                 </div>
               </div>
@@ -860,23 +1070,23 @@ function SourcesView({
           /* ── Add term form ── */
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             <span style={{ fontSize: fs - 1, color: theme.muted }}>
-              Adding to: <strong style={{ color: theme.text }}>{sources.find(s => s.id === addTermSourceId)?.name}</strong>
+              {t('sources.addTerm.addingTo', { name: sources.find(s => s.id === addTermSourceId)?.name ?? '' })}
             </span>
             <input
-              type="text" placeholder="Term *" value={newTerm.term}
+              type="text" placeholder={t('sources.addTerm.termPlaceholder')} value={newTerm.term}
               onChange={e => setNewTerm(t => ({ ...t, term: e.target.value }))}
               onKeyDown={e => { if (e.key === 'Escape') resetFooter() }}
               style={{ border: `1px solid ${theme.inputBorder}`, borderRadius: 6, padding: '7px 10px', fontSize: fs, outline: 'none', background: theme.bg, color: theme.text }}
             />
             <input
-              type="text" placeholder="Full form (optional)" value={newTerm.fullForm}
-              onChange={e => setNewTerm(t => ({ ...t, fullForm: e.target.value }))}
+              type="text" placeholder={t('sources.addTerm.fullFormPlaceholder')} value={newTerm.fullForm}
+              onChange={e => setNewTerm(prev => ({ ...prev, fullForm: e.target.value }))}
               onKeyDown={e => { if (e.key === 'Escape') resetFooter() }}
               style={{ border: `1px solid ${theme.inputBorder}`, borderRadius: 6, padding: '7px 10px', fontSize: fs, outline: 'none', background: theme.bg, color: theme.text }}
             />
             <input
-              type="text" placeholder="Definition *" value={newTerm.definition}
-              onChange={e => setNewTerm(t => ({ ...t, definition: e.target.value }))}
+              type="text" placeholder={t('sources.addTerm.definitionPlaceholder')} value={newTerm.definition}
+              onChange={e => setNewTerm(prev => ({ ...prev, definition: e.target.value }))}
               onKeyDown={e => { if (e.key === 'Enter' && newTerm.term.trim() && newTerm.definition.trim()) { void handleAddTerm() } else if (e.key === 'Escape') resetFooter() }}
               style={{ border: `1px solid ${theme.inputBorder}`, borderRadius: 6, padding: '7px 10px', fontSize: fs, outline: 'none', background: theme.bg, color: theme.text }}
             />
@@ -890,11 +1100,11 @@ function SourcesView({
                   cursor: newTerm.term.trim() && newTerm.definition.trim() ? 'pointer' : 'not-allowed',
                   opacity: newTerm.term.trim() && newTerm.definition.trim() ? 1 : 0.5,
                 }}>
-                Add term
+                {t('sources.addTerm.add')}
               </button>
               <button type="button" onClick={resetFooter}
                 style={{ background: 'none', border: `1px solid ${theme.border}`, borderRadius: 6, padding: '8px 12px', fontSize: fs, cursor: 'pointer', color: theme.secondary }}>
-                Done
+                {t('sources.addTerm.done')}
               </button>
             </div>
           </div>
@@ -903,7 +1113,7 @@ function SourcesView({
           /* ── New glossary name input ── */
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             <input
-              type="text" placeholder="Glossary name" value={newGlossaryName}
+              type="text" placeholder={t('sources.newGlossary.namePlaceholder')} value={newGlossaryName}
               onChange={e => setNewGlossaryName(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') { void handleCreateGlossary() } else if (e.key === 'Escape') resetFooter() }}
               style={{ border: `1px solid ${theme.inputBorder}`, borderRadius: 6, padding: '7px 10px', fontSize: fs, outline: 'none', background: theme.bg, color: theme.text }}
@@ -912,11 +1122,11 @@ function SourcesView({
               <button type="button"
                 onClick={() => { void handleCreateGlossary() }}
                 style={{ flex: 1, background: BRAND, color: '#fff', border: 'none', borderRadius: 6, padding: '8px 0', fontSize: fs, cursor: 'pointer' }}>
-                Create
+                {t('sources.newGlossary.create')}
               </button>
               <button type="button" onClick={resetFooter}
                 style={{ background: 'none', border: `1px solid ${theme.border}`, borderRadius: 6, padding: '8px 12px', fontSize: fs, cursor: 'pointer', color: theme.secondary }}>
-                Cancel
+                {t('sources.newGlossary.cancel')}
               </button>
             </div>
           </div>
@@ -926,15 +1136,15 @@ function SourcesView({
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             <div style={{ padding: '10px 12px', background: theme.bg, borderRadius: 6, border: `1px solid ${theme.border}` }}>
               <p style={{ fontSize: fs - 1, color: theme.text, margin: '0 0 4px', fontWeight: 600 }}>
-                Add from URL is not available at this time
+                {t('sources.url.notAvailableTitle')}
               </p>
               <p style={{ fontSize: fs - 1, color: theme.secondary, margin: 0, lineHeight: 1.55 }}>
-                Due to security restrictions, loading from a URL is currently disabled. Please download the file from the link you were trying and load it using the <strong>Add from file</strong> button.
+                {t('sources.url.notAvailableBody')}
               </p>
             </div>
             <button type="button" onClick={resetFooter}
               style={{ background: 'none', border: `1px solid ${theme.border}`, borderRadius: 6, padding: '8px 12px', fontSize: fs, cursor: 'pointer', color: theme.secondary, alignSelf: 'flex-end' }}>
-              Dismiss
+              {t('sources.url.dismiss')}
             </button>
           </div>
 
@@ -945,13 +1155,13 @@ function SourcesView({
               onClick={() => fileInputRef.current?.click()}
               disabled={isBusy}
               style={{ flex: 1, background: 'none', border: `1px solid ${theme.border}`, borderRadius: 6, padding: '8px 0', fontSize: fs, cursor: isBusy ? 'not-allowed' : 'pointer', color: theme.text, opacity: isBusy ? 0.5 : 1 }}>
-              + Add from file
+              {t('sources.btn.addFromFile')}
             </button>
             <button type="button"
               onClick={() => { resetFooter(); setNewGlossaryMode(true) }}
               disabled={isBusy}
               style={{ flex: 1, background: 'none', border: `1px solid ${theme.border}`, borderRadius: 6, padding: '8px 0', fontSize: fs, cursor: isBusy ? 'not-allowed' : 'pointer', color: theme.text, opacity: isBusy ? 0.5 : 1 }}>
-              + New glossary
+              {t('sources.btn.newGlossary')}
             </button>
           </div>
         )}
@@ -975,6 +1185,7 @@ function BrowseView({
   prefs: Prefs
 }) {
   const fs = prefs.fontSize
+  const { t } = useLocale()
   const [expanded, setExpanded] = useState<string | null>(null)
   const [copiedId, setCopiedId] = useState<string | null>(null)
   const [hoveredId, setHoveredId] = useState<string | null>(null)
@@ -983,17 +1194,17 @@ function BrowseView({
   const isLocked = activeSrc?.secured && !unlockedSources.has(activeSrc.id)
   const showSourceBadge = activeSourceId === 'all'
   const sourceMap = Object.fromEntries(sources.map(s => [s.id, s.name]))
-  const subtitle = activeSourceId === 'all' ? 'All sources' : (activeSrc?.name ?? '')
+  const subtitle = activeSourceId === 'all' ? t('browse.allSources') : (activeSrc?.name ?? '')
 
   const sorted = [...glossary].sort((a, b) =>
     a.term.localeCompare(b.term, undefined, { sensitivity: 'base' })
   )
   const groups: { letter: string; terms: TermEntry[] }[] = []
-  for (const t of sorted) {
-    const letter = /[a-zA-Z]/.test(t.term[0] ?? '') ? t.term[0]?.toUpperCase() ?? '#' : '#'
+  for (const entry of sorted) {
+    const letter = /[a-zA-Z]/.test(entry.term[0] ?? '') ? entry.term[0]?.toUpperCase() ?? '#' : '#'
     const last = groups[groups.length - 1]
-    if (last?.letter === letter) last.terms.push(t)
-    else groups.push({ letter, terms: [t] })
+    if (last?.letter === letter) last.terms.push(entry)
+    else groups.push({ letter, terms: [entry] })
   }
 
   function copyDef(id: string, definition: string) {
@@ -1013,7 +1224,7 @@ function BrowseView({
       <header style={{ background: BRAND, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
         <button type="button" onClick={onBack} style={{ ...hdrBtn, fontSize: 18, padding: '0 4px' }}>←</button>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <span style={{ fontWeight: 700, color: '#fff', fontSize: 18 }}>Browse</span>
+          <span style={{ fontWeight: 700, color: '#fff', fontSize: 18 }}>{t('browse.title')}</span>
           {subtitle && (
             <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.65)', marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {subtitle}
@@ -1022,7 +1233,7 @@ function BrowseView({
         </div>
         {!isLocked && glossary.length > 0 && (
           <span style={{ fontSize: fs - 2, color: 'rgba(255,255,255,0.65)', whiteSpace: 'nowrap' }}>
-            {glossary.length} terms
+            {t('browse.termCount', { count: glossary.length })}
           </span>
         )}
       </header>
@@ -1031,20 +1242,20 @@ function BrowseView({
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '32px 20px' }}>
           <span style={{ fontSize: 40, marginBottom: 14 }}>🔒</span>
           <p style={{ fontSize: fs, color: theme.text, fontWeight: 600, margin: '0 0 6px', textAlign: 'center' }}>
-            {activeSrc?.name} is locked
+            {t('browse.lockedTitle', { name: activeSrc?.name ?? '' })}
           </p>
           <p style={{ fontSize: fs - 1, color: theme.muted, margin: '0 0 20px', textAlign: 'center', lineHeight: 1.5 }}>
-            Enter the PIN to browse this glossary.
+            {t('browse.lockedBody')}
           </p>
           <button type="button"
             onClick={() => { if (activeSrc) onRequestUnlock(activeSrc.id) }}
             style={{ background: BRAND, color: '#fff', border: 'none', borderRadius: 6, padding: '9px 24px', fontSize: fs, cursor: 'pointer' }}>
-            Enter PIN
+            {t('browse.enterPin')}
           </button>
         </div>
       ) : glossary.length === 0 ? (
         <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '32px 20px' }}>
-          <p style={{ fontSize: fs, color: theme.muted, textAlign: 'center' }}>No terms loaded.</p>
+          <p style={{ fontSize: fs, color: theme.muted, textAlign: 'center' }}>{t('browse.noTerms')}</p>
         </div>
       ) : (
         <div style={{ flex: 1, overflowY: 'auto' }}>
@@ -1058,36 +1269,36 @@ function BrowseView({
               }}>
                 {letter}
               </div>
-              {terms.map(t => {
-                const isExpanded = expanded === t.id
-                const isCopied = copiedId === t.id
+              {terms.map(term => {
+                const isExpanded = expanded === term.id
+                const isCopied = copiedId === term.id
                 return (
-                  <button key={t.id} type="button"
-                    onMouseEnter={() => setHoveredId(t.id)}
+                  <button key={term.id} type="button"
+                    onMouseEnter={() => setHoveredId(term.id)}
                     onMouseLeave={() => setHoveredId(null)}
-                    onClick={() => { copyDef(t.id, t.definition); setExpanded(isExpanded ? null : t.id) }}
+                    onClick={() => { copyDef(term.id, term.definition); setExpanded(isExpanded ? null : term.id) }}
                     style={{
                       display: 'block', width: '100%', textAlign: 'left',
                       padding: '9px 14px',
                       border: 'none', borderBottom: `1px solid ${theme.border}`,
                       cursor: 'pointer',
-                      background: isExpanded || hoveredId === t.id ? theme.bg : theme.surface,
+                      background: isExpanded || hoveredId === term.id ? theme.bg : theme.surface,
                       transition: 'background-color 0.1s',
                       fontFamily: 'inherit',
                     }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3, flexWrap: 'wrap' }}>
-                      <strong style={{ fontSize: fs, color: theme.text }}>{t.term}</strong>
-                      {t.fullForm && (
-                        <span style={{ fontSize: fs - 1, color: theme.secondary }}>{t.fullForm}</span>
+                      <strong style={{ fontSize: fs, color: theme.text }}>{term.term}</strong>
+                      {term.fullForm && (
+                        <span style={{ fontSize: fs - 1, color: theme.secondary }}>{term.fullForm}</span>
                       )}
-                      {t.domain && (
+                      {term.domain && (
                         <span style={{ fontSize: fs - 2, color: theme.tagText, background: theme.tag, borderRadius: 4, padding: '1px 6px' }}>
-                          {t.domain}
+                          {term.domain}
                         </span>
                       )}
-                      {showSourceBadge && sourceMap[t.sourceId] && (
+                      {showSourceBadge && sourceMap[term.sourceId] && (
                         <span style={{ fontSize: fs - 2, color: theme.muted, background: theme.border, borderRadius: 4, padding: '1px 6px', marginLeft: 'auto' }}>
-                          {sourceMap[t.sourceId]}
+                          {sourceMap[term.sourceId]}
                         </span>
                       )}
                     </div>
@@ -1098,21 +1309,21 @@ function BrowseView({
                       padding: isCopied ? '3px 5px' : '0',
                       transition: 'background 0.25s',
                     }}>
-                      {t.definition}
+                      {term.definition}
                     </p>
                     {isCopied && (
                       <p style={{ fontSize: fs - 2, color: '#92400e', margin: '4px 0 0', textAlign: 'right' }}>
-                        ✓ Copied to clipboard
+                        {t('browse.copied')}
                       </p>
                     )}
-                    {isExpanded && t.aliases.length > 0 && (
+                    {isExpanded && term.aliases.length > 0 && (
                       <p style={{ fontSize: fs - 2, color: theme.muted, margin: '5px 0 0' }}>
-                        Also known as: {t.aliases.join(', ')}
+                        {t('browse.alsoKnownAs', { aliases: term.aliases.join(', ') })}
                       </p>
                     )}
-                    {isExpanded && t.sourceReference && (
+                    {isExpanded && term.sourceReference && (
                       <p style={{ fontSize: fs - 2, color: theme.muted, margin: '4px 0 0' }}>
-                        Source: {t.sourceReference}
+                        {t('browse.sourceRef', { ref: term.sourceReference })}
                       </p>
                     )}
                   </button>
@@ -1169,6 +1380,7 @@ function SearchView({
   const [expanded, setExpanded] = useState<string | null>(null)
   const [copiedId, setCopiedId] = useState<string | null>(null)
   const [contextMenu, setContextMenu] = useState<{ id: string; x: number; y: number } | null>(null)
+  const [showLangModal, setShowLangModal] = useState(false)
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editForm, setEditForm] = useState({ term: '', fullForm: '', definition: '' })
@@ -1243,6 +1455,7 @@ function SearchView({
 
   const didAutoSearch = useRef(false)
   const fs = prefs.fontSize
+  const { t, locale, setLocale } = useLocale()
 
   useEffect(() => { inputRef.current?.focus() }, [])
 
@@ -1298,7 +1511,7 @@ function SearchView({
 
   const activeSourceLabel =
     sources.length === 0 ? null
-    : activeSourceId === 'all' ? 'All sources'
+    : activeSourceId === 'all' ? t('search.allSources')
     : sources.find(s => s.id === activeSourceId)?.name ?? sources[0]?.name ?? null
 
   const hdrBtn: React.CSSProperties = {
@@ -1350,17 +1563,26 @@ function SearchView({
           )}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-          <button type="button" style={hdrBtn} title="Decrease font size" onClick={() => prefs.setFontSize(Math.max(11, prefs.fontSize - 1))}>A−</button>
-          <button type="button" style={hdrBtn} title="Increase font size" onClick={() => prefs.setFontSize(Math.min(17, prefs.fontSize + 1))}>A+</button>
-          <button type="button" style={hdrBtn} title={prefs.dark ? 'Light mode' : 'Dark mode'} onClick={() => prefs.setDark(!prefs.dark)}>
+          <button type="button" style={hdrBtn} title={t('header.decreaseFontSize')} onClick={() => prefs.setFontSize(Math.max(11, prefs.fontSize - 1))}>A−</button>
+          <button type="button" style={hdrBtn} title={t('header.increaseFontSize')} onClick={() => prefs.setFontSize(Math.min(17, prefs.fontSize + 1))}>A+</button>
+          <button type="button" style={hdrBtn} title={prefs.dark ? t('header.lightMode') : t('header.darkMode')} onClick={() => prefs.setDark(!prefs.dark)}>
             {prefs.dark ? '☀' : '☾'}
           </button>
           <span style={{ width: 1, height: 14, background: 'rgba(255,255,255,0.3)', margin: '0 3px', flexShrink: 0 }} />
-          <button type="button" onClick={onOpenBrowse} style={hdrBtn} title="Browse all terms A–Z">Az</button>
-          <button type="button" onClick={onOpenSources} style={{ ...hdrBtn, fontSize: 17, padding: '1px 6px' }} title="Manage sources">≡</button>
-          <button type="button" onClick={onOpenAbout} style={{ ...hdrBtn, fontSize: 15, padding: '1px 6px' }} title="About TermBox">ⓘ</button>
+          <button type="button" onClick={onOpenBrowse} style={hdrBtn} title={t('header.browseAZ')}>Az</button>
+          <button type="button" onClick={onOpenSources} style={{ ...hdrBtn, fontSize: 17, padding: '1px 6px' }} title={t('header.manageSources')}>≡</button>
+          <button type="button" onClick={onOpenAbout} style={{ ...hdrBtn, fontSize: 15, padding: '1px 6px' }} title={t('header.about')}>ⓘ</button>
+          <button type="button"
+            title={t('header.language')}
+            onClick={() => setShowLangModal(true)}
+            style={{ ...hdrBtn, fontSize: 10, letterSpacing: '0.5px', padding: '3px 6px', fontWeight: 700 }}>
+            {locale.toUpperCase()}
+          </button>
         </div>
       </header>
+      {showLangModal && (
+        <LanguageModal theme={theme} prefs={prefs} onClose={() => setShowLangModal(false)} />
+      )}
 
       {/* Empty state when no sources */}
       {noSources ? (
@@ -1373,27 +1595,27 @@ function SearchView({
             <line x1="10" y1="9" x2="8" y2="9" />
           </svg>
           <p style={{ fontSize: fs, color: theme.muted, marginBottom: 16, textAlign: 'center', lineHeight: 1.5 }}>
-            Load a CSV glossary or acronym list to get started
+            {t('search.empty.body')}
           </p>
           <button type="button"
             onClick={onOpenSources}
             style={{ background: BRAND, color: '#fff', border: 'none', borderRadius: 6, padding: '8px 20px', fontSize: fs, cursor: 'pointer' }}>
-            Add a glossary
+            {t('search.empty.addGlossary')}
           </button>
         </div>
       ) : activeIsLocked ? (
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '32px 20px', background: theme.bg }}>
           <span style={{ fontSize: 40, marginBottom: 14 }}>🔒</span>
           <p style={{ fontSize: fs, color: theme.text, fontWeight: 600, margin: '0 0 6px', textAlign: 'center' }}>
-            {activeSrc?.name} is locked
+            {t('search.lockedTitle', { name: activeSrc?.name ?? '' })}
           </p>
           <p style={{ fontSize: fs - 1, color: theme.muted, margin: '0 0 20px', textAlign: 'center', lineHeight: 1.5 }}>
-            Enter the PIN to unlock and search this glossary.
+            {t('search.lockedBody')}
           </p>
           <button type="button"
             onClick={() => { if (activeSrc) onRequestUnlock(activeSrc.id) }}
             style={{ background: BRAND, color: '#fff', border: 'none', borderRadius: 6, padding: '9px 24px', fontSize: fs, cursor: 'pointer' }}>
-            Enter PIN
+            {t('search.enterPin')}
           </button>
         </div>
       ) : (
@@ -1404,7 +1626,7 @@ function SearchView({
               <input
                 ref={inputRef}
                 type="text"
-                placeholder="Search terms…"
+                placeholder={t('search.placeholder')}
                 value={query}
                 onChange={e => setQuery(e.target.value)}
                 onKeyDown={e => { if (e.key === 'Enter' && canSearch) handleSearch() }}
@@ -1428,7 +1650,7 @@ function SearchView({
                 </svg>
               </button>
               {hasSearched && (
-                <button type="button" title="Clear search"
+                <button type="button" title={t('search.clearSearch')}
                   onClick={() => {
                     setQuery(''); setResults([]); setHasSearched(false); setHasMore(false)
                     didAutoSearch.current = false
@@ -1455,7 +1677,7 @@ function SearchView({
                     fontWeight: searchMode === mode ? 600 : 400,
                     transition: 'background-color 0.15s, color 0.15s',
                   }}>
-                  {mode === 'term' ? 'Term' : 'Definition'}
+                  {mode === 'term' ? t('search.mode.term') : t('search.mode.definition')}
                 </button>
               ))}
             </div>
@@ -1469,13 +1691,13 @@ function SearchView({
                   <circle cx={11} cy={11} r={8} />
                   <path d="m21 21-4.35-4.35" strokeLinecap="round" />
                 </svg>
-                <p style={{ fontSize: fs, margin: 0, opacity: 0.6 }}>Search for terms to see results</p>
+                <p style={{ fontSize: fs, margin: 0, opacity: 0.6 }}>{t('search.idle')}</p>
               </div>
             )}
 
             {hasSearched && results.length === 0 && (
               <p style={{ fontSize: fs, color: theme.muted, padding: '14px 16px' }}>
-                No results for &ldquo;{query}&rdquo;
+                {t('search.noResults', { query })}
               </p>
             )}
 
@@ -1504,27 +1726,27 @@ function SearchView({
                         <input autoFocus value={editForm.term}
                           onChange={e => setEditForm(f => ({ ...f, term: e.target.value }))}
                           onKeyDown={e => { if (e.key === 'Escape') setEditingId(null) }}
-                          placeholder="Term *"
+                          placeholder={t('search.edit.termPlaceholder')}
                           style={{ border: `1px solid ${theme.inputBorder}`, borderRadius: 5, padding: '5px 8px', fontSize: fs - 1, background: theme.bg, color: theme.text, outline: 'none' }} />
                         <input value={editForm.fullForm}
                           onChange={e => setEditForm(f => ({ ...f, fullForm: e.target.value }))}
                           onKeyDown={e => { if (e.key === 'Escape') setEditingId(null) }}
-                          placeholder="Full form (optional)"
+                          placeholder={t('search.edit.fullFormPlaceholder')}
                           style={{ border: `1px solid ${theme.inputBorder}`, borderRadius: 5, padding: '5px 8px', fontSize: fs - 1, background: theme.bg, color: theme.text, outline: 'none' }} />
                         <input value={editForm.definition}
                           onChange={e => setEditForm(f => ({ ...f, definition: e.target.value }))}
                           onKeyDown={e => { if (e.key === 'Enter' && editForm.term.trim() && editForm.definition.trim()) { void handleEditSave(r) } else if (e.key === 'Escape') setEditingId(null) }}
-                          placeholder="Definition *"
+                          placeholder={t('search.edit.definitionPlaceholder')}
                           style={{ border: `1px solid ${theme.inputBorder}`, borderRadius: 5, padding: '5px 8px', fontSize: fs - 1, background: theme.bg, color: theme.text, outline: 'none' }} />
                         <div style={{ display: 'flex', gap: 6 }}>
                           <button type="button" onClick={() => { void handleEditSave(r) }}
                             disabled={!editForm.term.trim() || !editForm.definition.trim()}
                             style={{ flex: 1, background: BRAND, color: '#fff', border: 'none', borderRadius: 5, padding: '5px 0', fontSize: fs - 1, cursor: 'pointer', opacity: editForm.term.trim() && editForm.definition.trim() ? 1 : 0.5 }}>
-                            Save
+                            {t('search.edit.save')}
                           </button>
                           <button type="button" onClick={() => setEditingId(null)}
                             style={{ background: 'none', border: `1px solid ${theme.border}`, borderRadius: 5, padding: '5px 10px', fontSize: fs - 1, cursor: 'pointer', color: theme.secondary }}>
-                            Cancel
+                            {t('search.edit.cancel')}
                           </button>
                         </div>
                       </div>
@@ -1558,17 +1780,17 @@ function SearchView({
                         </p>
                         {copiedId === r.id && (
                           <p style={{ fontSize: fs - 2, color: '#92400e', margin: '4px 0 0', textAlign: 'right' }}>
-                            ✓ Copied to clipboard
+                            {t('search.copied')}
                           </p>
                         )}
                         {expanded === r.id && r.aliases.length > 0 && (
                           <p style={{ fontSize: fs - 2, color: theme.muted, margin: '6px 0 0' }}>
-                            Also known as: {r.aliases.join(', ')}
+                            {t('search.alsoKnownAs', { aliases: r.aliases.join(', ') })}
                           </p>
                         )}
                         {expanded === r.id && r.sourceReference && (
                           <p style={{ fontSize: fs - 2, color: theme.muted, margin: '4px 0 0' }}>
-                            Source: {r.sourceReference}
+                            {t('search.sourceRef', { ref: r.sourceReference })}
                           </p>
                         )}
                       </>
@@ -1580,7 +1802,7 @@ function SearchView({
 
             {hasMore && (
               <p style={{ fontSize: fs - 1, color: theme.muted, padding: '8px 16px', borderTop: `1px solid ${theme.border}`, textAlign: 'center' }}>
-                More results exist — try a more specific term.
+                {t('search.hasMore')}
               </p>
             )}
           </div>
@@ -1610,17 +1832,17 @@ function SearchView({
                 }}>
                 {confirmDeleteId === r.id ? (
                   <div style={{ padding: '10px 14px' }}>
-                    <p style={{ fontSize: fs - 2, color: theme.text, margin: '0 0 8px', fontWeight: 600 }}>Delete this term?</p>
+                    <p style={{ fontSize: fs - 2, color: theme.text, margin: '0 0 8px', fontWeight: 600 }}>{t('search.context.deleteThisTerm')}</p>
                     <div style={{ display: 'flex', gap: 6 }}>
                       <button type="button"
                         onClick={() => { void handleTermDelete(r) }}
                         style={{ flex: 1, background: theme.error, color: '#fff', border: 'none', borderRadius: 5, padding: '5px 0', fontSize: fs - 2, cursor: 'pointer' }}>
-                        Delete
+                        {t('search.context.confirm.delete')}
                       </button>
                       <button type="button"
                         onClick={() => setConfirmDeleteId(null)}
                         style={{ flex: 1, background: 'none', border: `1px solid ${theme.border}`, borderRadius: 5, padding: '5px 0', fontSize: fs - 2, cursor: 'pointer', color: theme.secondary }}>
-                        Cancel
+                        {t('search.context.confirm.cancel')}
                       </button>
                     </div>
                   </div>
@@ -1630,13 +1852,13 @@ function SearchView({
                       onMouseEnter={e => (e.currentTarget.style.background = theme.bg)}
                       onMouseLeave={e => (e.currentTarget.style.background = 'none')}
                       onClick={() => startEdit(r)}>
-                      ✏ Edit
+                      {t('search.context.edit')}
                     </button>
                     <button type="button" style={{ ...menuBtn, color: theme.error }}
                       onMouseEnter={e => (e.currentTarget.style.background = theme.bg)}
                       onMouseLeave={e => (e.currentTarget.style.background = 'none')}
                       onClick={() => setConfirmDeleteId(r.id)}>
-                      ✕ Delete
+                      {t('search.context.delete')}
                     </button>
                   </>
                 )}
@@ -1662,6 +1884,7 @@ interface AppData {
 function App() {
   const [dark, setDark] = useStoredPref('pref_dark', false)
   const [fontSize, setFontSize] = useStoredPref('pref_fontSize', 13)
+  const [locale, setLocale] = useStoredPref<Locale>('pref_locale', 'en')
   const theme = dark ? DARK : LIGHT
   const prefs: Prefs = { dark, setDark, fontSize, setFontSize }
 
@@ -1761,7 +1984,10 @@ function App() {
     })
   }, [reload])
 
+  const localeCtxValue = { locale, setLocale, t: makeT(locale) }
+
   return (
+    <LocaleCtx.Provider value={localeCtxValue}>
     <div style={{
       width: '100%',
       height: size.h,
@@ -1834,6 +2060,7 @@ function App() {
         />
       )}
     </div>
+    </LocaleCtx.Provider>
   )
 }
 

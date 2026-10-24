@@ -97,8 +97,10 @@ function crc32(buf) {
 // - Replace background.service_worker with background.scripts (service_worker requires Firefox 128+;
 //   scripts works from Firefox 109 and covers our strict_min_version 115 target)
 // - Drop optional_host_permissions (unsupported before Firefox 128; not used at runtime)
+// - Drop minimum_chrome_version (Chrome-only field; causes AMO validation warning)
+// - Add data_collection_permissions (required by AMO; empty arrays = no data collected)
 const manifest = JSON.parse(readFileSync(join(distDir, 'manifest.json'), 'utf8'))
-const { optional_host_permissions: _dropped, ...base } = manifest
+const { optional_host_permissions: _dropped, minimum_chrome_version: _chrome, ...base } = manifest
 const firefoxManifest = JSON.stringify({
   ...base,
   background: {
@@ -106,6 +108,10 @@ const firefoxManifest = JSON.stringify({
     type: 'module',
   },
   ...GECKO,
+  data_collection_permissions: {
+    required: [],
+    optional: [],
+  },
 }, null, 2)
 
 const files = walkDir(distDir)

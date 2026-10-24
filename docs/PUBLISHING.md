@@ -146,6 +146,8 @@ Produces **`termbox-firefox.zip`** — upload this to addons.mozilla.org.
 The script also transforms the manifest for Firefox compatibility:
 - Replaces `background.service_worker` with `background.scripts` — Firefox < 128 doesn't support service workers in MV3; background scripts work from Firefox 109+
 - Removes `optional_host_permissions` — unsupported before Firefox 128 and not used at runtime
+- Removes `minimum_chrome_version` — Chrome-only field not recognised by Firefox
+- Adds `data_collection_permissions: { required: [], optional: [] }` — required by AMO since 2025; declares that the extension collects no user data
 
 The resulting gecko block:
 ```json

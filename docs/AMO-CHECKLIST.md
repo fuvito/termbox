@@ -12,7 +12,12 @@ npm run package:firefox
 
 This runs `npm run build` then `scripts/zip-firefox.mjs`, which:
 - Zips the same `dist/` folder as the Chrome package
-- Injects `browser_specific_settings.gecko` into `manifest.json` inside the zip (does **not** modify `dist/`)
+- Transforms `manifest.json` inside the zip (does **not** modify `dist/`):
+  - Injects `browser_specific_settings.gecko`
+  - Replaces `background.service_worker` with `background.scripts`
+  - Removes `optional_host_permissions` (unsupported before Firefox 128)
+  - Removes `minimum_chrome_version` (Chrome-only field)
+  - Adds `data_collection_permissions: { required: [], optional: [] }` (required by AMO; declares no data is collected)
 - Writes `termbox-firefox.zip`
 
 The injected block:

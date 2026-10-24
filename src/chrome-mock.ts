@@ -13,6 +13,12 @@ if (!g.chrome?.storage) {
   const PFX = '__termbox_'
   const sessionStore: Record<string, unknown> = {}
 
+  // ?reset wipes all stored data so the next load behaves like a fresh install
+  if (new URLSearchParams(location.search).has('reset')) {
+    Object.keys(localStorage).filter(k => k.startsWith(PFX)).forEach(k => localStorage.removeItem(k))
+    history.replaceState(null, '', location.pathname)
+  }
+
   function makeLocalArea() {
     return {
       get(key: string, cb?: (r: Record<string, unknown>) => void) {

@@ -2049,7 +2049,7 @@ function App() {
     const effectiveId: string | 'all' | null =
       rawActive === 'all' ? 'all'
       : rawActive && srcs.some(s => s.id === rawActive) ? rawActive
-      : srcs.length > 0 ? srcs[0].id
+      : srcs.length > 0 ? 'all'
       : null
     const glossary = await loadGlossary(srcs, effectiveId)
     setAppData({ sources: srcs, activeSourceId: effectiveId, glossary })

@@ -43,9 +43,9 @@ No accounts. No backend. No subscription. Works fully offline.
 
 | Browser | Status |
 |---|---|
-| Chrome | v1 — initial release |
+| Chrome | v1 — available on the Chrome Web Store |
 | Edge | v1 — works without changes (Chromium-based) |
-| Firefox | Planned |
+| Firefox | v1 — publish via `npm run package:firefox` |
 | Safari | Planned |
 
 ---
@@ -171,106 +171,13 @@ To use any sample, open TermBox → **≡** → **Add from file** → select the
 
 ---
 
-## Chrome Web Store listing
+## Publishing
 
-When submitting to the Chrome Web Store, use the following copy. Keywords are woven into the description naturally — the Store's search indexes the description text, so there's no separate keyword field.
+Store listing copy, permission justifications, packaging commands, and submission checklists for all browsers are in **[docs/PUBLISHING.md](docs/PUBLISHING.md)**.
 
-### Single purpose statement
-```
-TermBox lets users load CSV files as searchable glossaries and look up terms, acronyms, and definitions from the browser toolbar.
-```
-This is what you paste into the **"Single purpose"** field during submission. It must describe one narrow action — loading and searching a glossary. Do not mention features like dark mode or resizing here; those are incidental to the core purpose.
-
-### Permission justification
-
-Paste each entry below into the corresponding permission row in the CWS dashboard.
-
-| Permission | Justification |
-|---|---|
-| `storage` | Persists glossary sources, term data, and user preferences (dark mode, font size, popup size) locally on the user's device via `chrome.storage.local`. No data ever leaves the device. |
-| `optional_host_permissions: <all_urls>` | Reserved for a future URL-loading feature. Not used at runtime in the current version — no permission is ever requested or granted. Declared so the capability can be enabled in a future update without a manifest change. |
-
-The manifest declares no other permissions (`activeTab`, `tabs`, `scripting`, `cookies`, `history`, etc. are all absent — they are not needed).
-
-### Remote code
-
-**Answer: No.**
-
-All JavaScript is bundled into the extension package at build time by Vite. Nothing is fetched and executed at runtime. CSV content loaded from user-supplied URLs is treated as plain text data — it is parsed locally and never evaluated as code. The extension contains no `eval()`, `new Function()`, or dynamically injected `<script>` tags.
-
-### Privacy policy URL
-
-```
-https://github.com/fuvito/termbox/blob/main/PRIVACY.md
-```
-
-Paste this into the **"Privacy policy"** field in the CWS dashboard. The page is publicly accessible without login and renders as readable HTML. The policy covers: local-only storage, no analytics, no tracking, and when/why network requests are made.
-
-### Name (45 chars max)
-```
-TermBox — Glossary & Acronym Lookup
-```
-
-### Short description (132 chars max)
-```
-Build your own glossary or acronym finder from any CSV. Instant offline lookup from the toolbar. No account needed.
-```
-
-### Detailed description
-```
-TermBox turns any CSV file into a fast, searchable glossary — available instantly from your browser toolbar.
-
-Perfect for:
-• Acronym lookup and abbreviation expansion
-• Technical glossaries (medical, legal, engineering, AI/ML, finance)
-• Team or company-specific terminology
-• Any domain jargon you need close at hand
-
-HOW IT WORKS
-1. Prepare a CSV with a "term" and "definition" column (plus optional full_form, aliases, domain)
-2. Load it into TermBox from a local file
-3. Search instantly — no internet connection needed
-
-KEY FEATURES
-✓ Build your own custom glossary — bring any CSV
-✓ Create a glossary from scratch — no CSV needed, add terms directly in the app
-✓ Edit and delete individual terms — right-click any result to modify or remove it
-✓ Browse all terms A–Z — flip to a full alphabetical list with one tap
-✓ PIN protection — encrypt any source with AES-256-GCM; unlock once per session
-✓ Acronym expander — add a full_form column to expand abbreviations
-✓ Aliases — one entry can match multiple names (e.g. "PCR", "qPCR", "rt-PCR")
-✓ Multiple glossaries — load several sources and search across all of them
-✓ Search by term name or search inside definitions
-✓ Smart ranking: exact match → prefix → alias → substring
-✓ Export any glossary back to CSV — your data is always yours
-✓ Fully offline after first load — no server, no account, no subscription
-✓ Dark mode, adjustable font size, resizable popup
-
-✓ Open source — MIT licence, code on GitHub
-
-SAMPLE FILES INCLUDED
-The GitHub repo ships with five ready-to-use glossaries:
-• biotest-diagnostics.csv — 67 IVD/medical device terms
-  https://github.com/fuvito/termbox/blob/main/samples/biotest-diagnostics.csv
-• biotest-diagnostics-expanded.csv — expanded IVD/medical device glossary
-  https://github.com/fuvito/termbox/blob/main/samples/biotest-diagnostics-expanded.csv
-• biotest-diagnostics-acronyms-expanded.csv — IVD acronyms with expanded forms
-  https://github.com/fuvito/termbox/blob/main/samples/biotest-diagnostics-acronyms-expanded.csv
-• ai-ml.csv — 82 AI and machine learning terms
-  https://github.com/fuvito/termbox/blob/main/samples/ai-ml.csv
-• ai-ml-expanded.csv — expanded AI/ML glossary with richer definitions
-  https://github.com/fuvito/termbox/blob/main/samples/ai-ml-expanded.csv
-
-PRIVACY
-Stores data only on your device using Chrome's local storage.
-No analytics, no tracking, no external connections.
-```
-
-### Category
-`Productivity`
-
-### Keywords to emphasise in screenshots / promo tile
-glossary, acronym finder, acronym lookup, abbreviation expander, CSV glossary, terminology, term lookup, offline dictionary, custom dictionary
+Per-browser pre-submission checklists:
+- Chrome Web Store: [docs/CWS-CHECKLIST.md](docs/CWS-CHECKLIST.md)
+- Firefox AMO: [docs/AMO-CHECKLIST.md](docs/AMO-CHECKLIST.md)
 
 ---
 
@@ -324,27 +231,19 @@ Then open [http://localhost:5173/popup.html](http://localhost:5173/popup.html).
 | `npm run build` | Production build to `dist/` |
 | `npm run typecheck` | TypeScript type check (no emit) |
 | `npm run icons` | Regenerate `public/icon16/48/128.png` from the Node.js generator script |
+| `npm run package` | Run all quality gates then build and zip for Chrome Web Store → `termbox.zip` |
+| `npm run package:firefox` | Build and zip for Firefox AMO → `termbox-firefox.zip` |
 
-### Packaging for the Chrome Web Store
-
-Use the single command that runs all quality gates before building:
+### Packaging
 
 ```bash
-npm run package
+npm run package           # Chrome → termbox.zip
+npm run package:firefox   # Firefox → termbox-firefox.zip
 ```
 
-This runs `prepackage` automatically before packaging. **All of the following must pass** or the build aborts:
+Both commands run all quality gates (`lint`, `typecheck`, `test:coverage`, `test:e2e`) before building. The build aborts if any gate fails.
 
-| Gate | Script | Requirement |
-|------|--------|-------------|
-| Linter | `npm run lint` | Zero errors |
-| Type check | `npm run typecheck` | Zero errors |
-| Unit tests + coverage | `npm run test:coverage` | All 99 tests pass; ≥ 90% statements, branches, functions, lines |
-| End-to-end tests | `npm run test:e2e` | All 34 Playwright tests pass |
-
-On success, `termbox.zip` is written to the project root (contains the `dist/` contents ready for upload).
-
-Upload `termbox.zip` at the [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole).
+See [docs/PUBLISHING.md](docs/PUBLISHING.md) for store listing copy, submission checklists, and per-browser instructions.
 
 ---
 

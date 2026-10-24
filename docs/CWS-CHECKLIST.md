@@ -110,7 +110,7 @@ TermBox — Glossary & Acronym Lookup
 
 ### Short description (132 chars max)
 ```
-Build your own glossary or acronym finder from any CSV. Instant offline lookup from the toolbar. No account needed.
+Build your own glossary from any CSV. 5 built-in domain glossaries, PIN protection, 12 languages. Fully offline, no account.
 ```
 
 ### Category

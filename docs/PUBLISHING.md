@@ -66,7 +66,7 @@ Produces **`termbox.zip`** — upload this to the CWS dashboard.
 | Field | Value |
 |---|---|
 | **Name** (45 chars) | `TermBox — Glossary & Acronym Lookup` |
-| **Short description** (132 chars) | `Build your own glossary or acronym finder from any CSV. Instant offline lookup from the toolbar. No account needed.` |
+| **Short description** (132 chars) | `Build your own glossary from any CSV. 5 built-in domain glossaries, PIN protection, 12 languages. Fully offline, no account.` |
 | **Category** | Productivity |
 | **Language** | English |
 | **Homepage URL** _(optional)_ | `https://fuatyazar.com/termbox` |

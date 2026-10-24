@@ -11,7 +11,8 @@ const BASE_TERMS = [
   { id: `${SID}_2`, term: 'DNA', fullForm: null, definition: 'Deoxyribonucleic acid — the molecule carrying genetic information', domain: null, sourceReference: null, aliases: [], sourceId: SID, secured: false },
 ]
 
-const BASE_SOURCE = { id: SID, name: 'Test Glossary', type: 'file', url: null, termCount: 3, lastLoaded: new Date().toISOString(), autoRefresh: false, secured: false }
+const BASE_SOURCE = { id: SID, name: 'Test Glossary', type: 'file', url: null, termCount: 3, lastLoaded: new Date().toISOString(), autoRefresh: false, secured: false, author: null, authorUrl: null }
+const AUTHORED_SOURCE = { ...BASE_SOURCE, author: 'Jane Doe', authorUrl: 'https://jane.dev' }
 
 async function seedGlossary(page: Page, extraSource = false) {
   await page.addInitScript(({ sid, sid2, source, terms, extra }) => {
@@ -380,6 +381,7 @@ test.describe('PIN protection', () => {
   })
 
   test('correct PIN unlocks source and shows search', async ({ page }) => {
+
     // Set up PIN
     await page.getByTitle('Add PIN protection').click()
     await page.getByPlaceholder('Choose a PIN (min 4 chars)').fill('open1234')
@@ -403,5 +405,73 @@ test.describe('PIN protection', () => {
     await page.getByPlaceholder('Search terms…').fill('API')
     await page.keyboard.press('Enter')
     await expect(page.getByText('A set of rules for software communication')).toBeVisible()
+  })
+})
+
+// ─── Download dropdown ────────────────────────────────────────────────────────
+
+test.describe('download dropdown', () => {
+  test.beforeEach(async ({ page }) => {
+    await seedGlossary(page)
+    await gotoPopup(page)
+    await page.getByTitle('Manage sources').click()
+    await expect(page.getByText('Glossary Sources')).toBeVisible()
+  })
+
+  test('clicking ↓ opens dropdown with CSV and JSON options', async ({ page }) => {
+    await page.getByRole('button', { name: '↓' }).click()
+    await expect(page.getByRole('menuitem', { name: /CSV/ })).toBeVisible()
+    await expect(page.getByRole('menuitem', { name: /JSON/ })).toBeVisible()
+  })
+
+  test('clicking the overlay closes the dropdown', async ({ page }) => {
+    await page.getByRole('button', { name: '↓' }).click()
+    await expect(page.getByRole('menuitem', { name: /CSV/ })).toBeVisible()
+    // Click top-left corner which hits the fixed dismiss overlay (not the menu)
+    await page.mouse.click(5, 5)
+    await expect(page.getByRole('menuitem', { name: /CSV/ })).not.toBeVisible()
+  })
+})
+
+// ─── Language switcher ────────────────────────────────────────────────────────
+
+test.describe('language switcher', () => {
+  test('opens language modal from header', async ({ page }) => {
+    await gotoPopup(page)
+    await page.getByTitle('Language').click()
+    await expect(page.getByText('Language')).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Install from file…' })).toBeVisible()
+  })
+
+  test('✕ button closes language modal', async ({ page }) => {
+    await seedGlossary(page)
+    await gotoPopup(page)
+    await page.getByTitle('Language').click()
+    // Close the modal with the ✕ button in the modal header (inside the backdrop div)
+    await page.locator('[role="presentation"]').getByRole('button', { name: '✕' }).click()
+    await expect(page.getByPlaceholder('Search terms…')).toBeVisible()
+  })
+})
+
+// ─── About Credits section ────────────────────────────────────────────────────
+
+test.describe('about credits', () => {
+  test('Credits section is shown when a source has an author', async ({ page }) => {
+    await page.addInitScript(({ sid, source, terms }) => {
+      const PFX = '__termbox_'
+      localStorage.setItem(PFX + 'termbox_sources', JSON.stringify([source]))
+      localStorage.setItem(PFX + `termbox_terms_${sid}`, JSON.stringify(terms))
+    }, { sid: SID, source: AUTHORED_SOURCE, terms: BASE_TERMS })
+    await gotoPopup(page)
+    await page.getByTitle('About TermBox').click()
+    await expect(page.getByText('Credits')).toBeVisible()
+    await expect(page.getByText('Jane Doe')).toBeVisible()
+  })
+
+  test('Credits section is hidden when no source has an author', async ({ page }) => {
+    await seedGlossary(page)
+    await gotoPopup(page)
+    await page.getByTitle('About TermBox').click()
+    await expect(page.getByText('Credits')).not.toBeVisible()
   })
 })

@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest'
-import { parseCsv, csvToTermEntries, termEntriesToCsv } from './csv'
+import { describe, expect, it } from 'vitest'
+import { csvToTermEntries, parseCsv, parseSourcePackJson, termEntriesToCsv, termEntriesToSourcePackJson } from './csv'
 import type { TermEntry } from './types'
 
 // ─── parseCsv ─────────────────────────────────────────────────────────────────
@@ -65,6 +65,56 @@ describe('parseCsv', () => {
     // ﻿ is the BOM character Excel prepends to CSV exports
     const result = parseCsv('﻿term,definition\nAPI,A programming interface')
     expect(result[0]!.term).toBe('API')
+  })
+})
+
+// ─── parseCsv with extractMeta ────────────────────────────────────────────────
+
+describe('parseCsv(text, true)', () => {
+  it('returns empty meta when no comment lines are present', () => {
+    const { rows, meta } = parseCsv('term,definition\nAPI,desc', true)
+    expect(rows).toHaveLength(1)
+    expect(meta).toEqual({ author: null, url: null })
+  })
+
+  it('extracts author from a # author: comment line', () => {
+    const { meta } = parseCsv('# author: Jane Doe\nterm,definition\nAPI,desc', true)
+    expect(meta.author).toBe('Jane Doe')
+  })
+
+  it('extracts url from a # url: comment line', () => {
+    const { meta } = parseCsv('# url: https://example.com\nterm,definition\nAPI,desc', true)
+    expect(meta.url).toBe('https://example.com')
+  })
+
+  it('extracts both author and url', () => {
+    const { meta } = parseCsv('# author: Alice\n# url: https://alice.dev\nterm,definition\nAPI,desc', true)
+    expect(meta.author).toBe('Alice')
+    expect(meta.url).toBe('https://alice.dev')
+  })
+
+  it('stops reading comments at first non-comment line', () => {
+    const { rows, meta } = parseCsv('# author: Alice\nterm,definition\n# not a comment row,value\nAPI,desc', true)
+    expect(meta.author).toBe('Alice')
+    expect(rows).toHaveLength(2) // "# not a comment row" becomes a data row after header
+  })
+
+  it('returns empty rows and empty meta for empty input', () => {
+    const { rows, meta } = parseCsv('', true)
+    expect(rows).toEqual([])
+    expect(meta).toEqual({ author: null, url: null })
+  })
+
+  it('returns empty rows but populated meta for comments-only input', () => {
+    const { rows, meta } = parseCsv('# author: Bob', true)
+    expect(rows).toEqual([])
+    expect(meta.author).toBe('Bob')
+  })
+
+  it('ignores unrecognised comment keys', () => {
+    const { meta } = parseCsv('# license: MIT\nterm,definition\nAPI,desc', true)
+    expect(meta.author).toBeNull()
+    expect(meta.url).toBeNull()
   })
 })
 
@@ -199,5 +249,140 @@ describe('termEntriesToCsv', () => {
     expect(fields[1]).toBe('') // full_form
     expect(fields[3]).toBe('') // domain
     expect(fields[4]).toBe('') // source_reference
+  })
+})
+
+// ─── termEntriesToSourcePackJson ──────────────────────────────────────────────
+
+describe('termEntriesToSourcePackJson', () => {
+  const entry: TermEntry = {
+    id: 'src_0', term: 'API', fullForm: 'Application Programming Interface',
+    definition: 'A set of rules for software communication', domain: 'Software',
+    sourceReference: 'RFC 1234', aliases: ['REST API'], sourceId: 'src',
+  }
+
+  it('produces valid JSON with _name and terms array', () => {
+    const json = termEntriesToSourcePackJson([entry], { name: 'My Glossary', author: null, authorUrl: null })
+    const obj = JSON.parse(json)
+    expect(obj._name).toBe('My Glossary')
+    expect(Array.isArray(obj.terms)).toBe(true)
+    expect(obj.terms).toHaveLength(1)
+  })
+
+  it('includes _author when provided', () => {
+    const json = termEntriesToSourcePackJson([entry], { name: 'G', author: 'Alice', authorUrl: null })
+    expect(JSON.parse(json)._author).toBe('Alice')
+  })
+
+  it('omits _author when null', () => {
+    const json = termEntriesToSourcePackJson([entry], { name: 'G', author: null, authorUrl: null })
+    expect(JSON.parse(json)._author).toBeUndefined()
+  })
+
+  it('includes _url when provided', () => {
+    const json = termEntriesToSourcePackJson([entry], { name: 'G', author: null, authorUrl: 'https://example.com' })
+    expect(JSON.parse(json)._url).toBe('https://example.com')
+  })
+
+  it('omits optional term fields when null/empty', () => {
+    const minimal: TermEntry = { ...entry, fullForm: null, domain: null, sourceReference: null, aliases: [] }
+    const obj = JSON.parse(termEntriesToSourcePackJson([minimal], { name: 'G', author: null, authorUrl: null }))
+    const t = obj.terms[0]
+    expect(t.full_form).toBeUndefined()
+    expect(t.domain).toBeUndefined()
+    expect(t.source_reference).toBeUndefined()
+    expect(t.aliases).toBeUndefined()
+  })
+
+  it('produces an empty terms array for no entries', () => {
+    const obj = JSON.parse(termEntriesToSourcePackJson([], { name: 'G', author: null, authorUrl: null }))
+    expect(obj.terms).toEqual([])
+  })
+
+  it('round-trips through parseSourcePackJson', () => {
+    const json = termEntriesToSourcePackJson([entry], { name: 'Round-trip', author: 'Bob', authorUrl: 'https://bob.dev' })
+    const { terms, meta, name } = parseSourcePackJson(json)
+    expect(name).toBe('Round-trip')
+    expect(meta.author).toBe('Bob')
+    expect(meta.url).toBe('https://bob.dev')
+    expect(terms[0]!.term).toBe('API')
+    expect(terms[0]!.fullForm).toBe('Application Programming Interface')
+    expect(terms[0]!.aliases).toEqual(['REST API'])
+  })
+})
+
+// ─── parseSourcePackJson ──────────────────────────────────────────────────────
+
+describe('parseSourcePackJson', () => {
+  const pack = JSON.stringify({
+    _name: 'Test Pack',
+    _author: 'Alice',
+    _url: 'https://alice.dev',
+    terms: [
+      { term: 'API', definition: 'A programming interface', full_form: 'App. Prog. Interface', domain: 'Software', source_reference: 'RFC', aliases: ['REST API', 'Web API'] },
+      { term: 'DNA', definition: 'Genetic molecule' },
+    ],
+  })
+
+  it('parses name, author, and url', () => {
+    const { name, meta } = parseSourcePackJson(pack)
+    expect(name).toBe('Test Pack')
+    expect(meta.author).toBe('Alice')
+    expect(meta.url).toBe('https://alice.dev')
+  })
+
+  it('parses all term fields', () => {
+    const { terms } = parseSourcePackJson(pack)
+    const api = terms[0]!
+    expect(api.term).toBe('API')
+    expect(api.definition).toBe('A programming interface')
+    expect(api.fullForm).toBe('App. Prog. Interface')
+    expect(api.domain).toBe('Software')
+    expect(api.sourceReference).toBe('RFC')
+    expect(api.aliases).toEqual(['REST API', 'Web API'])
+  })
+
+  it('handles missing optional fields as null/empty', () => {
+    const { terms } = parseSourcePackJson(pack)
+    const dna = terms[1]!
+    expect(dna.fullForm).toBeNull()
+    expect(dna.domain).toBeNull()
+    expect(dna.sourceReference).toBeNull()
+    expect(dna.aliases).toEqual([])
+  })
+
+  it('accepts aliases as a semicolon-separated string', () => {
+    const p = JSON.stringify({ terms: [{ term: 'X', definition: 'Y', aliases: 'a;b;c' }] })
+    const { terms } = parseSourcePackJson(p)
+    expect(terms[0]!.aliases).toEqual(['a', 'b', 'c'])
+  })
+
+  it('filters out rows missing term or definition', () => {
+    const p = JSON.stringify({ terms: [
+      { term: '', definition: 'Something' },
+      { term: 'X', definition: '' },
+      { term: 'Y', definition: 'Valid' },
+    ] })
+    const { terms } = parseSourcePackJson(p)
+    expect(terms).toHaveLength(1)
+    expect(terms[0]!.term).toBe('Y')
+  })
+
+  it('returns null name and empty meta when fields are absent', () => {
+    const { name, meta } = parseSourcePackJson(JSON.stringify({ terms: [] }))
+    expect(name).toBeNull()
+    expect(meta).toEqual({ author: null, url: null })
+  })
+
+  it('throws on invalid JSON', () => {
+    expect(() => parseSourcePackJson('not json')).toThrow()
+  })
+
+  it('throws when the root value is an array', () => {
+    expect(() => parseSourcePackJson('[]')).toThrow('Invalid JSON: expected an object')
+  })
+
+  it('throws when terms is not an array', () => {
+    expect(() => parseSourcePackJson(JSON.stringify({ terms: 'oops' }))).toThrow('Invalid JSON: missing "terms" array')
   })
 })

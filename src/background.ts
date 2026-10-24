@@ -1,5 +1,5 @@
 // Minimal MV3 service worker — required by the manifest.
-import { parseCsv, csvToTermEntries } from './csv'
+import { csvToTermEntries, parseCsv } from './csv'
 import { getSources, setSources, setTerms } from './storage'
 
 chrome.runtime.onInstalled.addListener(async ({ reason }) => {

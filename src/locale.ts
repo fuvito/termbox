@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
-import en from './locales/en'
 import de from './locales/de'
+import en from './locales/en'
 import es from './locales/es'
 import fr from './locales/fr'
 import ja from './locales/ja'
@@ -76,7 +76,7 @@ export type TFunc = (key: string, vars?: Record<string, string | number>) => str
 
 export function makeT(locale: Locale): TFunc {
   const strings: Strings = BUILTIN_STRINGS[locale] ?? getCustomStrings(locale) ?? {}
-  const fallback = BUILTIN_STRINGS['en']
+  const fallback = BUILTIN_STRINGS.en
   return (key, vars) => {
     const template = strings[key] ?? fallback[key] ?? key
     if (!vars) return template

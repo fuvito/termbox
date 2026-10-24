@@ -1,19 +1,19 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import type { TermEntry, GlossarySource, SecureSourceMeta } from './types'
-import {
-  getSources, setSources,
-  getTerms, setTerms, deleteTerms,
-  getActiveSourceId, setActiveSourceId,
-  getSecureMeta, setSecureMeta, deleteSecureMeta,
-  getSecureTerms,
-  setSecureTerms,
-  deleteEncryptedBlob,
-  getSessionDek,
-  setSessionDek,
-  clearSessionDek,
-  loadGlossary,
-} from './storage'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { generateDekHex } from './crypto'
+import {
+  clearSessionDek,
+  deleteEncryptedBlob,deleteSecureMeta,deleteTerms,
+  getActiveSourceId, 
+  getSecureMeta, 
+  getSecureTerms,
+  getSessionDek,
+  getSources, 
+  getTerms, 
+  loadGlossary,setActiveSourceId,setSecureMeta, 
+  setSecureTerms,
+  setSessionDek,setSources,setTerms, 
+} from './storage'
+import type { GlossarySource, SecureSourceMeta, TermEntry } from './types'
 
 // ─── chrome mock ──────────────────────────────────────────────────────────────
 // Stub chrome before any module-level code in storage.ts runs.

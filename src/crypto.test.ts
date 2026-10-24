@@ -1,12 +1,12 @@
-import { describe, it, expect } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import {
-  generateSaltHex,
-  generateRecoveryKey,
-  generateDekHex,
+  decryptStr,
   deriveKeyFromPin,
   deriveKeyFromRecoveryKey,
   encryptStr,
-  decryptStr,
+  generateDekHex,
+  generateRecoveryKey,
+  generateSaltHex,
   hashStr,
 } from './crypto'
 

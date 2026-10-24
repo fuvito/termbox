@@ -1,41 +1,41 @@
 import './chrome-mock'
 import '@fontsource-variable/inter'
-import { StrictMode, useState, useEffect, useRef, useCallback } from 'react'
+import { StrictMode, useCallback, useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import type { TermEntry, GlossarySource, SecureSourceMeta } from './types'
-import type { SearchResult } from './search'
-import { rankTerms } from './search'
-import { parseCsv, csvToTermEntries, termEntriesToCsv, termEntriesToSourcePackJson, parseSourcePackJson } from './csv'
-import {
-  LocaleCtx, makeT, useLocale,
-  BUILTIN_LOCALES, BUILTIN_NAMES,
-  normalizeLangCode, getCustomLangCodes, getCustomStrings,
-  saveCustomPack, removeCustomPack,
-} from './locale'
+import {decryptStr, 
+  deriveKeyFromPin, deriveKeyFromRecoveryKey, encryptStr, generateDekHex,generateRecoveryKey, 
+  generateSaltHex, hashStr,
+} from './crypto'
+import { csvToTermEntries, parseCsv, parseSourcePackJson, termEntriesToCsv, termEntriesToSourcePackJson } from './csv'
 import type { Locale, TFunc } from './locale'
 import {
-  generateSaltHex, generateRecoveryKey, generateDekHex,
-  deriveKeyFromPin, deriveKeyFromRecoveryKey, encryptStr, decryptStr, hashStr,
-} from './crypto'
+  BUILTIN_LOCALES, BUILTIN_NAMES,getCustomLangCodes, getCustomStrings,
+  LocaleCtx, makeT, 
+  normalizeLangCode, removeCustomPack,
+  saveCustomPack, useLocale,
+} from './locale'
+import type { SearchResult } from './search'
+import { rankTerms } from './search'
 import {
-  getSources,
-  setSources,
-  getTerms,
-  setTerms,
+  clearSessionDek,
+  deleteEncryptedBlob,
+  deleteSecureMeta,
   deleteTerms,
   getActiveSourceId,
-  setActiveSourceId,
-  loadGlossary,
   getSecureMeta,
-  setSecureMeta,
-  deleteSecureMeta,
   getSecureTerms,
-  setSecureTerms,
-  deleteEncryptedBlob,
   getSessionDek,
+  getSources,
+  getTerms,
+  loadGlossary,
+  setActiveSourceId,
+  setSecureMeta,
+  setSecureTerms,
   setSessionDek,
-  clearSessionDek,
+  setSources,
+  setTerms,
 } from './storage'
+import type { GlossarySource, SecureSourceMeta, TermEntry } from './types'
 
 // ─── Theme ────────────────────────────────────────────────────────────────────
 
@@ -181,7 +181,7 @@ function AboutView({ onBack, theme, prefs, sources }: {
   const customLangCodes = getCustomLangCodes()
   const langPacksWithAuthor = customLangCodes
     .map(code => ({ code, strings: getCustomStrings(code) }))
-    .filter(({ strings }) => strings?.['_author'])
+    .filter(({ strings }) => strings?._author)
 
   const hasCredits = sourcesWithAuthor.length > 0 || langPacksWithAuthor.length > 0
 
@@ -258,7 +258,7 @@ function AboutView({ onBack, theme, prefs, sources }: {
                     <span style={{ fontSize: fs - 2, color: theme.muted, flexShrink: 0 }}>{t('about.langPackCredits')}</span>
                     <span style={{ fontSize: fs - 1, color: theme.secondary, fontWeight: 500, textAlign: 'right', fontFamily: 'monospace', letterSpacing: '0.5px' }}>{code}</span>
                   </div>
-                  <span style={{ fontSize: fs - 1, color: theme.muted }}>{strings?.['_author']}</span>
+                  <span style={{ fontSize: fs - 1, color: theme.muted }}>{strings?._author}</span>
                 </div>
               ))}
             </div>
@@ -317,7 +317,7 @@ function LanguageModal({ theme, prefs, onClose }: {
       if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error()
       const strings = parsed as Record<string, string>
       setPendingStrings(strings)
-      setNameInput(strings['_name'] ? normalizeLangCode(strings['_name']) : '')
+      setNameInput(strings._name ? normalizeLangCode(strings._name) : '')
       setStep('naming')
     } catch {
       setError(t('lang.error.invalidJson'))
@@ -350,11 +350,11 @@ function LanguageModal({ theme, prefs, onClose }: {
 
   function localeDisplayName(l: string) {
     if (BUILTIN_NAMES[l]) return BUILTIN_NAMES[l]
-    const raw = getCustomStrings(l)?.['_name']
+    const raw = getCustomStrings(l)?._name
     return raw ? normalizeLangCode(raw) : ''
   }
 
-  const chip = (label: string, active: boolean): React.CSSProperties => ({
+  const chip = (_label: string, active: boolean): React.CSSProperties => ({
     fontSize: 10, fontWeight: 700, letterSpacing: '0.5px', fontFamily: 'monospace',
     color: active ? '#fff' : theme.text,
     background: active ? BRAND : theme.border,
@@ -1568,7 +1568,7 @@ function SearchView({
 
   const didAutoSearch = useRef(false)
   const fs = prefs.fontSize
-  const { t, locale, setLocale } = useLocale()
+  const { t, locale } = useLocale()
 
   useEffect(() => { inputRef.current?.focus() }, [])
 

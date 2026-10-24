@@ -1,5 +1,5 @@
-import type { TermEntry, GlossarySource, SecureSourceMeta } from './types'
-import { importDekHex, encryptStr, decryptStr } from './crypto'
+import { decryptStr, encryptStr, importDekHex } from './crypto'
+import type { GlossarySource, SecureSourceMeta, TermEntry } from './types'
 
 const SOURCES_KEY = 'termbox_sources'
 const termsKey = (sourceId: string) => `termbox_terms_${sourceId}`

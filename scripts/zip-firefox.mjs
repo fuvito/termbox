@@ -109,6 +109,8 @@ const firefoxManifest = JSON.stringify({
 }, null, 2)
 
 const BUNDLED_SAMPLES = [
+  'biotest-diagnostics.csv',
+  'artificial-intelligence-and-machine-learning.csv',
   'cybersecurity.csv',
   'software-engineering-cloud-devops.csv',
   'finance-business-intelligence.csv',

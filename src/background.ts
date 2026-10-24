@@ -14,22 +14,26 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
 
   const sources = []
   for (const { file, name } of defaults) {
-    const text = await (await fetch(chrome.runtime.getURL(file))).text()
-    const id = crypto.randomUUID()
-    const terms = csvToTermEntries(parseCsv(text), id)
-    await setTerms(id, terms)
-    sources.push({
-      id,
-      name,
-      type: 'file' as const,
-      url: null,
-      termCount: terms.length,
-      lastLoaded: new Date().toISOString(),
-      autoRefresh: false,
-      secured: false,
-      author: null,
-      authorUrl: null,
-    })
+    try {
+      const text = await (await fetch(chrome.runtime.getURL(file))).text()
+      const id = crypto.randomUUID()
+      const terms = csvToTermEntries(parseCsv(text), id)
+      await setTerms(id, terms)
+      sources.push({
+        id,
+        name,
+        type: 'file' as const,
+        url: null,
+        termCount: terms.length,
+        lastLoaded: new Date().toISOString(),
+        autoRefresh: false,
+        secured: false,
+        author: null,
+        authorUrl: null,
+      })
+    } catch {
+      // File not bundled (e.g. unpacked/dev mode) — skip silently
+    }
   }
 
   await setSources(sources)

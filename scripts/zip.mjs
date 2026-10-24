@@ -98,6 +98,8 @@ function crc32(buf) {
 }
 
 const BUNDLED_SAMPLES = [
+  'biotest-diagnostics.csv',
+  'artificial-intelligence-and-machine-learning.csv',
   'cybersecurity.csv',
   'software-engineering-cloud-devops.csv',
   'finance-business-intelligence.csv',

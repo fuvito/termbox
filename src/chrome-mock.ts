@@ -89,8 +89,11 @@ if (!g.chrome?.storage) {
 
     const { csvToTermEntries, parseCsv } = await import('./csv')
     const defaults = [
-      { file: 'biotest-diagnostics.csv', name: 'Biotest Diagnostics' },
       { file: 'artificial-intelligence-and-machine-learning.csv', name: 'AI / ML' },
+      { file: 'biotest-diagnostics.csv', name: 'Biotest Diagnostics' },
+      { file: 'cybersecurity.csv', name: 'Cybersecurity' },
+      { file: 'finance-business-intelligence.csv', name: 'Finance & Business Intelligence' },
+      { file: 'software-engineering-cloud-devops.csv', name: 'Software Engineering & DevOps' },
     ]
     const sources: GlossarySource[] = []
     for (const { file, name } of defaults) {

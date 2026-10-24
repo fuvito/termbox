@@ -383,6 +383,6 @@ describe('parseSourcePackJson', () => {
   })
 
   it('throws when terms is not an array', () => {
-    expect(() => parseSourcePackJson(JSON.stringify({ terms: 'oops' }))).toThrow('Invalid JSON: missing "terms" array')
+    expect(() => parseSourcePackJson(JSON.stringify({ terms: 'oops' }))).toThrow('Not a valid source pack: missing "terms" array')
   })
 })

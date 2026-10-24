@@ -30,7 +30,7 @@ async function seedGlossary(page: Page, extraSource = false) {
 }
 
 async function gotoPopup(page: Page) {
-  await page.goto('/popup.html')
+  await page.goto('/popup.html?noinit')
 }
 
 // ─── Empty state ──────────────────────────────────────────────────────────────

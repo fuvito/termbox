@@ -15,7 +15,7 @@ if (!g.chrome?.storage) {
 
   // ?reset wipes all stored data so the next load behaves like a fresh install
   if (new URLSearchParams(location.search).has('reset')) {
-    Object.keys(localStorage).filter(k => k.startsWith(PFX)).forEach(k => localStorage.removeItem(k))
+    for (const k of Object.keys(localStorage).filter(k => k.startsWith(PFX))) localStorage.removeItem(k)
     history.replaceState(null, '', location.pathname)
   }
 
@@ -82,7 +82,10 @@ if (!g.chrome?.storage) {
   }
 
   // Mirrors background.ts onInstalled logic: load default glossaries on first visit.
+  // Skipped when ?noinit is present (used by E2E tests that seed their own data).
+  const skipInit = new URLSearchParams(location.search).has('noinit')
   void (async () => {
+    if (skipInit) { _devInitResolve(); return }
     const { getSources, setActiveSourceId, setSources, setTerms } = await import('./storage')
     const existing = await getSources()
     if (existing.length > 0) { _devInitResolve(); return }

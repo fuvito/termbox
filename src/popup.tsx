@@ -817,7 +817,7 @@ function SourcesView({
     async function checkPending() {
       const res = await chrome.storage.local.get('termbox_pending_import')
       const pending = res.termbox_pending_import as { content: string; filename: string } | undefined
-      if (!pending) return
+      if (!pending || typeof pending.content !== 'string' || typeof pending.filename !== 'string') return
       await chrome.storage.local.remove('termbox_pending_import')
       const freshSources = await getSources()
       setError(null)

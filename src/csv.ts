@@ -136,7 +136,13 @@ export function parseSourcePackJson(text: string): { terms: TermEntry[]; meta: C
   const parsed = JSON.parse(text) as unknown
   if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error('Invalid JSON: expected an object')
   const obj = parsed as Record<string, unknown>
-  if (!Array.isArray(obj.terms)) throw new Error('Invalid JSON: missing "terms" array')
+  if (!Array.isArray(obj.terms)) {
+    const looksLikeLanguagePack = typeof obj._name === 'string' &&
+      Object.values(obj).every(v => typeof v === 'string')
+    throw new Error(looksLikeLanguagePack
+      ? 'This file is a language pack, not a glossary source pack. Use the 🌐 button to install language packs.'
+      : 'Not a valid source pack: missing "terms" array')
+  }
   const name = typeof obj._name === 'string' ? obj._name : null
   const meta: CsvMeta = {
     author: typeof obj._author === 'string' ? obj._author : null,

@@ -1,12 +1,29 @@
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
-import { resolve } from 'path'
-import { readFileSync } from 'fs'
+import { resolve, relative } from 'path'
+import { readFileSync, existsSync } from 'fs'
 
 const { version } = JSON.parse(readFileSync(resolve(import.meta.dirname, 'package.json'), 'utf-8')) as { version: string }
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    {
+      name: 'serve-samples',
+      configureServer(server) {
+        const samplesDir = resolve(import.meta.dirname, 'samples')
+        server.middlewares.use((req, res, next) => {
+          const name = (req.url ?? '/').split('?')[0].slice(1)
+          if (!name.endsWith('.csv')) return next()
+          const filePath = resolve(samplesDir, name)
+          if (relative(samplesDir, filePath).startsWith('..')) return next()
+          if (!existsSync(filePath)) return next()
+          res.setHeader('Content-Type', 'text/csv; charset=utf-8')
+          res.end(readFileSync(filePath))
+        })
+      },
+    },
+  ],
   define: {
     __APP_VERSION__: JSON.stringify(version),
   },

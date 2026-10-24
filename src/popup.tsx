@@ -1,4 +1,4 @@
-import './chrome-mock'
+import { devInitReady } from './chrome-mock'
 import '@fontsource-variable/inter'
 import { StrictMode, useCallback, useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -2100,7 +2100,7 @@ function App() {
   }
 
   useEffect(() => {
-    void reload().then(async () => {
+    void devInitReady.then(() => reload()).then(async () => {
       const srcs = await getSources()
       for (const src of srcs) {
         if (src.type === 'url' && src.autoRefresh && src.url) {

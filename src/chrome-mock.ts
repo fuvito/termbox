@@ -1,8 +1,13 @@
 // Activates only outside a real Chrome extension context (e.g. `npm run serve`).
 // Backs chrome.storage.local with localStorage and chrome.storage.session with
 // an in-memory object so the popup works in a browser tab.
+import type { GlossarySource } from './types'
+
 // biome-ignore lint/suspicious/noExplicitAny: globalThis needs any to attach chrome mock
 const g = globalThis as any
+
+let _devInitResolve: () => void = () => {}
+export const devInitReady = new Promise<void>(r => { _devInitResolve = r })
 
 if (!g.chrome?.storage) {
   const PFX = '__termbox_'
@@ -60,10 +65,44 @@ if (!g.chrome?.storage) {
       session: makeSessionArea(),
       onChanged: { addListener() {}, removeListener() {} },
     },
-    runtime: { onInstalled: { addListener() {} } },
+    runtime: {
+      onInstalled: { addListener() {} },
+      getURL(path: string) { return `/${path}` },
+    },
     permissions: {
       request(_perms: object, cb: (granted: boolean) => void) { cb(true) },
       contains(_perms: object, cb: (result: boolean) => void) { cb(true) },
     },
   }
+
+  // Mirrors background.ts onInstalled logic: load default glossaries on first visit.
+  void (async () => {
+    const { getSources, setSources, setTerms } = await import('./storage')
+    const existing = await getSources()
+    if (existing.length > 0) { _devInitResolve(); return }
+
+    const { csvToTermEntries, parseCsv } = await import('./csv')
+    const defaults = [
+      { file: 'biotest-diagnostics.csv', name: 'Biotest Diagnostics' },
+      { file: 'artificial-intelligence-and-machine-learning.csv', name: 'AI / ML' },
+    ]
+    const sources: GlossarySource[] = []
+    for (const { file, name } of defaults) {
+      try {
+        const text = await (await fetch(g.chrome.runtime.getURL(file))).text()
+        const id = crypto.randomUUID()
+        const terms = csvToTermEntries(parseCsv(text), id)
+        await setTerms(id, terms)
+        sources.push({
+          id, name, type: 'file', url: null,
+          termCount: terms.length, lastLoaded: new Date().toISOString(),
+          autoRefresh: false, secured: false, author: null, authorUrl: null,
+        })
+      } catch {}
+    }
+    if (sources.length > 0) await setSources(sources)
+    _devInitResolve()
+  })()
+} else {
+  _devInitResolve()
 }

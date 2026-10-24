@@ -10,37 +10,46 @@ if (!g.chrome?.storage) {
 
   function makeLocalArea() {
     return {
-      get(key: string, cb: (r: Record<string, unknown>) => void) {
+      get(key: string, cb?: (r: Record<string, unknown>) => void) {
+        let result: Record<string, unknown>
         try {
           const raw = localStorage.getItem(PFX + key)
-          cb({ [key]: raw !== null ? JSON.parse(raw) : undefined })
-        } catch { cb({}) }
+          result = { [key]: raw !== null ? JSON.parse(raw) : undefined }
+        } catch { result = {} }
+        if (cb) cb(result)
+        return Promise.resolve(result)
       },
-      set(items: Record<string, unknown>, cb: () => void) {
+      set(items: Record<string, unknown>, cb?: () => void) {
         for (const [k, v] of Object.entries(items)) {
           try { localStorage.setItem(PFX + k, JSON.stringify(v)) } catch {}
         }
-        cb()
+        if (cb) cb()
+        return Promise.resolve()
       },
-      remove(key: string, cb: () => void) {
+      remove(key: string, cb?: () => void) {
         try { localStorage.removeItem(PFX + key) } catch {}
-        cb()
+        if (cb) cb()
+        return Promise.resolve()
       },
     }
   }
 
   function makeSessionArea() {
     return {
-      get(key: string, cb: (r: Record<string, unknown>) => void) {
-        cb({ [key]: sessionStore[key] })
+      get(key: string, cb?: (r: Record<string, unknown>) => void) {
+        const result = { [key]: sessionStore[key] }
+        if (cb) cb(result)
+        return Promise.resolve(result)
       },
-      set(items: Record<string, unknown>, cb: () => void) {
+      set(items: Record<string, unknown>, cb?: () => void) {
         Object.assign(sessionStore, items)
-        cb()
+        if (cb) cb()
+        return Promise.resolve()
       },
-      remove(key: string, cb: () => void) {
+      remove(key: string, cb?: () => void) {
         delete sessionStore[key]
-        cb()
+        if (cb) cb()
+        return Promise.resolve()
       },
     }
   }
@@ -49,6 +58,7 @@ if (!g.chrome?.storage) {
     storage: {
       local: makeLocalArea(),
       session: makeSessionArea(),
+      onChanged: { addListener() {}, removeListener() {} },
     },
     runtime: { onInstalled: { addListener() {} } },
     permissions: {

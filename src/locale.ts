@@ -6,6 +6,7 @@ import fr from './locales/fr'
 import ja from './locales/ja'
 import ko from './locales/ko'
 import pt from './locales/pt'
+import rw from './locales/rw'
 import sw from './locales/sw'
 import tr from './locales/tr'
 import vi from './locales/vi'
@@ -13,19 +14,19 @@ import zh from './locales/zh'
 
 export type Locale = string
 
-export const BUILTIN_LOCALES: readonly string[] = ['en', 'de', 'es', 'fr', 'ja', 'ko', 'pt', 'sw', 'tr', 'vi', 'zh']
+export const BUILTIN_LOCALES: readonly string[] = ['en', 'de', 'es', 'fr', 'ja', 'ko', 'pt', 'rw', 'sw', 'tr', 'vi', 'zh']
 export const BUILTIN_NAMES: Record<string, string> = {
   en: 'English', de: 'Deutsch', es: 'Español', fr: 'Français',
-  ja: '日本語', ko: '한국어', pt: 'Português', sw: 'Kiswahili',
-  tr: 'Türkçe', vi: 'Tiếng Việt', zh: '中文',
+  ja: '日本語', ko: '한국어', pt: 'Português', rw: 'Kinyarwanda',
+  sw: 'Kiswahili', tr: 'Türkçe', vi: 'Tiếng Việt', zh: '中文',
 }
 
 type Strings = Record<string, string>
 
 const BUILTIN_STRINGS: Record<string, Strings> = {
   en: en as Strings, de: de as Strings, es: es as Strings, fr: fr as Strings,
-  ja: ja as Strings, ko: ko as Strings, pt: pt as Strings, sw: sw as Strings,
-  tr: tr as Strings, vi: vi as Strings, zh: zh as Strings,
+  ja: ja as Strings, ko: ko as Strings, pt: pt as Strings, rw: rw as Strings,
+  sw: sw as Strings, tr: tr as Strings, vi: vi as Strings, zh: zh as Strings,
 }
 
 const CUSTOM_CODES_KEY = 'pref_custom_lang_codes'

@@ -187,7 +187,7 @@ function AboutView({ onBack, theme, prefs }: {
         <span style={{ fontWeight: 700, color: '#fff', fontSize: 18 }}>{t('about.title')}</span>
       </header>
 
-      <div style={{ flex: 1, padding: '32px 20px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div style={{ flex: 1, overflowY: 'auto', minHeight: 0, padding: '32px 20px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 
         {/* Logo */}
         <div style={{

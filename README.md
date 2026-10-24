@@ -132,6 +132,9 @@ The `samples/` folder contains ready-to-use CSV files you can load straight into
 | `biotest-diagnostics-acronyms-expanded.csv` | IVD / medical device acronyms with fully expanded forms | [Download](https://github.com/fuvito/termbox/blob/main/samples/biotest-diagnostics-acronyms-expanded.csv) |
 | `ai-ml.csv` | 82-term AI and machine learning glossary | [Download](https://github.com/fuvito/termbox/blob/main/samples/ai-ml.csv) |
 | `ai-ml-expanded.csv` | Expanded AI / ML glossary with richer definitions | [Download](https://github.com/fuvito/termbox/blob/main/samples/ai-ml-expanded.csv) |
+| `cybersecurity-acronyms.csv` | 674-term cybersecurity acronym glossary | [Download](https://github.com/fuvito/termbox/blob/main/samples/cybersecurity-acronyms.csv) |
+| `software-engineering-cloud-devops-expanded.csv` | 528-term software engineering, cloud, and DevOps glossary | [Download](https://github.com/fuvito/termbox/blob/main/samples/software-engineering-cloud-devops-expanded.csv) |
+| `finance-business-intelligence-acronyms.csv` | 715-term finance and business intelligence glossary | [Download](https://github.com/fuvito/termbox/blob/main/samples/finance-business-intelligence-acronyms.csv) |
 
 ### [`biotest-diagnostics.csv`](https://github.com/fuvito/termbox/blob/main/samples/biotest-diagnostics.csv)
 
@@ -166,6 +169,47 @@ An 82-term glossary covering the AI and machine learning landscape:
 | Deployment | Inference, Quantisation, Pruning, Distillation, ONNX, GPU, TPU |
 | AI Agents | Agent, Tool Use, MCP, Agentic Loop, Semantic Search, Vector Database |
 | AI Safety | Alignment, Guardrails, Prompt Injection, Jailbreak |
+
+### [`cybersecurity-acronyms.csv`](https://github.com/fuvito/termbox/blob/main/samples/cybersecurity-acronyms.csv)
+
+A 674-term glossary covering the full cybersecurity acronym landscape:
+
+| Domain | Example terms |
+|---|---|
+| Application & Information Security | CORS, CSRF, XSS, CSP, HSTS, OIDC, OAuth 2.0, SAML, SSO, MFA |
+| Cryptography & PKI | AES, RSA, ECC, TLS, mTLS, HMAC, PKI, CA, CRL, OCSP |
+| Network Security | VPN, IDS, IPS, SIEM, WAF, DDoS, BGP Hijack, NAT, DMZ |
+| Cloud & Container Security | CSPM, CWPP, CNAPP, SSPM, CIEM, IAC Scanning |
+| Threat Intelligence | IOC, TTP, APT, CVE, CVSS, CWE, MITRE ATT&CK |
+| Governance & Compliance | GRC, SOC 2, ISO 27001, NIST CSF, PCI DSS, GDPR, HIPAA |
+| Identity & Access | PAM, RBAC, ABAC, ZTA, ZTNA, FIDO2, WebAuthn |
+| Incident Response | DFIR, EDR, XDR, MDR, SOC, SOAR, MTTR, MTTD |
+
+### [`software-engineering-cloud-devops-expanded.csv`](https://github.com/fuvito/termbox/blob/main/samples/software-engineering-cloud-devops-expanded.csv)
+
+A 528-term glossary spanning software engineering, cloud infrastructure, and DevOps:
+
+| Domain | Example terms |
+|---|---|
+| Software Engineering | SOLID, DRY, TDD, BDD, DDD, CQRS, API, REST, gRPC, GraphQL |
+| Cloud & Infrastructure | IaaS, PaaS, SaaS, VPC, CDN, S3, Lambda, EKS, GKE, AKS |
+| DevOps & CI/CD | CI/CD, GitOps, IaC, Terraform, Ansible, Helm, Canary, Blue/Green |
+| Observability | SLI, SLO, SLA, MTTR, MTTF, DORA Metrics, OpenTelemetry, Prometheus |
+| Architecture | Microservices, Event-Driven, CQRS, Saga, Service Mesh, Sidecar |
+| Web & Security | CORS, JWT, OIDC, OAuth, mTLS, WAF, A11Y, i18n, l10n |
+
+### [`finance-business-intelligence-acronyms.csv`](https://github.com/fuvito/termbox/blob/main/samples/finance-business-intelligence-acronyms.csv)
+
+A 715-term glossary covering finance, accounting, and business intelligence:
+
+| Domain | Example terms |
+|---|---|
+| Accounting & Reporting | GAAP, IFRS, P&L, EBITDA, COGS, AR, AP, GL, BS, CFS |
+| Banking & Capital Markets | FX, AUM, NAV, IRR, NPV, DCF, LTV, DTI, WACC, IPO |
+| Tax, Payroll & Business Administration | VAT, GST, W-2, 1099, FICA, FUTA, EIN, ITIN |
+| Financial Risk | VaR, CVaR, Basel III, DSCR, LCR, NSFR, PD, LGD, EAD |
+| Business Intelligence & Analytics | KPI, OKR, NPS, CAC, CLV, MRR, ARR, Churn, Cohort, ARPU |
+| Regulation & Compliance | AML, KYC, FATF, MiFID II, Dodd-Frank, SOX, FINRA |
 
 To use any sample, open TermBox → **≡** → **Add from file** → select the downloaded CSV.
 

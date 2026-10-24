@@ -142,7 +142,11 @@ npm run package:firefox
 Builds `dist/` then injects `browser_specific_settings.gecko` into `manifest.json` inside the zip without modifying `dist/`.
 Produces **`termbox-firefox.zip`** — upload this to addons.mozilla.org.
 
-The injected gecko block:
+The script also transforms the manifest for Firefox compatibility:
+- Replaces `background.service_worker` with `background.scripts` — Firefox < 128 doesn't support service workers in MV3; background scripts work from Firefox 109+
+- Removes `optional_host_permissions` — unsupported before Firefox 128 and not used at runtime
+
+The resulting gecko block:
 ```json
 "browser_specific_settings": {
   "gecko": {

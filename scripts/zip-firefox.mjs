@@ -92,9 +92,21 @@ function crc32(buf) {
   return (crc ^ 0xffffffff) >>> 0
 }
 
-// Patch manifest.json with Firefox gecko block
+// Patch manifest.json for Firefox:
+// - Inject browser_specific_settings.gecko
+// - Replace background.service_worker with background.scripts (service_worker requires Firefox 128+;
+//   scripts works from Firefox 109 and covers our strict_min_version 115 target)
+// - Drop optional_host_permissions (unsupported before Firefox 128; not used at runtime)
 const manifest = JSON.parse(readFileSync(join(distDir, 'manifest.json'), 'utf8'))
-const firefoxManifest = JSON.stringify({ ...manifest, ...GECKO }, null, 2)
+const { optional_host_permissions: _dropped, ...base } = manifest
+const firefoxManifest = JSON.stringify({
+  ...base,
+  background: {
+    scripts: [manifest.background.service_worker],
+    type: 'module',
+  },
+  ...GECKO,
+}, null, 2)
 
 const files = walkDir(distDir)
 writeZip(files, outFile, { 'manifest.json': firefoxManifest })

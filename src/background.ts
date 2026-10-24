@@ -1,6 +1,6 @@
 // Minimal MV3 service worker — required by the manifest.
 import { csvToTermEntries, parseCsv } from './csv'
-import { getSources, setSources, setTerms } from './storage'
+import { getSources, setActiveSourceId, setSources, setTerms } from './storage'
 
 chrome.runtime.onInstalled.addListener(async ({ reason }) => {
   if (reason !== 'install') return
@@ -40,4 +40,6 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
   }
 
   await setSources(sources)
+  const aiMl = sources.find(s => s.name === 'AI / ML')
+  if (aiMl) await setActiveSourceId(aiMl.id)
 })

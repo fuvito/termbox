@@ -83,7 +83,7 @@ if (!g.chrome?.storage) {
 
   // Mirrors background.ts onInstalled logic: load default glossaries on first visit.
   void (async () => {
-    const { getSources, setSources, setTerms } = await import('./storage')
+    const { getSources, setActiveSourceId, setSources, setTerms } = await import('./storage')
     const existing = await getSources()
     if (existing.length > 0) { _devInitResolve(); return }
 
@@ -109,7 +109,11 @@ if (!g.chrome?.storage) {
         })
       } catch {}
     }
-    if (sources.length > 0) await setSources(sources)
+    if (sources.length > 0) {
+      await setSources(sources)
+      const aiMl = sources.find(s => s.name === 'AI / ML')
+      if (aiMl) await setActiveSourceId(aiMl.id)
+    }
     _devInitResolve()
   })()
 } else {

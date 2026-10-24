@@ -42,6 +42,7 @@ export default defineConfig({
       input: {
         popup: resolve(import.meta.dirname, 'popup.html'),
         background: resolve(import.meta.dirname, 'src/background.ts'),
+        importer: resolve(import.meta.dirname, 'importer.html'),
       },
       output: {
         entryFileNames: '[name].js',

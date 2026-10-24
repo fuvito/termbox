@@ -767,10 +767,69 @@ function SourcesView({
   const fs = prefs.fontSize
   const { t } = useLocale()
   const isBusy = loadingId !== null
+  const isFirefox = /Firefox/.test(navigator.userAgent)
 
   function isLocked(sourceId: string) {
     return sources.find(s => s.id === sourceId)?.secured && !unlockedSources.has(sourceId)
   }
+
+  async function importFileContent(content: string, filename: string, currentSources: GlossarySource[] = sources) {
+    const id = crypto.randomUUID()
+    setLoadingId(id)
+    try {
+      let terms: TermEntry[]
+      let sourceName: string
+      let author: string | null
+      let authorUrl: string | null
+      if (filename.toLowerCase().endsWith('.json')) {
+        const { terms: jsonTerms, meta, name } = parseSourcePackJson(content)
+        terms = jsonTerms.map((tt, i) => ({ ...tt, id: `${id}_${i}`, sourceId: id }))
+        sourceName = uniqueName(name ?? autoName(filename, t), currentSources)
+        author = meta.author
+        authorUrl = meta.url
+      } else {
+        const { rows, meta } = parseCsv(content, true)
+        terms = csvToTermEntries(rows, id)
+        sourceName = uniqueName(autoName(filename, t), currentSources)
+        author = meta.author
+        authorUrl = meta.url
+      }
+      const source: GlossarySource = {
+        id, name: sourceName, type: 'file', url: null,
+        termCount: terms.length, lastLoaded: new Date().toISOString(),
+        autoRefresh: false, secured: false, author, authorUrl,
+      }
+      await setSources([...currentSources, source])
+      await setTerms(id, terms)
+      await setActiveSourceId(id)
+      await onReload()
+    } catch (err) {
+      setError((err as Error).message || t('sources.error.failedToLoad'))
+    } finally {
+      setLoadingId(null)
+    }
+  }
+
+  // Firefox: popup closes when file dialog opens, so we open a separate importer window.
+  // When that window saves the file to storage, pick it up here on mount or via listener.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: getSources() reads fresh state; stale importFileContent closure is safe
+  useEffect(() => {
+    async function checkPending() {
+      const res = await chrome.storage.local.get('termbox_pending_import')
+      const pending = res.termbox_pending_import as { content: string; filename: string } | undefined
+      if (!pending) return
+      await chrome.storage.local.remove('termbox_pending_import')
+      const freshSources = await getSources()
+      setError(null)
+      await importFileContent(pending.content, pending.filename, freshSources)
+    }
+    void checkPending()
+    const listener = (changes: Record<string, chrome.storage.StorageChange>) => {
+      if (changes.termbox_pending_import?.newValue) void checkPending()
+    }
+    chrome.storage.onChanged.addListener(listener)
+    return () => chrome.storage.onChanged.removeListener(listener)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   function resetFooter() {
     setShowUrlInput(false)
@@ -833,48 +892,8 @@ function SourcesView({
     if (!file) return
     e.target.value = ''
     setError(null)
-    const id = crypto.randomUUID()
-    setLoadingId(id)
-    try {
-      const text = await loadFromFile(file)
-      let terms: TermEntry[]
-      let sourceName: string
-      let author: string | null
-      let authorUrl: string | null
-      if (file.name.toLowerCase().endsWith('.json')) {
-        const { terms: jsonTerms, meta, name } = parseSourcePackJson(text)
-        terms = jsonTerms.map((t, i) => ({ ...t, id: `${id}_${i}`, sourceId: id }))
-        sourceName = uniqueName(name ?? autoName(file.name, t), sources)
-        author = meta.author
-        authorUrl = meta.url
-      } else {
-        const { rows, meta } = parseCsv(text, true)
-        terms = csvToTermEntries(rows, id)
-        sourceName = uniqueName(autoName(file.name, t), sources)
-        author = meta.author
-        authorUrl = meta.url
-      }
-      const source: GlossarySource = {
-        id,
-        name: sourceName,
-        type: 'file',
-        url: null,
-        termCount: terms.length,
-        lastLoaded: new Date().toISOString(),
-        autoRefresh: false,
-        secured: false,
-        author,
-        authorUrl,
-      }
-      await setSources([...sources, source])
-      await setTerms(id, terms)
-      await setActiveSourceId(id)
-      await onReload()
-    } catch (err) {
-      setError((err as Error).message || t('sources.error.failedToLoad'))
-    } finally {
-      setLoadingId(null)
-    }
+    const text = await loadFromFile(file)
+    await importFileContent(text, file.name)
   }
 
   async function handleRefresh(source: GlossarySource) {
@@ -1265,7 +1284,13 @@ function SourcesView({
           /* ── Default buttons ── */
           <div style={{ display: 'flex', gap: 8 }}>
             <button type="button"
-              onClick={() => fileInputRef.current?.click()}
+              onClick={() => {
+                if (isFirefox) {
+                  void chrome.windows.create({ url: chrome.runtime.getURL('importer.html'), type: 'popup', width: 380, height: 200 })
+                } else {
+                  fileInputRef.current?.click()
+                }
+              }}
               disabled={isBusy}
               style={{ flex: 1, background: 'none', border: `1px solid ${theme.border}`, borderRadius: 6, padding: '8px 0', fontSize: fs, cursor: isBusy ? 'not-allowed' : 'pointer', color: theme.text, opacity: isBusy ? 0.5 : 1 }}>
               {t('sources.btn.addFromFile')}

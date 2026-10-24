@@ -8,8 +8,8 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
   if (existing.length > 0) return
 
   const defaults = [
-    { file: 'biotest-diagnostics-acronyms-expanded.csv', name: 'Biotest Diagnostics' },
-    { file: 'ai-ml-expanded.csv', name: 'AI / ML' },
+    { file: 'biotest-diagnostics.csv', name: 'Biotest Diagnostics' },
+    { file: 'artificial-intelligence-and-machine-learning.csv', name: 'AI / ML' },
   ]
 
   const sources = []

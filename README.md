@@ -127,13 +127,13 @@ The `samples/` folder contains ready-to-use CSV files you can load straight into
 
 | File | Description | Download |
 |---|---|---|
-| `biotest-diagnostics-acronyms-expanded.csv` | IVD / medical device acronyms with expanded forms | [Download](https://github.com/fuvito/termbox/blob/main/samples/biotest-diagnostics-acronyms-expanded.csv) |
-| `ai-ml-expanded.csv` | Expanded AI / ML glossary with richer definitions | [Download](https://github.com/fuvito/termbox/blob/main/samples/ai-ml-expanded.csv) |
-| `cybersecurity-acronyms.csv` | 674-term cybersecurity acronym glossary | [Download](https://github.com/fuvito/termbox/blob/main/samples/cybersecurity-acronyms.csv) |
-| `software-engineering-cloud-devops-expanded.csv` | 528-term software engineering, cloud, and DevOps glossary | [Download](https://github.com/fuvito/termbox/blob/main/samples/software-engineering-cloud-devops-expanded.csv) |
-| `finance-business-intelligence-acronyms.csv` | 715-term finance and business intelligence glossary | [Download](https://github.com/fuvito/termbox/blob/main/samples/finance-business-intelligence-acronyms.csv) |
+| `biotest-diagnostics.csv` | IVD / medical device acronyms with expanded forms | [Download](https://github.com/fuvito/termbox/blob/main/samples/biotest-diagnostics.csv) |
+| `artificial-intelligence-and-machine-learning.csv` | Expanded AI / ML glossary with richer definitions | [Download](https://github.com/fuvito/termbox/blob/main/samples/artificial-intelligence-and-machine-learning.csv) |
+| `cybersecurity.csv` | 674-term cybersecurity acronym glossary | [Download](https://github.com/fuvito/termbox/blob/main/samples/cybersecurity.csv) |
+| `software-engineering-cloud-devops.csv` | 528-term software engineering, cloud, and DevOps glossary | [Download](https://github.com/fuvito/termbox/blob/main/samples/software-engineering-cloud-devops.csv) |
+| `finance-business-intelligence.csv` | 715-term finance and business intelligence glossary | [Download](https://github.com/fuvito/termbox/blob/main/samples/finance-business-intelligence.csv) |
 
-### [`cybersecurity-acronyms.csv`](https://github.com/fuvito/termbox/blob/main/samples/cybersecurity-acronyms.csv)
+### [`cybersecurity.csv`](https://github.com/fuvito/termbox/blob/main/samples/cybersecurity.csv)
 
 A 674-term glossary covering the full cybersecurity acronym landscape:
 
@@ -148,7 +148,7 @@ A 674-term glossary covering the full cybersecurity acronym landscape:
 | Identity & Access | PAM, RBAC, ABAC, ZTA, ZTNA, FIDO2, WebAuthn |
 | Incident Response | DFIR, EDR, XDR, MDR, SOC, SOAR, MTTR, MTTD |
 
-### [`software-engineering-cloud-devops-expanded.csv`](https://github.com/fuvito/termbox/blob/main/samples/software-engineering-cloud-devops-expanded.csv)
+### [`software-engineering-cloud-devops.csv`](https://github.com/fuvito/termbox/blob/main/samples/software-engineering-cloud-devops.csv)
 
 A 528-term glossary spanning software engineering, cloud infrastructure, and DevOps:
 
@@ -161,7 +161,7 @@ A 528-term glossary spanning software engineering, cloud infrastructure, and Dev
 | Architecture | Microservices, Event-Driven, CQRS, Saga, Service Mesh, Sidecar |
 | Web & Security | CORS, JWT, OIDC, OAuth, mTLS, WAF, A11Y, i18n, l10n |
 
-### [`finance-business-intelligence-acronyms.csv`](https://github.com/fuvito/termbox/blob/main/samples/finance-business-intelligence-acronyms.csv)
+### [`finance-business-intelligence.csv`](https://github.com/fuvito/termbox/blob/main/samples/finance-business-intelligence.csv)
 
 A 715-term glossary covering finance, accounting, and business intelligence:
 

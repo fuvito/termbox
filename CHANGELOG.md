@@ -10,9 +10,9 @@ All notable changes to this project are documented here.
 - **Firefox support** — publish to Firefox Add-ons (AMO) via `npm run package:firefox`; produces `termbox-firefox.zip` with Firefox-compatible manifest (background scripts, gecko block injected at zip time without modifying `dist/`)
 - **Firefox: file import workaround** — Firefox closes the extension popup when a file dialog opens; "Add from file" now opens a small `importer.html` window that survives focus loss, saves the file to `chrome.storage`, and hands it back to the popup on reopen
 - **New sample glossaries** — three ready-to-use CSV files added to `samples/`:
-  - `cybersecurity-acronyms.csv` — 674 terms across application security, cryptography, network security, cloud security, GRC, identity, and incident response
-  - `software-engineering-cloud-devops-expanded.csv` — 528 terms covering software engineering, cloud infrastructure, DevOps, observability, and architecture
-  - `finance-business-intelligence-acronyms.csv` — 715 terms spanning accounting, banking, tax, financial risk, BI analytics, and regulation
+  - `cybersecurity.csv` — 674 terms across application security, cryptography, network security, cloud security, GRC, identity, and incident response
+  - `software-engineering-cloud-devops.csv` — 528 terms covering software engineering, cloud infrastructure, DevOps, observability, and architecture
+  - `finance-business-intelligence.csv` — 715 terms spanning accounting, banking, tax, financial risk, BI analytics, and regulation
 
 ### Fixed
 - Firefox "appears to be corrupt" install error — manifest is now transformed for Firefox: `background.service_worker` replaced with `background.scripts`, `optional_host_permissions` removed (both unsupported before Firefox 128)

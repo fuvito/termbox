@@ -278,11 +278,11 @@ The following ready-made CSV files are available to download and load into TermB
 
 | File | Description |
 |---|---|
-| [biotest-diagnostics.csv](https://github.com/fuvito/termbox/blob/main/samples/biotest-diagnostics.csv) | 67-term IVD / medical device glossary |
-| [biotest-diagnostics-expanded.csv](https://github.com/fuvito/termbox/blob/main/samples/biotest-diagnostics-expanded.csv) | Expanded IVD / medical device glossary |
-| [biotest-diagnostics-acronyms-expanded.csv](https://github.com/fuvito/termbox/blob/main/samples/biotest-diagnostics-acronyms-expanded.csv) | IVD / medical device acronyms with expanded forms |
-| [ai-ml.csv](https://github.com/fuvito/termbox/blob/main/samples/ai-ml.csv) | 82-term AI and machine learning glossary |
-| [ai-ml-expanded.csv](https://github.com/fuvito/termbox/blob/main/samples/ai-ml-expanded.csv) | Expanded AI / ML glossary |
+| [biotest-diagnostics.csv](https://github.com/fuvito/termbox/blob/main/samples/biotest-diagnostics.csv) | IVD / medical device acronyms with expanded forms |
+| [artificial-intelligence-and-machine-learning.csv](https://github.com/fuvito/termbox/blob/main/samples/artificial-intelligence-and-machine-learning.csv) | Expanded AI / ML glossary with richer definitions |
+| [cybersecurity.csv](https://github.com/fuvito/termbox/blob/main/samples/cybersecurity.csv) | 674-term cybersecurity acronym glossary |
+| [software-engineering-cloud-devops.csv](https://github.com/fuvito/termbox/blob/main/samples/software-engineering-cloud-devops.csv) | 528-term software engineering, cloud, and DevOps glossary |
+| [finance-business-intelligence.csv](https://github.com/fuvito/termbox/blob/main/samples/finance-business-intelligence.csv) | 715-term finance and business intelligence glossary |
 
 Download any file and load it via **≡ → Add from file**.
 

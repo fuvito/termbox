@@ -98,9 +98,9 @@ function crc32(buf) {
 }
 
 const BUNDLED_SAMPLES = [
-  'cybersecurity-acronyms.csv',
-  'software-engineering-cloud-devops-expanded.csv',
-  'finance-business-intelligence-acronyms.csv',
+  'cybersecurity.csv',
+  'software-engineering-cloud-devops.csv',
+  'finance-business-intelligence.csv',
 ]
 
 const files = walkDir(distDir)

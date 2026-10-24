@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client'
 import type { TermEntry, GlossarySource, SecureSourceMeta } from './types'
 import type { SearchResult } from './search'
 import { rankTerms } from './search'
-import { parseCsv, csvToTermEntries, termEntriesToCsv, parseSourcePackJson } from './csv'
+import { parseCsv, csvToTermEntries, termEntriesToCsv, termEntriesToSourcePackJson, parseSourcePackJson } from './csv'
 import {
   LocaleCtx, makeT, useLocale,
   BUILTIN_LOCALES, BUILTIN_NAMES,
@@ -757,6 +757,7 @@ function SourcesView({
   const [error, setError] = useState<string | null>(null)
   const [newGlossaryMode, setNewGlossaryMode] = useState(false)
   const [newGlossaryName, setNewGlossaryName] = useState('')
+  const [downloadMenuId, setDownloadMenuId] = useState<string | null>(null)
   const [addTermSourceId, setAddTermSourceId] = useState<string | null>(null)
   const [newTerm, setNewTerm] = useState({ term: '', fullForm: '', definition: '' })
   const [managingSourceId, setManagingSourceId] = useState<string | null>(null)
@@ -953,6 +954,31 @@ function SourcesView({
     a.download = `${source.name.toLowerCase().replace(/\s+/g, '-')}.csv`
     a.click()
     URL.revokeObjectURL(url)
+    setDownloadMenuId(null)
+  }
+
+  async function handleDownloadJson(source: GlossarySource) {
+    if (isLocked(source.id)) {
+      onRequestUnlock(source.id, () => { void handleDownloadJson(source) })
+      return
+    }
+    let terms: TermEntry[]
+    if (source.secured) {
+      const dek = await getSessionDek(source.id)
+      if (!dek) return
+      terms = await getSecureTerms(source.id, dek)
+    } else {
+      terms = await getTerms(source.id)
+    }
+    const json = termEntriesToSourcePackJson(terms, { name: source.name, author: source.author, authorUrl: source.authorUrl })
+    const blob = new Blob([json], { type: 'application/json;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `${source.name.toLowerCase().replace(/\s+/g, '-')}.json`
+    a.click()
+    URL.revokeObjectURL(url)
+    setDownloadMenuId(null)
   }
 
   const iconBtn: React.CSSProperties = {
@@ -1062,13 +1088,38 @@ function SourcesView({
                 style={{ ...iconBtn, fontSize: 16, opacity: isBusy ? 0.4 : 1 }}>
                 +
               </button>
-              <button type="button"
-                onClick={() => { void handleDownload(source) }}
-                disabled={isBusy}
-                title={t('sources.download.title')}
-                style={{ ...iconBtn, fontSize: 15, opacity: isBusy ? 0.4 : 1 }}>
-                ↓
-              </button>
+              <div style={{ position: 'relative' }}>
+                <button type="button"
+                  onClick={() => setDownloadMenuId(downloadMenuId === source.id ? null : source.id)}
+                  disabled={isBusy}
+                  title={t('sources.download.title')}
+                  style={{ ...iconBtn, fontSize: 15, opacity: isBusy ? 0.4 : 1 }}>
+                  ↓
+                </button>
+                {downloadMenuId === source.id && (
+                  // biome-ignore lint/a11y/noStaticElementInteractions: dismiss overlay
+                  <div role="presentation"
+                    style={{ position: 'fixed', inset: 0, zIndex: 10 }}
+                    onClick={() => setDownloadMenuId(null)}
+                    onKeyDown={e => { if (e.key === 'Escape') setDownloadMenuId(null) }}>
+                    <div role="menu"
+                      style={{ position: 'absolute', top: '100%', right: 0, background: theme.surface, border: `1px solid ${theme.border}`, borderRadius: 6, boxShadow: '0 4px 12px rgba(0,0,0,0.15)', zIndex: 11, minWidth: 90, overflow: 'hidden' }}
+                      onClick={e => e.stopPropagation()}
+                      onKeyDown={e => e.stopPropagation()}>
+                      <button type="button" role="menuitem"
+                        onClick={() => { void handleDownload(source) }}
+                        style={{ display: 'block', width: '100%', padding: '8px 12px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: prefs.fontSize - 1, color: theme.text, fontFamily: 'inherit' }}>
+                        {t('sources.download.csv')}
+                      </button>
+                      <button type="button" role="menuitem"
+                        onClick={() => { void handleDownloadJson(source) }}
+                        style={{ display: 'block', width: '100%', padding: '8px 12px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: prefs.fontSize - 1, color: theme.text, fontFamily: 'inherit' }}>
+                        {t('sources.download.json')}
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
               <button type="button"
                 onClick={() => setConfirmDeleteSourceId(source.id)}
                 disabled={isBusy}

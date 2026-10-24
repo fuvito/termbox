@@ -77,6 +77,21 @@ export function parseCsv(text: string, extractMeta?: true): Record<string, strin
   return extractMeta ? { rows: result, meta } : result
 }
 
+export function termEntriesToSourcePackJson(terms: TermEntry[], source: { name: string; author: string | null; authorUrl: string | null }): string {
+  const obj: Record<string, unknown> = { _name: source.name }
+  if (source.author) obj._author = source.author
+  if (source.authorUrl) obj._url = source.authorUrl
+  obj.terms = terms.map(t => {
+    const entry: Record<string, unknown> = { term: t.term, definition: t.definition }
+    if (t.fullForm) entry.full_form = t.fullForm
+    if (t.domain) entry.domain = t.domain
+    if (t.sourceReference) entry.source_reference = t.sourceReference
+    if (t.aliases.length) entry.aliases = t.aliases
+    return entry
+  })
+  return JSON.stringify(obj, null, 2)
+}
+
 export function termEntriesToCsv(terms: TermEntry[]): string {
   const headers = ['term', 'full_form', 'definition', 'domain', 'source_reference', 'aliases']
   const csvEscape = (v: string) =>

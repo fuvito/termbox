@@ -1096,29 +1096,27 @@ function SourcesView({
                   style={{ ...iconBtn, fontSize: 15, opacity: isBusy ? 0.4 : 1 }}>
                   ↓
                 </button>
-                {downloadMenuId === source.id && (
-                  // biome-ignore lint/a11y/noStaticElementInteractions: dismiss overlay
+                {downloadMenuId === source.id && (<>
+                  {/* biome-ignore lint/a11y/noStaticElementInteractions: dismiss overlay */}
                   <div role="presentation"
                     style={{ position: 'fixed', inset: 0, zIndex: 10 }}
                     onClick={() => setDownloadMenuId(null)}
-                    onKeyDown={e => { if (e.key === 'Escape') setDownloadMenuId(null) }}>
-                    <div role="menu"
-                      style={{ position: 'absolute', top: '100%', right: 0, background: theme.surface, border: `1px solid ${theme.border}`, borderRadius: 6, boxShadow: '0 4px 12px rgba(0,0,0,0.15)', zIndex: 11, minWidth: 90, overflow: 'hidden' }}
-                      onClick={e => e.stopPropagation()}
-                      onKeyDown={e => e.stopPropagation()}>
-                      <button type="button" role="menuitem"
-                        onClick={() => { void handleDownload(source) }}
-                        style={{ display: 'block', width: '100%', padding: '8px 12px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: prefs.fontSize - 1, color: theme.text, fontFamily: 'inherit' }}>
-                        {t('sources.download.csv')}
-                      </button>
-                      <button type="button" role="menuitem"
-                        onClick={() => { void handleDownloadJson(source) }}
-                        style={{ display: 'block', width: '100%', padding: '8px 12px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: prefs.fontSize - 1, color: theme.text, fontFamily: 'inherit' }}>
-                        {t('sources.download.json')}
-                      </button>
-                    </div>
+                    onKeyDown={e => { if (e.key === 'Escape') setDownloadMenuId(null) }}
+                  />
+                  <div role="menu"
+                    style={{ position: 'absolute', top: '100%', right: 0, background: theme.surface, border: `1px solid ${theme.border}`, borderRadius: 6, boxShadow: '0 4px 12px rgba(0,0,0,0.15)', zIndex: 11, minWidth: 90, overflow: 'hidden' }}>
+                    <button type="button" role="menuitem"
+                      onClick={() => { void handleDownload(source) }}
+                      style={{ display: 'block', width: '100%', padding: '8px 12px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: prefs.fontSize - 1, color: theme.text, fontFamily: 'inherit' }}>
+                      {t('sources.download.csv')}
+                    </button>
+                    <button type="button" role="menuitem"
+                      onClick={() => { void handleDownloadJson(source) }}
+                      style={{ display: 'block', width: '100%', padding: '8px 12px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: prefs.fontSize - 1, color: theme.text, fontFamily: 'inherit' }}>
+                      {t('sources.download.json')}
+                    </button>
                   </div>
-                )}
+                </>)}
               </div>
               <button type="button"
                 onClick={() => setConfirmDeleteSourceId(source.id)}

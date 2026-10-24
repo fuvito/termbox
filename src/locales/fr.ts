@@ -15,6 +15,10 @@ const fr: Record<string, string> = {
   'about.whatsNew': 'Nouveautés',
   'about.privacyPolicy': 'Politique de confidentialité',
   'about.termsConditions': 'Conditions générales',
+  'about.credits': 'Crédits',
+  'about.glossaryCredits': 'Glossaire',
+  'about.langPackCredits': 'Pack de langue',
+  'about.visitSource': 'Visiter la source',
 
   'pin.thisSource': 'cette source',
   'pin.cancel': 'Annuler',

@@ -15,6 +15,10 @@ const tr: Record<string, string> = {
   'about.whatsNew': 'Yenilikler',
   'about.privacyPolicy': 'Gizlilik Politikası',
   'about.termsConditions': 'Şartlar ve Koşullar',
+  'about.credits': 'Katkılar',
+  'about.glossaryCredits': 'Sözlük',
+  'about.langPackCredits': 'Dil paketi',
+  'about.visitSource': 'Kaynağa git',
 
   'pin.thisSource': 'bu kaynak',
   'pin.cancel': 'İptal',
@@ -140,6 +144,21 @@ const tr: Record<string, string> = {
   'header.manageSources': 'Kaynakları yönet',
   'header.about': 'TermBox Hakkında',
   'header.language': 'Dil değiştir',
+
+  'lang.title': 'Dil',
+  'lang.installFromFile': 'Dosyadan yükle…',
+  'lang.naming.hint': 'Bu paket için bir kod gir (1–3 harf). Kısa kodlar # ile tamamlanır.',
+  'lang.naming.placeholder': 'örn. abc',
+  'lang.naming.install': 'Yükle',
+  'lang.naming.cancel': 'İptal',
+  'lang.overwrite.title': '{code} değiştirilsin mi?',
+  'lang.overwrite.body': 'Bu kodla bir paket zaten yüklü. Yeni dosyayla değiştirilsin mi?',
+  'lang.overwrite.confirm': 'Değiştir',
+  'lang.overwrite.back': 'Geri',
+  'lang.remove.title': 'Bu dil paketini kaldır',
+  'lang.remove.confirm': 'Kaldır',
+  'lang.remove.cancel': 'İptal',
+  'lang.error.invalidJson': 'Dosya geçerli bir JSON değil',
 }
 
 export default tr

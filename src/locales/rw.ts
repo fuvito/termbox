@@ -15,6 +15,10 @@ const rw: Record<string, string> = {
   'about.whatsNew': 'Ibintu Bishya',
   'about.privacyPolicy': "Politiki y'Ibanga",
   'about.termsConditions': 'Amabwiriza n\'Ibisabwa',
+  'about.credits': 'Indangamuntu',
+  'about.glossaryCredits': 'Inkoranyamagambo',
+  'about.langPackCredits': 'Agapaketi k\'ururimi',
+  'about.visitSource': 'Sura inkomoko',
 
   'pin.thisSource': 'inkomoko iyi',
   'pin.cancel': 'Hagarika',

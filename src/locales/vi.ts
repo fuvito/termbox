@@ -15,6 +15,10 @@ const vi: Record<string, string> = {
   'about.whatsNew': 'Có gì mới',
   'about.privacyPolicy': 'Chính sách bảo mật',
   'about.termsConditions': 'Điều khoản & Điều kiện',
+  'about.credits': 'Ghi công',
+  'about.glossaryCredits': 'Thuật ngữ',
+  'about.langPackCredits': 'Gói ngôn ngữ',
+  'about.visitSource': 'Xem nguồn',
 
   'pin.thisSource': 'nguồn này',
   'pin.cancel': 'Hủy',

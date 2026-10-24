@@ -15,6 +15,10 @@ const sw: Record<string, string> = {
   'about.whatsNew': 'Mambo Mapya',
   'about.privacyPolicy': 'Sera ya Faragha',
   'about.termsConditions': 'Masharti na Hali',
+  'about.credits': 'Heshima',
+  'about.glossaryCredits': 'Faharasa',
+  'about.langPackCredits': 'Kifurushi cha lugha',
+  'about.visitSource': 'Tembelea chanzo',
 
   'pin.thisSource': 'chanzo hiki',
   'pin.cancel': 'Ghairi',

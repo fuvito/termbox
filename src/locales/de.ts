@@ -15,6 +15,10 @@ const de: Record<string, string> = {
   'about.whatsNew': 'Was ist neu',
   'about.privacyPolicy': 'Datenschutzrichtlinie',
   'about.termsConditions': 'Nutzungsbedingungen',
+  'about.credits': 'Mitwirkende',
+  'about.glossaryCredits': 'Glossar',
+  'about.langPackCredits': 'Sprachpaket',
+  'about.visitSource': 'Quelle besuchen',
 
   'pin.thisSource': 'diese Quelle',
   'pin.cancel': 'Abbrechen',
@@ -140,6 +144,21 @@ const de: Record<string, string> = {
   'header.manageSources': 'Quellen verwalten',
   'header.about': 'Über TermBox',
   'header.language': 'Sprache wechseln',
+
+  'lang.title': 'Sprache',
+  'lang.installFromFile': 'Aus Datei installieren…',
+  'lang.naming.hint': 'Gib einen Code für dieses Paket ein (1–3 Buchstaben). Kürzere Codes werden mit # aufgefüllt.',
+  'lang.naming.placeholder': 'z.B. abc',
+  'lang.naming.install': 'Installieren',
+  'lang.naming.cancel': 'Abbrechen',
+  'lang.overwrite.title': '{code} ersetzen?',
+  'lang.overwrite.body': 'Ein Paket mit diesem Code ist bereits installiert. Mit der neuen Datei ersetzen?',
+  'lang.overwrite.confirm': 'Ersetzen',
+  'lang.overwrite.back': 'Zurück',
+  'lang.remove.title': 'Dieses Sprachpaket entfernen',
+  'lang.remove.confirm': 'Entfernen',
+  'lang.remove.cancel': 'Abbrechen',
+  'lang.error.invalidJson': 'Datei ist kein gültiges JSON',
 }
 
 export default de

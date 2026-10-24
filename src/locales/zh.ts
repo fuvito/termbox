@@ -15,6 +15,10 @@ const zh: Record<string, string> = {
   'about.whatsNew': '最新动态',
   'about.privacyPolicy': '隐私政策',
   'about.termsConditions': '条款与条件',
+  'about.credits': '致谢',
+  'about.glossaryCredits': '词汇表',
+  'about.langPackCredits': '语言包',
+  'about.visitSource': '访问来源',
 
   'pin.thisSource': '此来源',
   'pin.cancel': '取消',

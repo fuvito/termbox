@@ -15,6 +15,10 @@ const es: Record<string, string> = {
   'about.whatsNew': 'Novedades',
   'about.privacyPolicy': 'Política de privacidad',
   'about.termsConditions': 'Términos y condiciones',
+  'about.credits': 'Créditos',
+  'about.glossaryCredits': 'Glosario',
+  'about.langPackCredits': 'Paquete de idioma',
+  'about.visitSource': 'Visitar fuente',
 
   'pin.thisSource': 'esta fuente',
   'pin.cancel': 'Cancelar',
@@ -140,6 +144,21 @@ const es: Record<string, string> = {
   'header.manageSources': 'Gestionar fuentes',
   'header.about': 'Acerca de TermBox',
   'header.language': 'Cambiar idioma',
+
+  'lang.title': 'Idioma',
+  'lang.installFromFile': 'Instalar desde archivo…',
+  'lang.naming.hint': 'Ingresa un código para este paquete (1–3 letras). Los códigos más cortos se completan con #.',
+  'lang.naming.placeholder': 'ej. abc',
+  'lang.naming.install': 'Instalar',
+  'lang.naming.cancel': 'Cancelar',
+  'lang.overwrite.title': '¿Reemplazar {code}?',
+  'lang.overwrite.body': 'Ya hay un paquete con este código instalado. ¿Reemplazarlo con el nuevo archivo?',
+  'lang.overwrite.confirm': 'Reemplazar',
+  'lang.overwrite.back': 'Atrás',
+  'lang.remove.title': 'Eliminar este paquete de idioma',
+  'lang.remove.confirm': 'Eliminar',
+  'lang.remove.cancel': 'Cancelar',
+  'lang.error.invalidJson': 'El archivo no es JSON válido',
 }
 
 export default es

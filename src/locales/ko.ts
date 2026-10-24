@@ -15,6 +15,10 @@ const ko: Record<string, string> = {
   'about.whatsNew': '새로운 기능',
   'about.privacyPolicy': '개인정보처리방침',
   'about.termsConditions': '이용약관',
+  'about.credits': '크레딧',
+  'about.glossaryCredits': '용어집',
+  'about.langPackCredits': '언어 팩',
+  'about.visitSource': '출처 방문',
 
   'pin.thisSource': '이 소스',
   'pin.cancel': '취소',

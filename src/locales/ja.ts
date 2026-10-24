@@ -15,6 +15,10 @@ const ja: Record<string, string> = {
   'about.whatsNew': '新着情報',
   'about.privacyPolicy': 'プライバシーポリシー',
   'about.termsConditions': '利用規約',
+  'about.credits': 'クレジット',
+  'about.glossaryCredits': '用語集',
+  'about.langPackCredits': '言語パック',
+  'about.visitSource': 'ソースを開く',
 
   'pin.thisSource': 'このソース',
   'pin.cancel': 'キャンセル',

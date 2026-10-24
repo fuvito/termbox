@@ -291,11 +291,11 @@ const HTML = /* html */`<!DOCTYPE html>
     <p class="tagline">Glossary &amp; Acronym Lookup</p>
 
     <div class="feats">
-      <span>Load any CSV</span><span class="dot">·</span>
-      <span>Create from scratch</span><span class="dot">·</span>
-      <span>Browse A–Z</span>
+      <span>CSV &amp; JSON glossaries</span><span class="dot">·</span>
+      <span>Browse A–Z</span><span class="dot">·</span>
+      <span>PIN&nbsp;protection</span>
       <span class="dot">·</span>
-      <span>PIN&nbsp;protection</span><span class="dot">·</span>
+      <span>12&nbsp;languages</span><span class="dot">·</span>
       <span>Fully offline</span><span class="dot">·</span>
       <span>Free</span>
     </div>

@@ -25,9 +25,11 @@ function e(sid, i, term, fullForm, def, domain, aliases = []) {
 }
 
 const BIO_SRC = { id: S1, name: 'Biotest Diagnostics', type: 'file', url: null,
-  termCount: 67, lastLoaded: AGO_1H, autoRefresh: false, secured: false }
+  termCount: 67, lastLoaded: AGO_1H, autoRefresh: false, secured: false,
+  author: 'Dr. A. Fischer', authorUrl: null }
 const AI_SRC  = { id: S2, name: 'AI / ML', type: 'file', url: null,
-  termCount: 82, lastLoaded: AGO_2H, autoRefresh: false, secured: false }
+  termCount: 82, lastLoaded: AGO_2H, autoRefresh: false, secured: false,
+  author: null, authorUrl: null }
 
 const BIO = [
   e(S1,  0, 'PCR',   'Polymerase Chain Reaction',
@@ -135,14 +137,14 @@ function portOpen(port) {
   })
 }
 
-async function shot(browser, filename, { dark = false, seed, interact }) {
+async function shot(browser, filename, { dark = false, locale = null, seed, interact }) {
   const ctx = await browser.newContext({
     viewport: { width: W, height: H },
     permissions: ['clipboard-read', 'clipboard-write'],
   })
   const page = await ctx.newPage()
 
-  await page.addInitScript(({ src, trm, aid, dark: d }) => {
+  await page.addInitScript(({ src, trm, aid, dark: d, locale: loc }) => {
     const P = '__termbox_'
     localStorage.setItem(P + 'termbox_sources', JSON.stringify(src))
     for (const [sid, terms] of Object.entries(trm)) {
@@ -150,7 +152,8 @@ async function shot(browser, filename, { dark = false, seed, interact }) {
     }
     localStorage.setItem(P + 'termbox_prefs', JSON.stringify({ activeSourceId: aid }))
     if (d) localStorage.setItem('pref_dark', 'true')
-  }, { ...seed, dark })
+    if (loc) localStorage.setItem('pref_locale', JSON.stringify(loc))
+  }, { ...seed, dark, locale })
 
   await page.goto(POPUP, { waitUntil: 'domcontentloaded' })
   await page.waitForSelector('#root > *')   // React mounted
@@ -255,6 +258,63 @@ async function main() {
         })
         await attentionBtn.click()
         await sleep(120)
+      },
+    })
+
+    // 4 — Dark mode search (AI/ML, "llm" query)
+    await shot(browser, 'dark_search.png', {
+      dark: true,
+      seed: { src: [BIO_SRC, AI_SRC], trm: { [S1]: BIO, [S2]: AI }, aid: S2 },
+      interact: async (page) => {
+        await page.getByPlaceholder('Search terms…').fill('llm')
+        await page.keyboard.press('Enter')
+        await page.waitForSelector('ul li')
+      },
+    })
+
+    // 5 — Chinese locale: search view with query
+    await shot(browser, 'language_zh.png', {
+      locale: 'zh',
+      seed: { src: [BIO_SRC, AI_SRC], trm: { [S1]: BIO, [S2]: AI }, aid: S1 },
+      interact: async (page) => {
+        await page.getByPlaceholder('搜索词条…').fill('pcr')
+        await page.keyboard.press('Enter')
+        await page.waitForSelector('ul li')
+      },
+    })
+
+    // 6 — Japanese locale: browse view
+    await shot(browser, 'language_ja.png', {
+      locale: 'ja',
+      seed: { src: [AI_SRC], trm: { [S2]: AI }, aid: S2 },
+      interact: async (page) => {
+        await page.getByTitle('すべての用語をA–Z順で表示').click()
+        await page.waitForSelector('strong')
+      },
+    })
+
+    // 7 — Language switcher modal open
+    await shot(browser, 'language_switcher.png', {
+      seed: { src: [BIO_SRC, AI_SRC], trm: { [S1]: BIO, [S2]: AI }, aid: S1 },
+      interact: async (page) => {
+        await page.getByTitle('Language').click()
+        await page.waitForSelector('text=Language')
+        await sleep(100)
+      },
+    })
+
+    // 8 — About view scrolled to Credits section (BIO_SRC has author)
+    await shot(browser, 'about_credits.png', {
+      seed: { src: [BIO_SRC, AI_SRC], trm: { [S1]: BIO, [S2]: AI }, aid: S1 },
+      interact: async (page) => {
+        await page.getByTitle('About TermBox').click()
+        await page.waitForSelector('text=Credits')
+        // Scroll the about panel to the bottom to reveal Credits
+        await page.evaluate(() => {
+          const scrollable = document.querySelector('[style*="overflow-y: auto"], [style*="overflow-y:auto"]')
+          if (scrollable) scrollable.scrollTop = scrollable.scrollHeight
+        })
+        await sleep(150)
       },
     })
 

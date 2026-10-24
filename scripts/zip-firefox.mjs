@@ -108,17 +108,6 @@ const firefoxManifest = JSON.stringify({
   ...GECKO,
 }, null, 2)
 
-const BUNDLED_SAMPLES = [
-  'biotest-diagnostics.csv',
-  'artificial-intelligence-and-machine-learning.csv',
-  'cybersecurity.csv',
-  'software-engineering-cloud-devops.csv',
-  'finance-business-intelligence.csv',
-]
-
 const files = walkDir(distDir)
-for (const name of BUNDLED_SAMPLES) {
-  files.push({ full: join(root, 'samples', name), rel: name })
-}
 writeZip(files, outFile, { 'manifest.json': firefoxManifest })
 console.log(`Packaged ${files.length} files → termbox-firefox.zip  (gecko id: termbox@fuvito, min Firefox 115)`)

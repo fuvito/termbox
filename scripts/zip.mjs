@@ -97,17 +97,6 @@ function crc32(buf) {
   return (crc ^ 0xffffffff) >>> 0
 }
 
-const BUNDLED_SAMPLES = [
-  'biotest-diagnostics.csv',
-  'artificial-intelligence-and-machine-learning.csv',
-  'cybersecurity.csv',
-  'software-engineering-cloud-devops.csv',
-  'finance-business-intelligence.csv',
-]
-
 const files = walkDir(distDir)
-for (const name of BUNDLED_SAMPLES) {
-  files.push({ full: join(root, 'samples', name), rel: name })
-}
 writeZip(files, outFile)
 console.log(`Packaged ${files.length} files → termbox.zip`)

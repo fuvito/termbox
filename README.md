@@ -210,6 +210,7 @@ Search for **TermBox** in the [Chrome Web Store](https://chrome.google.com/webst
 3. Enable **Developer mode** (top-right toggle)
 4. Click **Load unpacked** and select the `dist/` folder
 5. The TermBox icon appears in your toolbar — click it to open
+6. All 5 sample glossaries are loaded automatically on first open
 
 To update after a `git pull`, run `npm run build` again and click the refresh icon on the extension card in `chrome://extensions`.
 

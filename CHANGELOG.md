@@ -24,6 +24,7 @@ All notable changes to this project are documented here.
 ### Fixed
 - Firefox "appears to be corrupt" install error — manifest is now transformed for Firefox: `background.service_worker` replaced with `background.scripts`, `optional_host_permissions` removed (both unsupported before Firefox 128)
 - Clearer error when a language pack JSON is loaded via "Add from file": now says "This file is a language pack — use the 🌐 button" instead of the raw technical error
+- Default glossaries now auto-load when installing as an unpacked extension via **Load unpacked** (Chrome) or **Load Temporary Add-on** (Firefox) — previously only worked for the packed zip
 
 ---
 

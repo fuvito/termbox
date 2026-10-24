@@ -127,48 +127,11 @@ The `samples/` folder contains ready-to-use CSV files you can load straight into
 
 | File | Description | Download |
 |---|---|---|
-| `biotest-diagnostics.csv` | 67-term IVD / medical device glossary | [Download](https://github.com/fuvito/termbox/blob/main/samples/biotest-diagnostics.csv) |
-| `biotest-diagnostics-expanded.csv` | Expanded IVD / medical device glossary with richer definitions | [Download](https://github.com/fuvito/termbox/blob/main/samples/biotest-diagnostics-expanded.csv) |
-| `biotest-diagnostics-acronyms-expanded.csv` | IVD / medical device acronyms with fully expanded forms | [Download](https://github.com/fuvito/termbox/blob/main/samples/biotest-diagnostics-acronyms-expanded.csv) |
-| `ai-ml.csv` | 82-term AI and machine learning glossary | [Download](https://github.com/fuvito/termbox/blob/main/samples/ai-ml.csv) |
+| `biotest-diagnostics-acronyms-expanded.csv` | IVD / medical device acronyms with expanded forms | [Download](https://github.com/fuvito/termbox/blob/main/samples/biotest-diagnostics-acronyms-expanded.csv) |
 | `ai-ml-expanded.csv` | Expanded AI / ML glossary with richer definitions | [Download](https://github.com/fuvito/termbox/blob/main/samples/ai-ml-expanded.csv) |
 | `cybersecurity-acronyms.csv` | 674-term cybersecurity acronym glossary | [Download](https://github.com/fuvito/termbox/blob/main/samples/cybersecurity-acronyms.csv) |
 | `software-engineering-cloud-devops-expanded.csv` | 528-term software engineering, cloud, and DevOps glossary | [Download](https://github.com/fuvito/termbox/blob/main/samples/software-engineering-cloud-devops-expanded.csv) |
 | `finance-business-intelligence-acronyms.csv` | 715-term finance and business intelligence glossary | [Download](https://github.com/fuvito/termbox/blob/main/samples/finance-business-intelligence-acronyms.csv) |
-
-### [`biotest-diagnostics.csv`](https://github.com/fuvito/termbox/blob/main/samples/biotest-diagnostics.csv)
-
-A 67-term glossary for the in vitro diagnostics (IVD) and medical device industry, covering:
-
-| Domain | Example terms |
-|---|---|
-| Molecular Biology | PCR, qPCR, ddPCR, DNA, RNA |
-| Genomics | NGS, WGS, SNP |
-| Immunology | ELISA, CLIA, LFA, IgG, IgM |
-| Clinical Chemistry | CRP, HbA1c, troponin, LDL |
-| Oncology | ctDNA, TMB, PD-L1, PSA |
-| Neurology | MS, Amyloid Beta, Tau, APOE |
-| Medical Imaging | MRI, CT, PET |
-| Analytical / Statistics | LOD, LOQ, CV, Sensitivity, Specificity, PPV, NPV, ROC, AUC |
-| Regulatory | IVD, IVDR, MDR, CE, FDA, EMA, IFU, UDI, GLP, ICH |
-| Quality | SOP, CAPA, GMP, QMS, DHF, NCR, OOS |
-
-### [`ai-ml.csv`](https://github.com/fuvito/termbox/blob/main/samples/ai-ml.csv)
-
-An 82-term glossary covering the AI and machine learning landscape:
-
-| Domain | Example terms |
-|---|---|
-| Foundations | AI, ML, Deep Learning, Neural Network, Transfer Learning |
-| LLMs | LLM, GPT, Transformer, Attention, Context Window, Token, Hallucination |
-| Prompting | Prompt Engineering, Few-Shot, Zero-Shot, Chain-of-Thought, System Prompt |
-| Training & Alignment | RLHF, SFT, DPO, Fine-Tuning, LoRA, QLoRA, PEFT |
-| Generative AI | GAN, VAE, Diffusion Model, RAG, Multimodal |
-| Evaluation | Perplexity, BLEU, ROUGE, MMLU, HumanEval, Benchmark |
-| Core ML concepts | Overfitting, Dropout, Batch Norm, Loss Function, Gradient Descent, Adam |
-| Deployment | Inference, Quantisation, Pruning, Distillation, ONNX, GPU, TPU |
-| AI Agents | Agent, Tool Use, MCP, Agentic Loop, Semantic Search, Vector Database |
-| AI Safety | Alignment, Guardrails, Prompt Injection, Jailbreak |
 
 ### [`cybersecurity-acronyms.csv`](https://github.com/fuvito/termbox/blob/main/samples/cybersecurity-acronyms.csv)
 

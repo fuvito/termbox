@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "TermBox",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Build your own glossary or acronym finder from any CSV. Instant offline lookup from the toolbar. No account needed.",
   "permissions": ["storage"],
   "optional_host_permissions": ["<all_urls>"],

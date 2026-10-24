@@ -1,7 +1,48 @@
 # TermBox — Publishing Guide
 
-How to build and submit TermBox to each browser store.
+How to build, manually install, and submit TermBox to each browser store.
 For day-to-day pre-submission checklists see the per-store files linked below.
+
+---
+
+## Manual installation (without a store)
+
+### Chrome
+
+1. Build the extension:
+   ```bash
+   npm run build
+   ```
+2. Open `chrome://extensions` and enable **Developer mode** (top-right toggle).
+3. Click **Load unpacked** and select the `dist/` folder.
+4. The TermBox icon appears in the toolbar.
+
+To update after a code change: run `npm run build` again, then click the refresh icon on the extension card in `chrome://extensions`.
+
+### Firefox
+
+1. Build the Firefox package:
+   ```bash
+   npm run package:firefox
+   ```
+   This produces `termbox-firefox.zip`.
+2. Open `about:debugging` → **This Firefox**.
+3. Click **Load Temporary Add-on…** and select `termbox-firefox.zip`.
+4. The TermBox icon appears in the toolbar.
+
+> Temporary add-ons are removed when Firefox is closed. For a persistent install, submit to AMO or load an [unsigned extension](https://wiki.mozilla.org/Add-ons/Extension_Signing) in Firefox Developer Edition / Nightly.
+
+### Edge
+
+Edge is Chromium-based — the Chrome steps work unchanged:
+
+1. Build: `npm run build`
+2. Open `edge://extensions` and enable **Developer mode**.
+3. Click **Load unpacked** and select the `dist/` folder.
+
+### Safari (future)
+
+Safari requires an Xcode project wrapper — see the [Safari section](#safari-future) below.
 
 ---
 

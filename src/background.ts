@@ -27,6 +27,8 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
       lastLoaded: new Date().toISOString(),
       autoRefresh: false,
       secured: false,
+      author: null,
+      authorUrl: null,
     })
   }
 

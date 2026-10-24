@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client'
 import type { TermEntry, GlossarySource, SecureSourceMeta } from './types'
 import type { SearchResult } from './search'
 import { rankTerms } from './search'
-import { parseCsv, csvToTermEntries, termEntriesToCsv } from './csv'
+import { parseCsv, csvToTermEntries, termEntriesToCsv, parseSourcePackJson } from './csv'
 import {
   LocaleCtx, makeT, useLocale,
   BUILTIN_LOCALES, BUILTIN_NAMES,
@@ -150,10 +150,11 @@ declare const __APP_VERSION__: string
 
 // ─── AboutView ────────────────────────────────────────────────────────────────
 
-function AboutView({ onBack, theme, prefs }: {
+function AboutView({ onBack, theme, prefs, sources }: {
   onBack: () => void
   theme: Theme
   prefs: Prefs
+  sources: GlossarySource[]
 }) {
   const fs = prefs.fontSize
   const { t } = useLocale()
@@ -175,6 +176,14 @@ function AboutView({ onBack, theme, prefs }: {
       )}
     </div>
   )
+
+  const sourcesWithAuthor = sources.filter(s => s.author)
+  const customLangCodes = getCustomLangCodes()
+  const langPacksWithAuthor = customLangCodes
+    .map(code => ({ code, strings: getCustomStrings(code) }))
+    .filter(({ strings }) => strings?.['_author'])
+
+  const hasCredits = sourcesWithAuthor.length > 0 || langPacksWithAuthor.length > 0
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: theme.bg }}>
@@ -218,6 +227,43 @@ function AboutView({ onBack, theme, prefs }: {
           {infoRow(t('about.license'), 'MIT')}
           {infoRow(t('about.source'), 'github.com/fuvito/termbox', 'https://github.com/fuvito/termbox')}
         </div>
+
+        {/* Credits */}
+        {hasCredits && (
+          <div style={{ width: '100%', marginTop: 24 }}>
+            <p style={{ fontSize: fs - 2, fontWeight: 700, color: theme.muted, textTransform: 'uppercase', letterSpacing: '0.8px', margin: '0 0 4px' }}>
+              {t('about.credits')}
+            </p>
+            <div style={{ borderTop: `1px solid ${theme.border}` }}>
+              {sourcesWithAuthor.map(s => (
+                <div key={s.id} style={{ padding: '8px 0', borderBottom: `1px solid ${theme.border}` }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 }}>
+                    <span style={{ fontSize: fs - 2, color: theme.muted, flexShrink: 0 }}>{t('about.glossaryCredits')}</span>
+                    <span style={{ fontSize: fs - 1, color: theme.secondary, fontWeight: 500, textAlign: 'right' }}>{s.name}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
+                    <span style={{ fontSize: fs - 1, color: theme.muted }}>{s.author}</span>
+                    {s.authorUrl && (
+                      <button type="button" onClick={() => openUrl(s.authorUrl as string)}
+                        style={{ background: 'none', border: 'none', color: theme.primary, fontSize: fs - 2, cursor: 'pointer', padding: 0, fontFamily: 'inherit', flexShrink: 0 }}>
+                        {t('about.visitSource')}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+              {langPacksWithAuthor.map(({ code, strings }) => (
+                <div key={code} style={{ padding: '8px 0', borderBottom: `1px solid ${theme.border}` }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 }}>
+                    <span style={{ fontSize: fs - 2, color: theme.muted, flexShrink: 0 }}>{t('about.langPackCredits')}</span>
+                    <span style={{ fontSize: fs - 1, color: theme.secondary, fontWeight: 500, textAlign: 'right', fontFamily: 'monospace', letterSpacing: '0.5px' }}>{code}</span>
+                  </div>
+                  <span style={{ fontSize: fs - 1, color: theme.muted }}>{strings?.['_author']}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Links */}
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 16, marginTop: 24 }}>
@@ -739,6 +785,7 @@ function SourcesView({
     const source: GlossarySource = {
       id, name, type: 'file', url: null,
       termCount: 0, lastLoaded: new Date().toISOString(), autoRefresh: false, secured: false,
+      author: null, authorUrl: null,
     }
     await setSources([...sources, source])
     await setTerms(id, [])
@@ -789,24 +836,41 @@ function SourcesView({
     setLoadingId(id)
     try {
       const text = await loadFromFile(file)
-      const rows = parseCsv(text)
-      const terms = csvToTermEntries(rows, id)
+      let terms: TermEntry[]
+      let sourceName: string
+      let author: string | null
+      let authorUrl: string | null
+      if (file.name.toLowerCase().endsWith('.json')) {
+        const { terms: jsonTerms, meta, name } = parseSourcePackJson(text)
+        terms = jsonTerms.map((t, i) => ({ ...t, id: `${id}_${i}`, sourceId: id }))
+        sourceName = uniqueName(name ?? autoName(file.name, t), sources)
+        author = meta.author
+        authorUrl = meta.url
+      } else {
+        const { rows, meta } = parseCsv(text, true)
+        terms = csvToTermEntries(rows, id)
+        sourceName = uniqueName(autoName(file.name, t), sources)
+        author = meta.author
+        authorUrl = meta.url
+      }
       const source: GlossarySource = {
         id,
-        name: uniqueName(autoName(file.name, t), sources),
+        name: sourceName,
         type: 'file',
         url: null,
         termCount: terms.length,
         lastLoaded: new Date().toISOString(),
         autoRefresh: false,
         secured: false,
+        author,
+        authorUrl,
       }
       await setSources([...sources, source])
       await setTerms(id, terms)
       await setActiveSourceId(id)
       await onReload()
     } catch (err) {
-      setError((err as Error).message || 'Failed to load file')
+      setError((err as Error).message || t('sources.error.failedToLoad'))
     } finally {
       setLoadingId(null)
     }
@@ -823,9 +887,9 @@ function SourcesView({
     setLoadingId(source.id)
     try {
       const text = await loadFromUrl(source.url)
-      const rows = parseCsv(text)
+      const { rows, meta } = parseCsv(text, true)
       const terms = csvToTermEntries(rows, source.id)
-      const updated: GlossarySource = { ...source, termCount: terms.length, lastLoaded: new Date().toISOString() }
+      const updated: GlossarySource = { ...source, termCount: terms.length, lastLoaded: new Date().toISOString(), author: meta.author ?? source.author, authorUrl: meta.url ?? source.authorUrl }
       await setSources(sources.map(s => s.id === source.id ? updated : s))
       await setTerms(source.id, terms)
       await onReload()
@@ -1064,7 +1128,7 @@ function SourcesView({
 
       {/* Footer */}
       <div style={{ borderTop: `1px solid ${theme.border}`, padding: 14, background: theme.surface, flexShrink: 0 }}>
-        <input ref={fileInputRef} type="file" accept=".csv" style={{ display: 'none' }} onChange={handleFile} />
+        <input ref={fileInputRef} type="file" accept=".csv,.json" style={{ display: 'none' }} onChange={handleFile} />
 
         {addTermSourceId ? (
           /* ── Add term form ── */
@@ -2057,6 +2121,7 @@ function App() {
           onBack={() => setScreen('search')}
           theme={theme}
           prefs={prefs}
+          sources={appData.sources}
         />
       )}
     </div>

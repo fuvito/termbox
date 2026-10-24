@@ -18,6 +18,8 @@ export interface GlossarySource {
   lastLoaded: string    // ISO 8601
   autoRefresh: boolean
   secured: boolean
+  author: string | null
+  authorUrl: string | null
 }
 
 export interface SecureSourceMeta {

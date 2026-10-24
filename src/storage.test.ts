@@ -176,15 +176,15 @@ describe('getSources / setSources', () => {
 
   it('round-trips an array of sources', async () => {
     const sources: GlossarySource[] = [
-      { id: 'src1', name: 'Test', type: 'file', url: null, termCount: 5, lastLoaded: '2026-01-01', autoRefresh: false, secured: false },
+      { id: 'src1', name: 'Test', type: 'file', url: null, termCount: 5, lastLoaded: '2026-01-01', autoRefresh: false, secured: false, author: null, authorUrl: null },
     ]
     await setSources(sources)
     expect(await getSources()).toEqual(sources)
   })
 
   it('overwrites on second call', async () => {
-    const a: GlossarySource[] = [{ id: 'a', name: 'A', type: 'file', url: null, termCount: 0, lastLoaded: '', autoRefresh: false, secured: false }]
-    const b: GlossarySource[] = [{ id: 'b', name: 'B', type: 'file', url: null, termCount: 0, lastLoaded: '', autoRefresh: false, secured: false }]
+    const a: GlossarySource[] = [{ id: 'a', name: 'A', type: 'file', url: null, termCount: 0, lastLoaded: '', autoRefresh: false, secured: false, author: null, authorUrl: null }]
+    const b: GlossarySource[] = [{ id: 'b', name: 'B', type: 'file', url: null, termCount: 0, lastLoaded: '', autoRefresh: false, secured: false, author: null, authorUrl: null }]
     await setSources(a)
     await setSources(b)
     expect(await getSources()).toEqual(b)
@@ -267,7 +267,7 @@ describe('secure meta storage', () => {
 
 describe('loadGlossary', () => {
   const makeSource = (id: string, secured = false): GlossarySource => ({
-    id, name: id, type: 'file', url: null, termCount: 1, lastLoaded: '', autoRefresh: false, secured,
+    id, name: id, type: 'file', url: null, termCount: 1, lastLoaded: '', autoRefresh: false, secured, author: null, authorUrl: null,
   })
 
   it('returns [] for empty sources array', async () => {

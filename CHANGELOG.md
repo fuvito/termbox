@@ -4,6 +4,23 @@ All notable changes to this project are documented here.
 
 ---
 
+## [1.0.5] — 2026-10-24
+
+### Added
+- **12 built-in languages** — English, German, Spanish, French, Japanese, Korean, Portuguese, Kinyarwanda, Kiswahili, Turkish, Vietnamese, Chinese (Simplified)
+- **Language picker modal** — click the globe icon (🌐) in the header to switch language; replaces the old click-to-cycle button
+- **Custom language pack loading** — install any language from a `.json` file; codes are normalized to 3 uppercase characters (padded with `#` if shorter)
+- **Glossary source packs in JSON** — load a glossary source from a `.json` file (in addition to CSV); supports `_name`, `_author`, `_url` metadata fields
+- **CSV author credits** — add `# author: Name` and `# url: https://…` comment lines at the top of a CSV file; the information is stored with the source and displayed in the About page
+- **Author credits in About page** — a Credits section lists authors of loaded glossary sources and installed custom language packs
+- Language packs support an `_author` field; installed custom pack authors are shown in the About page Credits section
+
+### Changed
+- About page is now scrollable when content exceeds the popup height
+- Language button in header changed from cycle-click to modal picker
+
+---
+
 ## [1.0.4] — 2026-10-23
 
 ### Added

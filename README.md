@@ -20,20 +20,22 @@ No accounts. No backend. No subscription. Works fully offline.
 
 ## Features
 
-- **Build your own glossary** — bring any CSV and TermBox turns it into a searchable tool
-- **Create a glossary from scratch** — use the in-app editor to build a glossary without a CSV file
+- **Build your own glossary** — bring any CSV or JSON and TermBox turns it into a searchable tool
+- **Create a glossary from scratch** — use the in-app editor to build a glossary without a file
 - **Add terms manually** — add term, full form, and definition directly from the Sources panel
 - **Edit and delete terms** — right-click any search result to modify or remove it
 - **Browse A–Z** — flip to a full alphabetical term list with sticky letter headers from the **Az** button
 - **PIN protection** — encrypt any source with AES-256-GCM; unlock once per browser session
 - **Acronym lookup** — expand abbreviations instantly; supports `full_form` and `aliases` columns
-- Load from a **local CSV file**
+- Load from a **local CSV file** or **JSON source pack**
 - **Multiple named sources** — switch between glossaries or search across all at once
 - **Fully offline** after first load — instant local search, no server round-trips
 - **Search by term** or **search by definition** via a pill segment toggle
 - Smart result ranking: exact → prefix → alias → substring
 - **Export to CSV** — download any loaded glossary back to a CSV file
 - Restore last search on reopen — your previous results are always one click away
+- **12 built-in languages** — language modal with custom language pack loading from `.json`
+- **Author credits** — CSV and JSON sources can include author metadata; displayed in About
 - Dark mode, font size controls, resizable popup
 - No tracking, no external requests
 
@@ -51,6 +53,8 @@ No accounts. No backend. No subscription. Works fully offline.
 ## CSV format
 
 ```csv
+# author: Jane Doe
+# url: https://example.com/glossary
 term,full_form,definition,domain,source_reference,aliases
 PCR,Polymerase Chain Reaction,A technique used to amplify DNA,Molecular Biology,,qPCR;rt-PCR
 API,Application Programming Interface,A set of rules for software communication,Software,,
@@ -65,9 +69,54 @@ API,Application Programming Interface,A set of rules for software communication,
 | `source_reference` | No | Citation or reference |
 | `aliases` | No | Semicolon-separated alternative names |
 
+**Author credits:** Add `# author: Name` and/or `# url: https://…` comment lines before the header row. These are stored with the source and shown in the About page Credits section.
+
 - Column header names are **case-insensitive** and **order-independent**
 - Quoted fields with commas inside are supported (RFC 4180)
 - Encoding: UTF-8
+
+## JSON source pack format
+
+```json
+{
+  "_name": "My Glossary",
+  "_author": "Jane Doe",
+  "_url": "https://example.com/glossary",
+  "terms": [
+    { "term": "API", "definition": "Application Programming Interface" },
+    { "term": "PCR", "full_form": "Polymerase Chain Reaction", "definition": "A DNA amplification technique", "aliases": ["qPCR", "rt-PCR"] }
+  ]
+}
+```
+
+See [`sample-packs/source-pack-template.json`](sample-packs/source-pack-template.json) for a full annotated example.
+
+---
+
+## Sample packs
+
+The `sample-packs/` folder contains ready-to-use templates you can load or adapt:
+
+| File | Type | Description |
+|---|---|---|
+| [`source-pack-template.json`](sample-packs/source-pack-template.json) | Source pack | Annotated JSON glossary template — edit and load to create your own |
+| [`language-pack-template.json`](sample-packs/language-pack-template.json) | Language pack | Full English template for translating TermBox into a new language |
+| [`rw.json`](sample-packs/rw.json) | Language pack | Kinyarwanda (rw) language pack — example of a completed translation |
+
+### Creating and loading a source pack
+
+1. Copy `sample-packs/source-pack-template.json` to your computer
+2. Edit the `_name`, `_author`, `_url` fields and fill in your `terms` array
+3. Open TermBox → **≡** → **+ Add from file** → select your `.json` file
+
+### Creating and loading a language pack
+
+1. Copy `sample-packs/language-pack-template.json` to your computer
+2. Change `_name` to a 1–3 character code for your language (e.g. `pl` for Polish)
+3. Add `_author` with your name (optional — displayed in the About page Credits)
+4. Translate every string value (keep the keys and `{placeholder}` tokens unchanged)
+5. Open TermBox → click **🌐** in the header → **Install from file…** → select your `.json` file
+6. Enter or confirm the 3-character code and click **Install**
 
 ---
 

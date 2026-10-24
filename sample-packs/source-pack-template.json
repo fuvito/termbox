@@ -1,0 +1,32 @@
+{
+  "_name": "My Glossary",
+  "_author": "Your Name",
+  "_url": "https://example.com/your-glossary",
+
+  "terms": [
+    {
+      "term": "API",
+      "full_form": "Application Programming Interface",
+      "definition": "A set of rules that allows software applications to communicate with each other.",
+      "domain": "Software",
+      "source_reference": "MDN Web Docs",
+      "aliases": ["REST API", "Web API"]
+    },
+    {
+      "term": "PCR",
+      "full_form": "Polymerase Chain Reaction",
+      "definition": "A laboratory technique used to amplify small segments of DNA or RNA.",
+      "domain": "Molecular Biology",
+      "source_reference": "NCBI",
+      "aliases": ["qPCR", "rt-PCR"]
+    },
+    {
+      "term": "LLM",
+      "full_form": "Large Language Model",
+      "definition": "A type of AI model trained on vast amounts of text data to understand and generate natural language.",
+      "domain": "AI / ML",
+      "source_reference": "",
+      "aliases": []
+    }
+  ]
+}

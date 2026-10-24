@@ -10,15 +10,18 @@ TermBox is a browser extension that turns any CSV file into a fast, searchable g
 2. [Searching for a term](#2-searching-for-a-term)
 3. [Browsing all terms A–Z](#3-browsing-all-terms-az)
 4. [Loading a glossary from a CSV file](#4-loading-a-glossary-from-a-csv-file)
-5. [Creating a glossary from scratch](#5-creating-a-glossary-from-scratch)
-6. [Adding terms manually](#6-adding-terms-manually)
-7. [Managing multiple sources](#7-managing-multiple-sources)
-8. [PIN protection](#8-pin-protection)
-9. [Exporting a glossary to CSV](#9-exporting-a-glossary-to-csv)
-10. [CSV file format](#10-csv-file-format)
-11. [Sample glossaries](#11-sample-glossaries)
-12. [Display settings](#12-display-settings)
-13. [Tips and shortcuts](#13-tips-and-shortcuts)
+5. [Loading a glossary from a JSON file](#5-loading-a-glossary-from-a-json-file)
+6. [Creating a glossary from scratch](#6-creating-a-glossary-from-scratch)
+7. [Adding terms manually](#7-adding-terms-manually)
+8. [Managing multiple sources](#8-managing-multiple-sources)
+9. [PIN protection](#9-pin-protection)
+10. [Exporting a glossary to CSV](#10-exporting-a-glossary-to-csv)
+11. [CSV file format](#11-csv-file-format)
+12. [JSON source pack format](#12-json-source-pack-format)
+13. [Sample glossaries](#13-sample-glossaries)
+14. [Language settings](#14-language-settings)
+15. [Display settings](#15-display-settings)
+16. [Tips and shortcuts](#16-tips-and-shortcuts)
 
 ---
 
@@ -73,11 +76,23 @@ Click **Az** in the header to open the Browse view — a full alphabetical list 
 
 If a glossary with the same name is already loaded, TermBox automatically appends a number to keep names unique (e.g. "Medical Terms", "Medical Terms - 2").
 
-> **Tip:** See [section 10](#10-csv-file-format) for the expected column format, and [section 11](#11-sample-glossaries) for ready-made files you can download and load.
+> **Tip:** See [section 11](#11-csv-file-format) for the expected column format, and [section 13](#13-sample-glossaries) for ready-made files you can download and load.
 
 ---
 
-## 5. Creating a glossary from scratch
+## 5. Loading a glossary from a JSON file
+
+TermBox also accepts glossary source packs in `.json` format. The format mirrors the CSV columns but uses a structured object.
+
+1. Open TermBox and click **≡** to open Glossary Sources
+2. Click **+ Add from file**
+3. Select a `.json` source pack file
+
+See [section 12](#12-json-source-pack-format) for the full JSON format specification.
+
+---
+
+## 6. Creating a glossary from scratch
 
 You don't need a CSV file to get started — you can build a glossary directly inside TermBox.
 
@@ -85,11 +100,11 @@ You don't need a CSV file to get started — you can build a glossary directly i
 2. Click **+ New glossary**
 3. Type a name (e.g. "My Project Terms") and press **Enter** or click **Create**
 4. An empty glossary is created and set as the active source
-5. Use the **+** button on the source row to start adding terms (see section 6)
+5. Use the **+** button on the source row to start adding terms (see section 7)
 
 ---
 
-## 6. Adding terms manually
+## 7. Adding terms manually
 
 1. In Glossary Sources, click the **+** button on any source row
 2. Fill in the form at the bottom of the panel:
@@ -101,7 +116,7 @@ You don't need a CSV file to get started — you can build a glossary directly i
 
 ---
 
-## 7. Managing multiple sources
+## 8. Managing multiple sources
 
 You can load as many glossaries as you like and switch between them.
 
@@ -113,7 +128,7 @@ When searching across multiple sources, each result shows a small badge with the
 
 ---
 
-## 8. PIN protection
+## 9. PIN protection
 
 You can protect any glossary source with a PIN. When locked, the terms are encrypted with AES-256-GCM and cannot be read, searched, or exported without the correct PIN.
 
@@ -198,7 +213,66 @@ API,Application Programming Interface,A set of rules for software communication,
 
 ---
 
-## 11. Sample glossaries
+## 11. CSV file format — author credits
+
+You can embed author credit information at the top of a CSV file using `#`-prefixed comment lines before the header row:
+
+```csv
+# author: Jane Doe
+# url: https://example.com/glossary
+term,definition
+API,Application Programming Interface
+```
+
+Supported keys (case-insensitive):
+
+| Key | Description |
+|---|---|
+| `author` | Name of the glossary author or maintainer |
+| `url` | Link to the original source or author page |
+
+When a CSV with these credits is loaded, the author information is stored with the source and displayed in **ⓘ About → Credits**.
+
+---
+
+## 12. JSON source pack format
+
+TermBox accepts glossary source packs as `.json` files with the following structure:
+
+```json
+{
+  "_name": "My Glossary",
+  "_author": "Jane Doe",
+  "_url": "https://example.com/glossary",
+  "terms": [
+    {
+      "term": "PCR",
+      "full_form": "Polymerase Chain Reaction",
+      "definition": "A technique used to amplify DNA.",
+      "domain": "Molecular Biology",
+      "source_reference": "NCBI",
+      "aliases": ["qPCR", "rt-PCR"]
+    }
+  ]
+}
+```
+
+| Field | Required | Description |
+|---|---|---|
+| `_name` | No | Source name (used as the glossary display name) |
+| `_author` | No | Author credit (shown in About → Credits) |
+| `_url` | No | Link to original source or author page |
+| `terms` | Yes | Array of term objects |
+| `terms[].term` | Yes | The word or acronym |
+| `terms[].definition` | Yes | The definition |
+| `terms[].full_form` | No | Expanded form of the term |
+| `terms[].domain` | No | Subject area tag |
+| `terms[].source_reference` | No | Citation or reference |
+| `terms[].aliases` | No | Array or semicolon-separated string of alternative names |
+
+---
+
+## 13. Sample glossaries
 
 The following ready-made CSV files are available to download and load into TermBox:
 
@@ -214,7 +288,41 @@ Download any file and load it via **≡ → Add from file**.
 
 ---
 
-## 12. Display settings
+## 14. Language settings
+
+TermBox ships with 12 built-in languages. To switch language:
+
+1. Click the **🌐** (language) button in the header
+2. Select your language from the list
+
+### Installing a custom language pack
+
+If your language is not in the list, you can install a language pack from a `.json` file:
+
+1. Click **🌐** → **Install from file…**
+2. Select a `.json` language pack file
+3. Enter a 1–3 character code for the pack (e.g. `pl` for Polish) — shorter codes are padded with `#`
+4. Click **Install**
+
+**Language pack format:**
+
+```json
+{
+  "_name": "PL",
+  "_author": "Pack Author Name",
+  "search.placeholder": "Szukaj terminów…",
+  "about.title": "O programie",
+  ...
+}
+```
+
+The `_name` field is used to pre-fill the code input. The `_author` field is displayed in **ⓘ About → Credits**. All other keys are translation strings. Missing keys fall back to English.
+
+To remove a custom language pack: click **🌐**, then click **✕** next to the pack and confirm.
+
+---
+
+## 15. Display settings
 
 All settings are in the popup header bar:
 
@@ -225,6 +333,7 @@ All settings are in the popup header bar:
 | **☾ / ☀** | Toggle dark / light mode |
 | **Az** | Browse all terms A–Z |
 | **≡** | Open Glossary Sources |
+| **🌐** | Change language |
 | **ⓘ** | Open About / legal links |
 
 The popup can be **resized** by dragging any edge or corner.
@@ -233,7 +342,7 @@ All display preferences are saved automatically and persist across sessions.
 
 ---
 
-## 13. Tips and shortcuts
+## 16. Tips and shortcuts
 
 - **Keyboard:** Press **Enter** in the search box to search; press **Escape** in any form to cancel
 - **Copy on click:** Click any search result to instantly copy its definition to the clipboard
@@ -244,6 +353,7 @@ All display preferences are saved automatically and persist across sessions.
 - **Offline:** Once a glossary is loaded, TermBox works with no internet connection
 - **Font size:** If text feels too small or large, use **A−** / **A+** in the header
 - **PIN session:** An unlocked source stays unlocked until the browser closes — you don't need to re-enter the PIN every time you open the popup
+- **Language:** Switch language from **🌐** in the header — all UI text updates instantly
 
 ---
 

@@ -15,6 +15,10 @@ const GECKO = {
     gecko: {
       id: 'termbox@fuvito',
       strict_min_version: '115.0',
+      data_collection_permissions: {
+        required: [],
+        optional: [],
+      },
     },
   },
 }
@@ -108,10 +112,6 @@ const firefoxManifest = JSON.stringify({
     type: 'module',
   },
   ...GECKO,
-  data_collection_permissions: {
-    required: [],
-    optional: [],
-  },
 }, null, 2)
 
 const files = walkDir(distDir)

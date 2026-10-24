@@ -225,7 +225,13 @@ Then open [http://localhost:5173/popup.html](http://localhost:5173/popup.html).
 
 > The dev server auto-opens this URL in your default browser when started.
 
-`chrome.storage.local` is automatically replaced with a `localStorage`-backed mock, so adding sources and searching works exactly as it would in the real extension.
+`chrome.storage.local` is automatically replaced with a `localStorage`-backed mock, so adding sources and searching works exactly as it would in the real extension. The two default glossaries (Biotest Diagnostics and AI / ML) are auto-loaded on first open, mirroring the production install experience.
+
+To reset to a clean state (wipe all stored data and re-run the first-install flow), open:
+
+```
+http://localhost:5173/popup.html?reset
+```
 
 ---
 
